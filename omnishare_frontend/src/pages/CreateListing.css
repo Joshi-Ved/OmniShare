@@ -1,0 +1,41 @@
+.create-listing-page {
+  min-height: calc(100vh - 80px);
+  background-color: var(--gray-50);
+  padding: 40px 0;
+}
+
+.create-listing-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.create-listing-card h1 {
+  margin: 0 0 10px 0;
+  color: var(--gray-900);
+}
+
+.create-listing-card .subtitle {
+  color: var(--gray-600);
+  margin-bottom: 30px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .create-listing-card {
+    padding: 20px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}

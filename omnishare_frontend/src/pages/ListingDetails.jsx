@@ -1,0 +1,236 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { listingsAPI, bookingsAPI } from '../services/api';
+import { toast } from 'react-toastify';
+import './ListingDetails.css';
+
+const ListingDetails = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [listing, setListing] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [bookingDates, setBookingDates] = useState({
+    start_date: '',
+    end_date: '',
+  });
+  const [priceBreakdown, setPriceBreakdown] = useState(null);
+
+  useEffect(() => {
+    fetchListing();
+    fetchReviews();
+  }, [id]);
+
+  const fetchListing = async () => {
+    setLoading(true);
+    try {
+      const response = await listingsAPI.getById(id);
+      setListing(response.data);
+    } catch (error) {
+      toast.error('Failed to load listing');
+      navigate('/');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      const response = await listingsAPI.getReviews(id);
+      setReviews(response.data.results || response.data);
+    } catch (error) {
+      console.error('Failed to load reviews');
+    }
+  };
+
+  const handleDateChange = (e) => {
+    setBookingDates({
+      ...bookingDates,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const calculatePrice = async () => {
+    if (!bookingDates.start_date || !bookingDates.end_date) {
+      toast.error('Please select both dates');
+      return;
+    }
+
+    try {
+      const response = await bookingsAPI.calculatePrice({
+        listing_id: listing.id,
+        start_date: bookingDates.start_date,
+        end_date: bookingDates.end_date,
+      });
+      setPriceBreakdown(response.data);
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to calculate price');
+    }
+  };
+
+  const handleBooking = async () => {
+    if (!localStorage.getItem('access_token')) {
+      toast.error('Please login to book');
+      navigate('/login');
+      return;
+    }
+
+    if (!bookingDates.start_date || !bookingDates.end_date) {
+      toast.error('Please select dates');
+      return;
+    }
+
+    try {
+      const response = await bookingsAPI.create({
+        listing: listing.id,
+        start_date: bookingDates.start_date,
+        end_date: bookingDates.end_date,
+        insurance_fee: priceBreakdown?.insurance_fee || 0,
+      });
+      
+      toast.success('Booking created! Proceeding to payment...');
+      navigate(`/bookings/${response.data.booking.id}`);
+    } catch (error) {
+      const errorMsg = error.response?.data?.dates || 
+                      error.response?.data?.listing ||
+                      'Failed to create booking';
+      toast.error(errorMsg);
+    }
+  };
+
+  if (loading) return <div className="loading">Loading...</div>;
+  if (!listing) return null;
+
+  return (
+    <div className="listing-details-page">
+      <div className="container">
+        <div className="listing-images">
+          {listing.images && listing.images.length > 0 ? (
+            <div className="image-gallery">
+              <img src={listing.images[0].image} alt={listing.title} className="main-image" />
+            </div>
+          ) : (
+            <div className="no-image-large">No Image Available</div>
+          )}
+        </div>
+
+        <div className="listing-content grid grid-2">
+          <div className="listing-info">
+            <h1>{listing.title}</h1>
+            <p className="location">📍 {listing.location}</p>
+            
+            <div className="host-info card">
+              <h3>Hosted by {listing.host.username}</h3>
+              <p>Trust Score: ⭐ {listing.host.trust_score}/5</p>
+              <p>Completed Bookings: {listing.host.successful_bookings}</p>
+              {listing.host.gold_host_flag && (
+                <span className="badge badge-warning">⭐ Gold Host</span>
+              )}
+            </div>
+
+            <div className="description card">
+              <h3>Description</h3>
+              <p>{listing.description}</p>
+            </div>
+
+            <div className="listing-details card">
+              <h3>Details</h3>
+              <p><strong>Category:</strong> {listing.category_name}</p>
+              <p><strong>Daily Price:</strong> ₹{listing.daily_price}</p>
+              <p><strong>Security Deposit:</strong> ₹{listing.deposit}</p>
+              <p><strong>Rating:</strong> ⭐ {listing.rating} ({listing.total_reviews} reviews)</p>
+              <p><strong>Total Bookings:</strong> {listing.total_bookings}</p>
+            </div>
+
+            <div className="reviews card">
+              <h3>Reviews</h3>
+              {reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <div key={review.id} className="review">
+                    <div className="review-header">
+                      <strong>{review.reviewer_name}</strong>
+                      <span>⭐ {review.rating}/5</span>
+                    </div>
+                    <p>{review.comment}</p>
+                    <small>{new Date(review.created_at).toLocaleDateString()}</small>
+                  </div>
+                ))
+              ) : (
+                <p>No reviews yet</p>
+              )}
+            </div>
+          </div>
+
+          <div className="booking-widget">
+            <div className="card">
+              <h2>Book This Item</h2>
+              
+              <div className="form-group">
+                <label>Start Date</label>
+                <input
+                  type="date"
+                  name="start_date"
+                  value={bookingDates.start_date}
+                  onChange={handleDateChange}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>End Date</label>
+                <input
+                  type="date"
+                  name="end_date"
+                  value={bookingDates.end_date}
+                  onChange={handleDateChange}
+                  min={bookingDates.start_date}
+                />
+              </div>
+
+              <button onClick={calculatePrice} className="btn btn-secondary">
+                Calculate Price
+              </button>
+
+              {priceBreakdown && (
+                <div className="price-breakdown">
+                  <h3>Price Breakdown</h3>
+                  <div className="price-row">
+                    <span>₹{priceBreakdown.daily_price} × {priceBreakdown.rental_days} days</span>
+                    <span>₹{priceBreakdown.rental_amount}</span>
+                  </div>
+                  <div className="price-row">
+                    <span>Service Fee (6%)</span>
+                    <span>₹{priceBreakdown.commission_guest}</span>
+                  </div>
+                  <div className="price-row">
+                    <span>Insurance</span>
+                    <span>₹{priceBreakdown.insurance_fee}</span>
+                  </div>
+                  <div className="price-row">
+                    <span>Security Deposit (refundable)</span>
+                    <span>₹{priceBreakdown.deposit}</span>
+                  </div>
+                  <hr />
+                  <div className="price-row total">
+                    <strong>Total</strong>
+                    <strong>₹{priceBreakdown.guest_total}</strong>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={handleBooking}
+                className="btn btn-primary"
+                disabled={!priceBreakdown}
+              >
+                Proceed to Book
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ListingDetails;

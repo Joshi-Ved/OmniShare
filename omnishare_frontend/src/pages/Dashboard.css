@@ -1,0 +1,134 @@
+.dashboard-page {
+  min-height: calc(100vh - 80px);
+  background-color: var(--gray-50);
+  padding: 40px 0;
+}
+
+.dashboard-page h1 {
+  margin-bottom: 30px;
+  color: var(--gray-900);
+}
+
+.dashboard-stats {
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.stat-card h3 {
+  color: var(--gray-600);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.stat-number {
+  color: var(--primary-color);
+  font-size: 32px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.dashboard-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.dashboard-tabs .tab {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  color: var(--gray-600);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.dashboard-tabs .tab:hover {
+  color: var(--primary-color);
+}
+
+.dashboard-tabs .tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.listing-card {
+  padding: 20px;
+}
+
+.listing-card h3 {
+  margin: 0 0 10px 0;
+  color: var(--gray-900);
+}
+
+.listing-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.booking-card {
+  padding: 20px;
+}
+
+.booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.booking-header h3 {
+  margin: 0;
+  color: var(--gray-900);
+}
+
+.booking-details {
+  margin-bottom: 15px;
+}
+
+.booking-details p {
+  margin: 8px 0;
+  color: var(--gray-700);
+}
+
+@media (max-width: 768px) {
+  .dashboard-stats {
+    gap: 15px;
+  }
+  
+  .stat-number {
+    font-size: 24px;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
