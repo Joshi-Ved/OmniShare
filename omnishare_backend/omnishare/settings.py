@@ -69,16 +69,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'omnishare.wsgi.application'
 
 # Database
+# Using SQLite for demo (change to PostgreSQL for production)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME', default='omnishare_db'),
-        'USER': config('DATABASE_USER', default='postgres'),
-        'PASSWORD': config('DATABASE_PASSWORD', default='postgres'),
-        'HOST': config('DATABASE_HOST', default='localhost'),
-        'PORT': config('DATABASE_PORT', default='5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# For PostgreSQL (uncomment for production):
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DATABASE_NAME', default='omnishare_db'),
+#         'USER': config('DATABASE_USER', default='postgres'),
+#         'PASSWORD': config('DATABASE_PASSWORD', default='postgres'),
+#         'HOST': config('DATABASE_HOST', default='localhost'),
+#         'PORT': config('DATABASE_PORT', default='5432'),
+#     }
+# }
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
