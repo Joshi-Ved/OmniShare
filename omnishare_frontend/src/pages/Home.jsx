@@ -23,9 +23,10 @@ const Home = () => {
   const fetchCategories = async () => {
     try {
       const response = await listingsAPI.getCategories();
-      setCategories(response.data);
+      setCategories(response.data.results || response.data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]);
     }
   };
 
