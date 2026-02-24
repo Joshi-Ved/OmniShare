@@ -114,17 +114,18 @@ def calculate_booking_price(listing, start_date, end_date):
     """
     from django.conf import settings
     from datetime import timedelta
+    from decimal import Decimal
     
     delta = end_date - start_date
     rental_days = max(1, delta.days)
     
     rental_amount = listing.daily_price * rental_days
-    commission_host = rental_amount * settings.PLATFORM_COMMISSION_HOST
-    commission_guest = rental_amount * settings.PLATFORM_COMMISSION_GUEST
+    commission_host = rental_amount * Decimal(str(settings.PLATFORM_COMMISSION_HOST))
+    commission_guest = rental_amount * Decimal(str(settings.PLATFORM_COMMISSION_GUEST))
     platform_commission = commission_host + commission_guest
     
     # Default insurance: 5% of rental amount
-    insurance_fee = rental_amount * 0.05
+    insurance_fee = rental_amount * Decimal('0.05')
     
     guest_total = rental_amount + commission_guest + listing.deposit + insurance_fee
     host_payout = rental_amount - commission_host

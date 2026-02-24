@@ -13,6 +13,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ListingDetails from './pages/ListingDetails';
 import BookingPage from './pages/BookingPage';
 import CreateListing from './pages/CreateListing';
+import KYCSubmission from './pages/KYCSubmission';
 
 // Components
 import Navbar from './components/Navbar';
@@ -54,6 +55,12 @@ function App() {
           <Route path="/listings/create" element={
             <PrivateRoute>
               <CreateListing />
+            </PrivateRoute>
+          } />
+          
+          <Route path="/kyc/submit" element={
+            <PrivateRoute>
+              <KYCSubmission />
             </PrivateRoute>
           } />
           

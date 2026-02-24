@@ -27,9 +27,13 @@ const CreateListing = () => {
   const fetchCategories = async () => {
     try {
       const response = await listingsAPI.getCategories();
-      setCategories(response.data);
+      
+      // Handle paginated response from DRF
+      const categoriesData = response.data.results || response.data;
+      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (error) {
-      console.error('Failed to load categories');
+      console.error('Failed to load categories:', error);
+      setCategories([]);
     }
   };
 
@@ -45,10 +49,17 @@ const CreateListing = () => {
     setLoading(true);
 
     try {
+      console.log('Creating listing with data:', formData);
+      console.log('Auth token:', localStorage.getItem('access_token'));
+      console.log('User:', JSON.parse(localStorage.getItem('user') || '{}'));
+      
       const response = await listingsAPI.create(formData);
       toast.success('Listing created! Awaiting admin verification.');
       navigate('/host/dashboard');
     } catch (error) {
+      console.error('Create listing error:', error);
+      console.error('Error response:', error.response);
+      
       const errors = error.response?.data;
       if (errors) {
         Object.keys(errors).forEach(key => {
@@ -106,7 +117,7 @@ const CreateListing = () => {
                   required
                 >
                   <option value="">Select Category</option>
-                  {categories.map((cat) => (
+                  {Array.isArray(categories) && categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
                     </option>
