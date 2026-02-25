@@ -34,9 +34,10 @@ const Home = () => {
     setLoading(true);
     try {
       const response = await listingsAPI.getAll(filters);
-      setListings(response.data.results || response.data);
+      setListings(response.data.results || response.data || []);
     } catch (error) {
-      toast.error('Failed to load listings');
+      console.error('Listings error:', error.message);
+      setListings([]);
     } finally {
       setLoading(false);
     }
@@ -77,8 +78,8 @@ const Home = () => {
 
       {/* Filters */}
       <div className="container">
-        <div className="filters card">
-          <div className="grid grid-4">
+        <div className="filters">
+          <div className="filters-grid">
             <div className="form-group">
               <label>Category</label>
               <select name="category" value={filters.category} onChange={handleFilterChange}>
@@ -89,6 +90,17 @@ const Home = () => {
                   </option>
                 ))}
               </select>
+            </div>
+
+            <div className="form-group">
+              <label>Location</label>
+              <input
+                type="text"
+                name="location"
+                value={filters.location}
+                onChange={handleFilterChange}
+                placeholder="Search location..."
+              />
             </div>
 
             <div className="form-group">
@@ -113,59 +125,61 @@ const Home = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label>&nbsp;</label>
-              <button onClick={handleSearch} className="btn btn-primary">
-                Apply Filters
-              </button>
-            </div>
+            <button onClick={handleSearch} className="btn btn-primary">
+              Search
+            </button>
           </div>
         </div>
 
         {/* Listings Grid */}
         {loading ? (
           <div className="loading">Loading listings...</div>
-        ) : (
+        ) : listings.length > 0 ? (
           <div className="listings-grid grid grid-3">
             {listings.map((listing) => (
-              <Link to={`/listings/${listing.id}`} key={listing.id} className="listing-card card">
-                <div className="listing-image">
+              <Link to={`/listings/${listing.id}`} key={listing.id} className="listing-card">
+                <div className="listing-image-wrapper">
                   {listing.primary_image ? (
-                    <img src={listing.primary_image} alt={listing.title} />
+                    <img src={listing.primary_image} alt={listing.title} className="listing-image" />
                   ) : (
-                    <div className="no-image">No Image</div>
+                    <div className="no-image">📦</div>
                   )}
                   {listing.promoted_flag && (
-                    <span className="badge badge-warning promoted-badge">⭐ Promoted</span>
+                    <span className="promoted-badge">⭐ Promoted</span>
+                  )}
+                  {listing.rating > 0 && (
+                    <div className="rating-badge">⭐ {listing.rating.toFixed(1)}</div>
                   )}
                 </div>
                 
                 <div className="listing-content">
                   <h3>{listing.title}</h3>
-                  <p className="location">📍 {listing.location}</p>
-                  <p className="description">{listing.description.substring(0, 80)}...</p>
+                  <div className="listing-meta">
+                    <span className="location">📍 {listing.location}</span>
+                    <span className="category">{listing.category}</span>
+                  </div>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--neutral-600)', margin: '0' }}>
+                    {listing.description?.substring(0, 60)}...
+                  </p>
                   
-                  <div className="listing-footer">
+                  <div className="listing-price">
                     <div className="price">
-                      <strong>₹{listing.daily_price}/day</strong>
-                    </div>
-                    <div className="rating">
-                      ⭐ {listing.rating} ({listing.total_reviews})
+                      ₹{listing.daily_price}
+                      <span className="price-unit">/day</span>
                     </div>
                   </div>
-                  
-                  {listing.host.gold_host_flag && (
-                    <span className="badge badge-warning">⭐ Gold Host</span>
-                  )}
                 </div>
               </Link>
             ))}
           </div>
-        )}
-
-        {!loading && listings.length === 0 && (
-          <div className="no-results">
+        ) : (
+          <div className="no-listings">
+            <div className="no-listings-icon">📦</div>
             <p>No listings found. Try adjusting your filters.</p>
+            <button onClick={() => setFilters({ category: '', location: '', min_price: '', max_price: '' })} 
+                    className="btn btn-primary">
+              Clear Filters
+            </button>
           </div>
         )}
       </div>
