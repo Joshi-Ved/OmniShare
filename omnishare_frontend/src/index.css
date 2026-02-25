@@ -162,6 +162,12 @@ a:hover {
   user-select: none;
 }
 
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
 .btn-primary {
   background: var(--primary);
   color: white;

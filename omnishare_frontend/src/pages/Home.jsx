@@ -8,6 +8,7 @@ const Home = () => {
   const [listings, setListings] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     category: '',
     location: '',
@@ -16,14 +17,18 @@ const Home = () => {
   });
 
   useEffect(() => {
-    fetchCategories();
-    fetchListings();
+    const initializeHome = async () => {
+      await fetchCategories();
+      await fetchListings();
+    };
+    initializeHome();
   }, []);
 
   const fetchCategories = async () => {
     try {
       const response = await listingsAPI.getCategories();
-      setCategories(response.data.results || response.data || []);
+      const cats = response.data?.results || response.data || [];
+      setCategories(Array.isArray(cats) ? cats : []);
     } catch (error) {
       console.error('Error fetching categories:', error);
       setCategories([]);
@@ -32,11 +37,14 @@ const Home = () => {
 
   const fetchListings = async () => {
     setLoading(true);
+    setError(null);
     try {
       const response = await listingsAPI.getAll(filters);
-      setListings(response.data.results || response.data || []);
+      const list = response.data?.results || response.data || [];
+      setListings(Array.isArray(list) ? list : []);
     } catch (error) {
-      console.error('Listings error:', error.message);
+      console.error('Listings error:', error);
+      setError('Failed to load listings. Please try again.');
       setListings([]);
     } finally {
       setLoading(false);
@@ -50,24 +58,34 @@ const Home = () => {
     });
   };
 
-  const handleSearch = () => {
-    fetchListings();
+  const handleSearch = async () => {
+    await fetchListings();
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      category: '',
+      location: '',
+      min_price: '',
+      max_price: '',
+    });
   };
 
   return (
     <div className="home-page">
       {/* Hero Section */}
       <div className="hero">
-        <div className="container">
+        <div className="hero-content">
           <h1>Rent Anything, From Anyone, Anywhere</h1>
           <p>Join India's fastest growing P2P rental marketplace</p>
           <div className="hero-search">
             <input
               type="text"
               name="location"
-              placeholder="Search by location..."
+              placeholder="Search by location (e.g., Delhi, Mumbai)..."
               value={filters.location}
               onChange={handleFilterChange}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
             <button onClick={handleSearch} className="btn btn-primary">
               Search
@@ -131,57 +149,79 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Listings Grid */}
-        {loading ? (
-          <div className="loading">Loading listings...</div>
-        ) : listings.length > 0 ? (
-          <div className="listings-grid grid grid-3">
-            {listings.map((listing) => (
-              <Link to={`/listings/${listing.id}`} key={listing.id} className="listing-card">
-                <div className="listing-image-wrapper">
-                  {listing.primary_image ? (
-                    <img src={listing.primary_image} alt={listing.title} className="listing-image" />
-                  ) : (
-                    <div className="no-image">📦</div>
-                  )}
-                  {listing.promoted_flag && (
-                    <span className="promoted-badge">⭐ Promoted</span>
-                  )}
-                  {listing.rating > 0 && (
-                    <div className="rating-badge">⭐ {listing.rating.toFixed(1)}</div>
-                  )}
-                </div>
-                
-                <div className="listing-content">
-                  <h3>{listing.title}</h3>
-                  <div className="listing-meta">
-                    <span className="location">📍 {listing.location}</span>
-                    <span className="category">{listing.category}</span>
-                  </div>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--neutral-600)', margin: '0' }}>
-                    {listing.description?.substring(0, 60)}...
-                  </p>
-                  
-                  <div className="listing-price">
-                    <div className="price">
-                      ₹{listing.daily_price}
-                      <span className="price-unit">/day</span>
+        {/* Listings Section */}
+        <div className="listings-section">
+          {error && (
+            <div className="error-message">
+              <span>⚠️ {error}</span>
+              <button onClick={() => handleSearch()} className="btn btn-sm btn-secondary">Retry</button>
+            </div>
+          )}
+
+          {loading ? (
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Loading amazing items for you...</p>
+            </div>
+          ) : listings.length > 0 ? (
+            <>
+              <div className="listings-header">
+                <h2>Found {listings.length} items</h2>
+              </div>
+              <div className="listings-grid grid grid-3">
+                {listings.map((listing) => (
+                  <Link to={`/listings/${listing.id}`} key={listing.id} className="listing-card">
+                    <div className="listing-image-wrapper">
+                      {listing.primary_image ? (
+                        <img src={listing.primary_image} alt={listing.title} className="listing-image" />
+                      ) : (
+                        <div className="no-image">📦</div>
+                      )}
+                      {listing.promoted_flag && (
+                        <span className="promoted-badge">⭐ Promoted</span>
+                      )}
+                      {listing.rating > 0 && (
+                        <div className="rating-badge">⭐ {listing.rating.toFixed(1)}</div>
+                      )}
                     </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="no-listings">
-            <div className="no-listings-icon">📦</div>
-            <p>No listings found. Try adjusting your filters.</p>
-            <button onClick={() => setFilters({ category: '', location: '', min_price: '', max_price: '' })} 
-                    className="btn btn-primary">
-              Clear Filters
-            </button>
-          </div>
-        )}
+                    
+                    <div className="listing-content">
+                      <h3>{listing.title}</h3>
+                      <div className="listing-meta">
+                        <span className="location">📍 {listing.location}</span>
+                        <span className="category-badge">{listing.category_name}</span>
+                      </div>
+                      <p className="listing-description">
+                        {listing.description?.substring(0, 60)}...
+                      </p>
+                      
+                      <div className="listing-footer">
+                        <div className="listing-price">
+                          <div className="price">
+                            ₹{listing.daily_price}
+                            <span className="price-unit">/day</span>
+                          </div>
+                        </div>
+                        <div className="host-info">
+                          <small>{listing.total_reviews} reviews</small>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="no-listings">
+              <div className="no-listings-icon">🔍</div>
+              <h3>No listings found</h3>
+              <p>Try adjusting your filters or explore all items</p>
+              <button onClick={handleClearFilters} className="btn btn-primary">
+                Clear Filters & Explore
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
