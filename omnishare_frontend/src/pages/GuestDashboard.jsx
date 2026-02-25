@@ -15,10 +15,17 @@ const GuestDashboard = () => {
   const fetchBookings = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        toast.error('Please login to view your bookings');
+        setLoading(false);
+        return;
+      }
       const response = await bookingsAPI.getMyBookings('guest');
-      setBookings(response.data.results || response.data);
+      setBookings(response.data.results || response.data || []);
     } catch (error) {
-      toast.error('Failed to load bookings');
+      console.error('Bookings error:', error.message);
+      setBookings([]);
     } finally {
       setLoading(false);
     }

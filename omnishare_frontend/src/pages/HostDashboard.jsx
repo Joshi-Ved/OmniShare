@@ -17,14 +17,22 @@ const HostDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        toast.error('Please login to continue');
+        setLoading(false);
+        return;
+      }
       const [listingsRes, bookingsRes] = await Promise.all([
-        listingsAPI.getMyListings(),
-        bookingsAPI.getMyBookings('host'),
+        listingsAPI.getMyListings().catch(() => ({ data: { results: [] } })),
+        bookingsAPI.getMyBookings('host').catch(() => ({ data: { results: [] } })),
       ]);
-      setListings(listingsRes.data.results || listingsRes.data);
-      setBookings(bookingsRes.data.results || bookingsRes.data);
+      setListings(listingsRes.data.results || listingsRes.data || []);
+      setBookings(bookingsRes.data.results || bookingsRes.data || []);
     } catch (error) {
-      toast.error('Failed to load dashboard data');
+      console.error('Dashboard error:', error.message);
+      setListings([]);
+      setBookings([]);
     } finally {
       setLoading(false);
     }

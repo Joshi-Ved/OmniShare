@@ -28,8 +28,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 && !localStorage.getItem('access_token')) {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('access_token');
       localStorage.removeItem('user');
+      // Silently fail for 401 - frontend should handle redirects
     }
     return Promise.reject(error);
   }

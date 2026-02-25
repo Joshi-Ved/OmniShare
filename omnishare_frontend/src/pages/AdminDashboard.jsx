@@ -18,19 +18,29 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        toast.error('Admin access required');
+        setLoading(false);
+        return;
+      }
       const [statsRes, listingsRes, kycRes, disputesRes] = await Promise.all([
-        adminAPI.getDashboard(),
-        adminAPI.getPendingListings(),
-        adminAPI.getPendingKYC(),
-        adminAPI.getDisputedBookings(),
+        adminAPI.getDashboard().catch(() => ({ data: {} })),
+        adminAPI.getPendingListings().catch(() => ({ data: { results: [] } })),
+        adminAPI.getPendingKYC().catch(() => ({ data: { results: [] } })),
+        adminAPI.getDisputedBookings().catch(() => ({ data: { results: [] } })),
       ]);
       
-      setStats(statsRes.data);
-      setPendingListings(listingsRes.data.results || listingsRes.data);
-      setPendingKYC(kycRes.data.results || kycRes.data);
-      setDisputes(disputesRes.data.results || disputesRes.data);
+      setStats(statsRes.data || {});
+      setPendingListings(listingsRes.data.results || listingsRes.data || []);
+      setPendingKYC(kycRes.data.results || kycRes.data || []);
+      setDisputes(disputesRes.data.results || disputesRes.data || []);
     } catch (error) {
-      toast.error('Failed to load dashboard');
+      console.error('Admin dashboard error:', error.message);
+      setStats({});
+      setPendingListings([]);
+      setPendingKYC([]);
+      setDisputes([]);
     } finally {
       setLoading(false);
     }
