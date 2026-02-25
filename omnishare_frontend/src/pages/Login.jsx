@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authAPI } from '../services/api';
+import { loginWithEmail } from '../services/firebaseAuthService';
+import { getFirestoreDocument, setFirestoreDocument } from '../services/firebaseFirestoreService';
 import { toast } from 'react-toastify';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
@@ -24,29 +25,52 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const response = await authAPI.login(formData);
-      
-      // Store tokens and user data
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      
-      // Fetch user profile
-      const profileResponse = await authAPI.getProfile();
-      localStorage.setItem('user', JSON.stringify(profileResponse.data));
-      
+      const credential = await loginWithEmail({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      const idToken = await credential.user.getIdToken();
+      const existingUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+      let profile = null;
+      try {
+        profile = await getFirestoreDocument('users', credential.user.uid);
+      } catch {
+      }
+
+      if (!profile) {
+        profile = {
+          uid: credential.user.uid,
+          username: credential.user.displayName || credential.user.email || 'User',
+          email: credential.user.email,
+          role: existingUser.role || 'guest',
+          is_staff: Boolean(existingUser.is_staff),
+          updated_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+        };
+
+        try {
+          await setFirestoreDocument('users', credential.user.uid, profile, true);
+        } catch {
+        }
+      }
+
+      localStorage.setItem('access_token', idToken);
+      localStorage.removeItem('refresh_token');
+      localStorage.setItem('user', JSON.stringify(profile));
+
       toast.success('Login successful!');
-      
-      // Redirect based on role
-      const user = profileResponse.data;
-      if (user.role === 'admin' || user.is_staff) {
+
+      if (profile.role === 'admin' || profile.is_staff) {
         navigate('/admin/dashboard');
-      } else if (user.role === 'host') {
+      } else if (profile.role === 'host') {
         navigate('/host/dashboard');
       } else {
         navigate('/guest/dashboard');
       }
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Login failed');
+      toast.error(error?.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -61,14 +85,14 @@ const Login = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Username</label>
+              <label>Email</label>
               <input
-                type="text"
-                name="username"
-                value={formData.username}
+                type="email"
+                name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="Enter your username"
+                placeholder="Enter your email"
               />
             </div>
 

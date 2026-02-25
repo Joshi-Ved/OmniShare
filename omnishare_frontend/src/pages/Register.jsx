@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authAPI } from '../services/api';
+import { registerWithEmail } from '../services/firebaseAuthService';
+import { setFirestoreDocument } from '../services/firebaseFirestoreService';
 import { toast } from 'react-toastify';
 import './Auth.css';
 
@@ -34,28 +35,38 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await authAPI.register(formData);
-      
-      // Store tokens and user data
-      localStorage.setItem('access_token', response.data.tokens.access);
-      localStorage.setItem('refresh_token', response.data.tokens.refresh);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      
+      const credential = await registerWithEmail({
+        email: formData.email,
+        password: formData.password,
+        displayName: formData.username,
+      });
+
+      const idToken = await credential.user.getIdToken();
+
+      const profile = {
+        uid: credential.user.uid,
+        username: formData.username,
+        email: formData.email,
+        role: formData.role,
+        phone_number: formData.phone_number,
+        is_staff: false,
+        updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      };
+
+      try {
+        await setFirestoreDocument('users', credential.user.uid, profile, true);
+      } catch {
+      }
+
+      localStorage.setItem('access_token', idToken);
+      localStorage.removeItem('refresh_token');
+      localStorage.setItem('user', JSON.stringify(profile));
+
       toast.success('Registration successful! Please complete your KYC.');
       navigate('/guest/dashboard');
     } catch (error) {
-      const errors = error.response?.data;
-      if (errors) {
-        Object.keys(errors).forEach(key => {
-          if (Array.isArray(errors[key])) {
-            toast.error(`${key}: ${errors[key][0]}`);
-          } else {
-            toast.error(errors[key]);
-          }
-        });
-      } else {
-        toast.error('Registration failed');
-      }
+      toast.error(error?.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
