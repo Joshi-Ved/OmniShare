@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.conf import settings
 
 from .models import Transaction
 from .razorpay_utils import create_razorpay_order, verify_payment_signature

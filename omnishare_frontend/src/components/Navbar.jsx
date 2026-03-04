@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { logoutFirebaseUser } from '../services/firebaseAuthService';
+import { authAPI } from '../services/api';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -11,7 +11,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await logoutFirebaseUser();
+      await authAPI.logout();
     } catch {
     }
     localStorage.removeItem('access_token');

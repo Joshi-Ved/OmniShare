@@ -15,7 +15,7 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Token ${token}`;
     }
     return config;
   },
@@ -28,11 +28,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('user');
-      // Silently fail for 401 - frontend should handle redirects
-    }
     return Promise.reject(error);
   }
 );
@@ -41,6 +36,7 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (data) => api.post('/users/register/', data),
   login: (data) => api.post('/users/login/', data),
+  logout: () => api.post('/users/logout/'),
   getProfile: () => api.get('/users/profile/'),
   updateProfile: (data) => api.put('/users/profile/', data),
   submitKYC: (formData) => api.post('/users/kyc/submit/', formData, {
@@ -81,15 +77,26 @@ export const bookingsAPI = {
 
 // Payments API
 export const paymentsAPI = {
-  createOrder: (bookingId) => api.post(`/payments/create-order/${bookingId}/`),
-  verifyPayment: (data) => api.post('/payments/verify/', data),
-  getTransactions: () => api.get('/payments/transactions/'),
+  checkoutPreview: (bookingId) => api.post('/payments/payments/checkout-preview/', { booking_id: bookingId }),
+  createOrder: (bookingId) => api.post('/payments/payments/create-order/', { booking_id: bookingId }),
+  verifyPayment: (data) => api.post('/payments/payments/verify/', data),
+  refund: (data) => api.post('/payments/payments/refund/', data),
+  getTransactions: (params) => api.get('/payments/payments/transactions/', { params }),
+  getSettlements: () => api.get('/payments/payments/settlements/'),
+  getInvoices: () => api.get('/payments/invoices/'),
+  downloadInvoice: (invoiceId) => api.get(`/payments/invoices/${invoiceId}/download/`, { responseType: 'blob' }),
+  resendInvoice: (invoiceId) => api.post(`/payments/invoices/${invoiceId}/resend_email/`),
 };
 
 // Admin API
 export const adminAPI = {
   getDashboard: () => api.get('/crm/dashboard/'),
   getRevenueReport: (params) => api.get('/crm/revenue-report/', { params }),
+  getSalesReport: (params) => api.get('/crm/sales-report/', { params }),
+  getInventoryLinkage: (params) => api.get('/crm/inventory-linkage/', { params }),
+  getDecisionSupport: () => api.get('/crm/decision-support/'),
+  getCustomers: (params) => api.get('/crm/customers/', { params }),
+  getCustomerDetail: (userId) => api.get(`/crm/customers/${userId}/`),
   verifyListing: (data) => api.post('/listings/verify/', data),
   getPendingListings: () => api.get('/listings/pending/'),
   getPendingKYC: () => api.get('/users/kyc/pending/'),

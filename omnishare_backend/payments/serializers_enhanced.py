@@ -19,15 +19,15 @@ class CommissionSplitSerializer(serializers.ModelSerializer):
             'id', 'booking', 'escrow', 'rental_amount',
             'commission_host', 'commission_guest', 'total_commission',
             'guest_total', 'host_payout', 'platform_earnings',
-            'created_at', 'updated_at'
+            'calculated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'calculated_at']
 
 
 class EscrowAccountSerializer(serializers.ModelSerializer):
     """Serializer for EscrowAccount model"""
     
-    commission_split = CommissionSplitSerializer(read_only=True)
+    commission_split = serializers.SerializerMethodField()
     
     class Meta:
         model = EscrowAccount
@@ -35,10 +35,16 @@ class EscrowAccountSerializer(serializers.ModelSerializer):
             'id', 'booking', 'guest', 'host',
             'total_amount', 'rental_amount', 'guest_commission',
             'host_commission', 'platform_revenue', 'status',
-            'held_until', 'released_at', 'refunded_at',
-            'commission_split', 'metadata', 'created_at', 'updated_at'
+            'held_until', 'released_at',
+            'commission_split', 'created_at'
         ]
-        read_only_fields = ['id', 'status', 'released_at', 'refunded_at', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'status', 'released_at', 'created_at']
+
+    def get_commission_split(self, obj):
+        split = obj.commission_splits.first()
+        if not split:
+            return None
+        return CommissionSplitSerializer(split).data
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -51,14 +57,13 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = [
             'id', 'booking', 'booking_details', 'user',
-            'amount', 'status', 'transaction_type', 'payment_gateway',
-            'razorpay_order_id', 'razorpay_payment_id', 'razorpay_refund_id',
-            'refund_status', 'escrow', 'processed_at',
-            'metadata', 'created_at', 'updated_at'
+            'amount', 'status', 'transaction_type',
+            'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature',
+            'escrow', 'description', 'metadata',
+            'created_at', 'completed_at'
         ]
         read_only_fields = [
-            'id', 'status', 'processed_at', 'created_at', 'updated_at',
-            'razorpay_order_id', 'razorpay_payment_id', 'razorpay_refund_id'
+            'id', 'status', 'created_at', 'completed_at'
         ]
     
     def get_booking_details(self, obj):
@@ -85,11 +90,11 @@ class SettlementSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'user', 'user_name', 'escrow', 'settlement_type',
             'amount', 'status', 'processed_at', 'razorpay_transfer_id',
-            'metadata', 'created_at', 'updated_at'
+            'metadata', 'notes', 'created_at'
         ]
         read_only_fields = [
             'id', 'status', 'processed_at', 'razorpay_transfer_id',
-            'created_at', 'updated_at'
+            'created_at'
         ]
 
 
@@ -105,13 +110,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'booking', 'booking_details', 'guest', 'guest_name',
             'host', 'host_name', 'invoice_number', 'invoice_date',
-            'due_date', 'subtotal', 'platform_commission', 'total_amount',
-            'pdf_generated', 'pdf_file', 'sent_to_guest', 'payment_terms',
-            'created_at', 'updated_at'
+            'due_date', 'subtotal', 'tax_amount', 'platform_commission', 'total_amount',
+            'pdf_generated', 'pdf_file', 'sent_to_guest', 'sent_to_host',
+            'created_at'
         ]
         read_only_fields = [
             'id', 'invoice_number', 'invoice_date', 'pdf_generated',
-            'pdf_file', 'sent_to_guest', 'created_at', 'updated_at'
+            'pdf_file', 'sent_to_guest', 'sent_to_host', 'created_at'
         ]
     
     def get_booking_details(self, obj):
@@ -123,7 +128,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 'start_date': obj.booking.start_date,
                 'end_date': obj.booking.end_date,
                 'rental_days': obj.booking.rental_days,
-                'status': obj.booking.status,
+                'status': obj.booking.booking_status,
             }
         return None
 
@@ -134,12 +139,11 @@ class WebhookLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = WebhookLog
         fields = [
-            'id', 'webhook_id', 'event_type', 'payload',
-            'ip_address', 'verified', 'processed', 'metadata',
-            'created_at', 'updated_at'
+            'id', 'event', 'razorpay_webhook_id', 'payload',
+            'processed', 'processing_error', 'received_at', 'processed_at'
         ]
         read_only_fields = [
-            'id', 'created_at', 'updated_at'
+            'id', 'received_at', 'processed_at'
         ]
 
 

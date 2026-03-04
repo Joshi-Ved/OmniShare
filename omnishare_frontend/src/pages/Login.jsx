@@ -1,76 +1,45 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { loginWithEmail } from '../services/firebaseAuthService';
-import { getFirestoreDocument, setFirestoreDocument } from '../services/firebaseFirestoreService';
+import { authAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const credential = await loginWithEmail({
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await authAPI.login(formData);
+      const token = response.data?.access_token;
+      const user = response.data?.user;
 
-      const idToken = await credential.user.getIdToken();
-      const existingUser = JSON.parse(localStorage.getItem('user') || '{}');
-
-      let profile = null;
-      try {
-        profile = await getFirestoreDocument('users', credential.user.uid);
-      } catch {
+      if (!token || !user) {
+        throw new Error('Invalid login response');
       }
 
-      if (!profile) {
-        profile = {
-          uid: credential.user.uid,
-          username: credential.user.displayName || credential.user.email || 'User',
-          email: credential.user.email,
-          role: existingUser.role || 'guest',
-          is_staff: Boolean(existingUser.is_staff),
-          updated_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-        };
-
-        try {
-          await setFirestoreDocument('users', credential.user.uid, profile, true);
-        } catch {
-        }
-      }
-
-      localStorage.setItem('access_token', idToken);
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('user', JSON.stringify(user));
       localStorage.removeItem('refresh_token');
-      localStorage.setItem('user', JSON.stringify(profile));
 
-      toast.success('Login successful!');
+      toast.success('Login successful');
 
-      if (profile.role === 'admin' || profile.is_staff) {
+      if (user.role === 'admin' || user.is_staff) {
         navigate('/admin/dashboard');
-      } else if (profile.role === 'host') {
+      } else if (user.role === 'host') {
         navigate('/host/dashboard');
       } else {
         navigate('/guest/dashboard');
       }
     } catch (error) {
-      toast.error(error?.message || 'Login failed');
+      toast.error(error.response?.data?.error || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -115,8 +84,7 @@ const Login = () => {
 
           <div className="auth-footer">
             <p>
-              Don't have an account?{' '}
-              <Link to="/register">Sign up</Link>
+              Don't have an account? <Link to="/register">Sign up</Link>
             </p>
           </div>
         </div>

@@ -12,6 +12,7 @@ import GuestDashboard from './pages/GuestDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ListingDetails from './pages/ListingDetails';
 import BookingPage from './pages/BookingPage';
+import PaymentPage from './pages/PaymentPage';
 import CreateListing from './pages/CreateListing';
 import KYCSubmission from './pages/KYCSubmission';
 
@@ -67,6 +68,12 @@ function App() {
           <Route path="/bookings/:id" element={
             <PrivateRoute>
               <BookingPage />
+            </PrivateRoute>
+          } />
+
+          <Route path="/payments/:bookingId" element={
+            <PrivateRoute>
+              <PaymentPage />
             </PrivateRoute>
           } />
           

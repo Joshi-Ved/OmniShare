@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { listingsAPI } from '../services/api';
-import { toast } from 'react-toastify';
 import './Home.css';
 
 const Home = () => {
@@ -15,16 +14,9 @@ const Home = () => {
     min_price: '',
     max_price: '',
   });
+  const initializedRef = useRef(false);
 
-  useEffect(() => {
-    const initializeHome = async () => {
-      await fetchCategories();
-      await fetchListings();
-    };
-    initializeHome();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await listingsAPI.getCategories();
       const cats = response.data?.results || response.data || [];
@@ -33,13 +25,13 @@ const Home = () => {
       console.error('Error fetching categories:', error);
       setCategories([]);
     }
-  };
+  }, []);
 
-  const fetchListings = async () => {
+  const fetchListings = useCallback(async (queryFilters = filters) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await listingsAPI.getAll(filters);
+      const response = await listingsAPI.getAll(queryFilters);
       const list = response.data?.results || response.data || [];
       setListings(Array.isArray(list) ? list : []);
     } catch (error) {
@@ -49,7 +41,19 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    if (initializedRef.current) {
+      return;
+    }
+    initializedRef.current = true;
+    const initializeHome = async () => {
+      await fetchCategories();
+      await fetchListings();
+    };
+    initializeHome();
+  }, [fetchCategories, fetchListings]);
 
   const handleFilterChange = (e) => {
     setFilters({
@@ -59,7 +63,7 @@ const Home = () => {
   };
 
   const handleSearch = async () => {
-    await fetchListings();
+    await fetchListings(filters);
   };
 
   const handleClearFilters = () => {
@@ -180,8 +184,8 @@ const Home = () => {
                       {listing.promoted_flag && (
                         <span className="promoted-badge">⭐ Promoted</span>
                       )}
-                      {listing.rating > 0 && (
-                        <div className="rating-badge">⭐ {listing.rating.toFixed(1)}</div>
+                      {parseFloat(listing.rating) > 0 && (
+                        <div className="rating-badge">⭐ {parseFloat(listing.rating).toFixed(1)}</div>
                       )}
                     </div>
                     

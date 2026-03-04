@@ -1,135 +1,440 @@
 """
-CRM Analytics and Reporting
+CRM + ERP analytics and reporting endpoints.
+Covers:
+- Customer management
+- Sales reporting
+- Inventory linkage
+- Decision-support dashboards
 """
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum, Count, Avg, Q
+
+from datetime import datetime, timedelta
+from decimal import Decimal
+
+from django.db.models import Avg, Count, Sum, Q, F, ExpressionWrapper, DecimalField
 from django.utils import timezone
-from datetime import timedelta
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from users.models import User
 from listings.models import Listing
 from bookings.models import Booking
-from payments.models import Transaction
 from users.permissions import IsAdmin
+
+
+def _parse_date(date_str, fallback):
+    if not date_str:
+        return fallback
+    return datetime.strptime(date_str, '%Y-%m-%d')
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdmin])
 def dashboard_analytics(request):
-    """Get comprehensive dashboard analytics"""
-    
-    # User Stats
+    """High-level operations dashboard."""
     total_users = User.objects.count()
     verified_users = User.objects.filter(kyc_status='verified').count()
     gold_hosts = User.objects.filter(gold_host_flag=True).count()
-    
-    # Listing Stats
+
     total_listings = Listing.objects.count()
     verified_listings = Listing.objects.filter(verification_status='approved').count()
-    pending_listings = Listing.objects.filter(verification_status='pending').count()
-    
-    # Booking Stats
+    active_listings = Listing.objects.filter(is_available=True, verification_status='approved').count()
+
     total_bookings = Booking.objects.count()
     completed_bookings = Booking.objects.filter(booking_status='completed').count()
     active_bookings = Booking.objects.filter(booking_status__in=['confirmed', 'in_use']).count()
     disputed_bookings = Booking.objects.filter(dispute_flag=True).count()
-    
-    # Revenue Stats
-    total_revenue = Booking.objects.filter(
-        booking_status='completed'
-    ).aggregate(
+
+    total_revenue = Booking.objects.filter(booking_status='completed').aggregate(
         total=Sum('platform_commission')
-    )['total'] or 0
-    
-    # Monthly GMV (Gross Merchandise Value)
+    )['total'] or Decimal('0')
+
     thirty_days_ago = timezone.now() - timedelta(days=30)
     monthly_gmv = Booking.objects.filter(
         created_at__gte=thirty_days_ago,
         booking_status='completed'
-    ).aggregate(
-        total=Sum('rental_amount')
-    )['total'] or 0
-    
-    # Category Performance
-    category_stats = Listing.objects.values(
-        'category__name'
-    ).annotate(
+    ).aggregate(total=Sum('rental_amount'))['total'] or Decimal('0')
+
+    category_stats = Listing.objects.values('category__name').annotate(
         listing_count=Count('id'),
         avg_rating=Avg('rating'),
         total_bookings=Count('bookings')
-    ).order_by('-total_bookings')[:5]
-    
-    # Top Hosts
-    top_hosts = User.objects.filter(
-        role__in=['host', 'both']
-    ).annotate(
-        total_earnings=Sum('host_bookings__host_payout')
-    ).order_by('-total_earnings')[:5]
-    
-    top_hosts_data = [{
-        'id': host.id,
-        'username': host.username,
-        'total_earnings': float(host.total_earnings or 0),
-        'trust_score': float(host.trust_score),
-        'gold_host': host.gold_host_flag
-    } for host in top_hosts]
-    
+    ).order_by('-total_bookings')[:8]
+
+    top_hosts = User.objects.filter(role__in=['host', 'both']).annotate(
+        total_earnings=Sum('host_bookings__host_payout'),
+        completed_bookings=Count('host_bookings', filter=Q(host_bookings__booking_status='completed')),
+    ).order_by('-total_earnings')[:10]
+
     return Response({
         'users': {
             'total': total_users,
             'verified': verified_users,
-            'gold_hosts': gold_hosts
+            'gold_hosts': gold_hosts,
         },
         'listings': {
             'total': total_listings,
             'verified': verified_listings,
-            'pending': pending_listings
+            'active': active_listings,
         },
         'bookings': {
             'total': total_bookings,
             'completed': completed_bookings,
             'active': active_bookings,
-            'disputed': disputed_bookings
+            'disputed': disputed_bookings,
         },
         'revenue': {
             'total_platform_revenue': float(total_revenue),
-            'monthly_gmv': float(monthly_gmv)
+            'monthly_gmv': float(monthly_gmv),
         },
         'category_performance': list(category_stats),
-        'top_hosts': top_hosts_data
+        'top_hosts': [
+            {
+                'id': host.id,
+                'username': host.username,
+                'total_earnings': float(host.total_earnings or 0),
+                'completed_bookings': host.completed_bookings,
+                'trust_score': float(host.trust_score),
+                'gold_host': host.gold_host_flag,
+            }
+            for host in top_hosts
+        ],
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def customer_management(request):
+    """Extensive customer management list with filters and KPIs."""
+    role = request.query_params.get('role')
+    kyc = request.query_params.get('kyc_status')
+    search = request.query_params.get('search')
+    risk_only = request.query_params.get('risk_only') == 'true'
+
+    users = User.objects.all().annotate(
+        guest_spend=Sum('guest_bookings__guest_total', filter=Q(guest_bookings__booking_status='completed')),
+        host_revenue=Sum('host_bookings__host_payout', filter=Q(host_bookings__booking_status='completed')),
+        total_guest_bookings=Count('guest_bookings', distinct=True),
+        total_host_bookings=Count('host_bookings', distinct=True),
+        active_bookings=Count(
+            'guest_bookings',
+            filter=Q(guest_bookings__booking_status__in=['confirmed', 'in_use']),
+            distinct=True,
+        ) + Count(
+            'host_bookings',
+            filter=Q(host_bookings__booking_status__in=['confirmed', 'in_use']),
+            distinct=True,
+        ),
+    )
+
+    if role:
+        users = users.filter(role=role)
+    if kyc:
+        users = users.filter(kyc_status=kyc)
+    if search:
+        users = users.filter(Q(username__icontains=search) | Q(email__icontains=search))
+    if risk_only:
+        users = users.filter(Q(disputed_bookings__gt=0) | Q(trust_score__lt=3.5))
+
+    users = users.order_by('-created_at')
+
+    return Response({
+        'count': users.count(),
+        'results': [
+            {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'role': user.role,
+                'kyc_status': user.kyc_status,
+                'trust_score': float(user.trust_score),
+                'gold_host_flag': user.gold_host_flag,
+                'guest_spend': float(user.guest_spend or 0),
+                'host_revenue': float(user.host_revenue or 0),
+                'total_guest_bookings': user.total_guest_bookings,
+                'total_host_bookings': user.total_host_bookings,
+                'active_bookings': user.active_bookings,
+                'cancelled_bookings': user.cancelled_bookings,
+                'disputed_bookings': user.disputed_bookings,
+                'created_at': user.created_at,
+            }
+            for user in users[:200]
+        ],
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def customer_detail(request, user_id):
+    """Single-customer 360° profile for CRM operations."""
+    user = User.objects.get(id=user_id)
+
+    guest_bookings = Booking.objects.filter(guest=user)
+    host_bookings = Booking.objects.filter(host=user)
+
+    guest_stats = guest_bookings.aggregate(
+        total=Count('id'),
+        completed=Count('id', filter=Q(booking_status='completed')),
+        active=Count('id', filter=Q(booking_status__in=['confirmed', 'in_use'])),
+        spend=Sum('guest_total', filter=Q(booking_status='completed')),
+    )
+
+    host_stats = host_bookings.aggregate(
+        total=Count('id'),
+        completed=Count('id', filter=Q(booking_status='completed')),
+        active=Count('id', filter=Q(booking_status__in=['confirmed', 'in_use'])),
+        revenue=Sum('host_payout', filter=Q(booking_status='completed')),
+    )
+
+    recent_bookings = Booking.objects.filter(Q(guest=user) | Q(host=user)).select_related(
+        'listing', 'guest', 'host'
+    ).order_by('-created_at')[:10]
+
+    return Response({
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'role': user.role,
+            'kyc_status': user.kyc_status,
+            'trust_score': float(user.trust_score),
+            'gold_host_flag': user.gold_host_flag,
+            'created_at': user.created_at,
+        },
+        'guest_stats': {
+            'total_bookings': guest_stats['total'] or 0,
+            'completed': guest_stats['completed'] or 0,
+            'active': guest_stats['active'] or 0,
+            'total_spend': float(guest_stats['spend'] or 0),
+        },
+        'host_stats': {
+            'total_bookings': host_stats['total'] or 0,
+            'completed': host_stats['completed'] or 0,
+            'active': host_stats['active'] or 0,
+            'total_revenue': float(host_stats['revenue'] or 0),
+        },
+        'recent_bookings': [
+            {
+                'id': booking.id,
+                'listing': booking.listing.title,
+                'role': 'guest' if booking.guest_id == user.id else 'host',
+                'status': booking.booking_status,
+                'guest_total': float(booking.guest_total),
+                'host_payout': float(booking.host_payout),
+                'platform_commission': float(booking.platform_commission),
+                'created_at': booking.created_at,
+            }
+            for booking in recent_bookings
+        ],
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def sales_report(request):
+    """Detailed sales report with period grouping and conversion metrics."""
+    end_date = _parse_date(request.query_params.get('end_date'), timezone.now())
+    start_date = _parse_date(request.query_params.get('start_date'), end_date - timedelta(days=30))
+    group_by = request.query_params.get('group_by', 'day')  # day/week/month
+
+    bookings = Booking.objects.filter(created_at__gte=start_date, created_at__lte=end_date)
+
+    completed = bookings.filter(booking_status='completed')
+    cancelled = bookings.filter(booking_status='cancelled')
+
+    totals = {
+        'bookings_created': bookings.count(),
+        'bookings_completed': completed.count(),
+        'bookings_cancelled': cancelled.count(),
+        'completion_rate': round((completed.count() / bookings.count()) * 100, 2) if bookings.exists() else 0,
+        'gmv': float(completed.aggregate(v=Sum('rental_amount'))['v'] or 0),
+        'guest_revenue': float(completed.aggregate(v=Sum('guest_total'))['v'] or 0),
+        'host_payouts': float(completed.aggregate(v=Sum('host_payout'))['v'] or 0),
+        'platform_commission': float(completed.aggregate(v=Sum('platform_commission'))['v'] or 0),
+        'average_order_value': float(completed.aggregate(v=Avg('guest_total'))['v'] or 0),
+    }
+
+    if group_by == 'week':
+        buckets = 7
+    elif group_by == 'month':
+        buckets = 30
+    else:
+        buckets = 1
+
+    timeline = []
+    cursor = start_date
+    while cursor <= end_date:
+        bucket_end = min(cursor + timedelta(days=buckets - 1), end_date)
+        bucket_qs = bookings.filter(created_at__date__gte=cursor.date(), created_at__date__lte=bucket_end.date())
+        bucket_completed = bucket_qs.filter(booking_status='completed')
+        timeline.append({
+            'label': f"{cursor.date()} to {bucket_end.date()}",
+            'created': bucket_qs.count(),
+            'completed': bucket_completed.count(),
+            'cancelled': bucket_qs.filter(booking_status='cancelled').count(),
+            'gmv': float(bucket_completed.aggregate(v=Sum('rental_amount'))['v'] or 0),
+            'platform_commission': float(bucket_completed.aggregate(v=Sum('platform_commission'))['v'] or 0),
+        })
+        cursor = bucket_end + timedelta(days=1)
+
+    top_categories = Listing.objects.filter(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date).values(
+        'category__name'
+    ).annotate(
+        bookings=Count('bookings'),
+        gmv=Sum('bookings__rental_amount', filter=Q(bookings__booking_status='completed')),
+    ).order_by('-gmv')[:10]
+
+    return Response({
+        'range': {'start_date': start_date, 'end_date': end_date, 'group_by': group_by},
+        'totals': totals,
+        'timeline': timeline,
+        'top_categories': list(top_categories),
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def inventory_linkage_report(request):
+    """ERP-style inventory linkage: connects listing stock/availability to sales outcomes."""
+    end_date = _parse_date(request.query_params.get('end_date'), timezone.now())
+    start_date = _parse_date(request.query_params.get('start_date'), end_date - timedelta(days=30))
+
+    listings = Listing.objects.select_related('host', 'category').annotate(
+        total_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date)),
+        completed_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='completed')),
+        cancelled_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='cancelled')),
+        active_bookings=Count('bookings', filter=Q(bookings__booking_status__in=['confirmed', 'in_use'])),
+        generated_revenue=Sum('bookings__rental_amount', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='completed')),
+    ).order_by('-generated_revenue')
+
+    data = []
+    for listing in listings:
+        utilization = 0.0
+        if listing.total_bookings:
+            utilization = round((listing.completed_bookings / listing.total_bookings) * 100, 2)
+
+        inventory_risk = 'high' if (not listing.is_available or listing.verification_status != 'approved') else 'normal'
+        if listing.cancelled_bookings >= 3:
+            inventory_risk = 'medium'
+
+        data.append({
+            'listing_id': listing.id,
+            'title': listing.title,
+            'host': listing.host.username,
+            'category': listing.category.name if listing.category else None,
+            'verification_status': listing.verification_status,
+            'is_available': listing.is_available,
+            'total_bookings': listing.total_bookings,
+            'completed_bookings': listing.completed_bookings,
+            'cancelled_bookings': listing.cancelled_bookings,
+            'active_bookings': listing.active_bookings,
+            'generated_revenue': float(listing.generated_revenue or 0),
+            'utilization_percent': utilization,
+            'inventory_risk': inventory_risk,
+        })
+
+    totals = {
+        'total_listings': len(data),
+        'available_listings': sum(1 for i in data if i['is_available']),
+        'high_risk_listings': sum(1 for i in data if i['inventory_risk'] == 'high'),
+        'medium_risk_listings': sum(1 for i in data if i['inventory_risk'] == 'medium'),
+        'total_linked_revenue': round(sum(i['generated_revenue'] for i in data), 2),
+    }
+
+    return Response({
+        'range': {'start_date': start_date, 'end_date': end_date},
+        'summary': totals,
+        'inventory_linkage': data[:300],
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def decision_support_dashboard(request):
+    """Decision-support board with recommendations driven by CRM + ERP metrics."""
+    now = timezone.now()
+    thirty_days_ago = now - timedelta(days=30)
+
+    booking_qs = Booking.objects.filter(created_at__gte=thirty_days_ago)
+    completed_qs = booking_qs.filter(booking_status='completed')
+
+    gmv = completed_qs.aggregate(v=Sum('rental_amount'))['v'] or Decimal('0')
+    commission = completed_qs.aggregate(v=Sum('platform_commission'))['v'] or Decimal('0')
+    disputes = booking_qs.filter(dispute_flag=True).count()
+
+    low_conversion_hosts = User.objects.filter(role__in=['host', 'both']).annotate(
+        total=Count('host_bookings', filter=Q(host_bookings__created_at__gte=thirty_days_ago)),
+        completed=Count('host_bookings', filter=Q(host_bookings__created_at__gte=thirty_days_ago, host_bookings__booking_status='completed')),
+    ).filter(total__gte=5)
+
+    host_actions = []
+    for host in low_conversion_hosts:
+        conversion = (host.completed / host.total) * 100 if host.total else 0
+        if conversion < 50:
+            host_actions.append({
+                'host_id': host.id,
+                'username': host.username,
+                'conversion_rate': round(conversion, 2),
+                'recommended_action': 'Review listing quality, pricing, and response SLA',
+            })
+
+    underperforming_inventory = Listing.objects.annotate(
+        completed_30=Count('bookings', filter=Q(bookings__created_at__gte=thirty_days_ago, bookings__booking_status='completed'))
+    ).filter(verification_status='approved', is_available=True, completed_30=0)[:20]
+
+    recommendations = []
+    if disputes > 0:
+        recommendations.append('Increase dispute monitoring and tighten host/guest handover SOPs for flagged bookings.')
+    if float(commission) < 1000:
+        recommendations.append('Run category-level promotions to increase GMV and commission throughput.')
+    if underperforming_inventory.exists():
+        recommendations.append('Reprice or relist low-performing inventory to improve utilization and conversion.')
+    if not recommendations:
+        recommendations.append('Current metrics are stable; prioritize incremental conversion optimization and retention campaigns.')
+
+    return Response({
+        'window_days': 30,
+        'kpis': {
+            'bookings_created': booking_qs.count(),
+            'bookings_completed': completed_qs.count(),
+            'completion_rate_percent': round((completed_qs.count() / booking_qs.count()) * 100, 2) if booking_qs.exists() else 0,
+            'gmv': float(gmv),
+            'platform_commission': float(commission),
+            'disputes': disputes,
+            'average_trust_score': float(User.objects.aggregate(v=Avg('trust_score'))['v'] or 0),
+        },
+        'host_actions': host_actions[:20],
+        'underperforming_inventory': [
+            {
+                'listing_id': listing.id,
+                'title': listing.title,
+                'host': listing.host.username,
+                'daily_price': float(listing.daily_price),
+                'rating': float(listing.rating),
+            }
+            for listing in underperforming_inventory
+        ],
+        'recommendations': recommendations,
     })
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdmin])
 def revenue_report(request):
-    """Get detailed revenue report"""
-    from datetime import datetime
-    
-    # Get date range from query params
-    start_date_str = request.query_params.get('start_date')
-    end_date_str = request.query_params.get('end_date')
-    
-    if start_date_str and end_date_str:
-        start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
-        end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
-    else:
-        # Default to last 30 days
-        end_date = timezone.now()
-        start_date = end_date - timedelta(days=30)
-    
+    """Backward-compatible compact revenue report endpoint."""
+    end_date = _parse_date(request.query_params.get('end_date'), timezone.now())
+    start_date = _parse_date(request.query_params.get('start_date'), end_date - timedelta(days=30))
+
     bookings = Booking.objects.filter(
         completed_at__gte=start_date,
         completed_at__lte=end_date,
-        booking_status='completed'
+        booking_status='completed',
     )
-    
-    total_commission = bookings.aggregate(Sum('platform_commission'))['platform_commission__sum'] or 0
-    total_gmv = bookings.aggregate(Sum('rental_amount'))['rental_amount__sum'] or 0
+
+    total_commission = bookings.aggregate(v=Sum('platform_commission'))['v'] or Decimal('0')
+    total_gmv = bookings.aggregate(v=Sum('rental_amount'))['v'] or Decimal('0')
     booking_count = bookings.count()
-    
+
     return Response({
         'start_date': start_date,
         'end_date': end_date,
@@ -137,34 +442,26 @@ def revenue_report(request):
         'total_gmv': float(total_gmv),
         'total_commission': float(total_commission),
         'commission_rate': '18%',
-        'average_booking_value': float(total_gmv / booking_count) if booking_count > 0 else 0
+        'average_booking_value': float(total_gmv / booking_count) if booking_count else 0,
     })
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdmin])
 def user_analytics(request):
-    """Get user behavior analytics"""
-    
-    # User acquisition trend
+    """Backward-compatible user analytics endpoint."""
     thirty_days_ago = timezone.now() - timedelta(days=30)
     new_users = User.objects.filter(created_at__gte=thirty_days_ago).count()
-    
-    # User by role
     user_by_role = User.objects.values('role').annotate(count=Count('id'))
-    
-    # Average trust score
-    avg_trust_score = User.objects.aggregate(Avg('trust_score'))['trust_score__avg'] or 0
-    
-    # Active users (made booking in last 30 days)
+    avg_trust_score = User.objects.aggregate(v=Avg('trust_score'))['v'] or 0
     active_users = User.objects.filter(
         Q(guest_bookings__created_at__gte=thirty_days_ago) |
         Q(host_bookings__created_at__gte=thirty_days_ago)
     ).distinct().count()
-    
+
     return Response({
         'new_users_last_30_days': new_users,
         'user_by_role': list(user_by_role),
         'average_trust_score': float(avg_trust_score),
-        'active_users': active_users
+        'active_users': active_users,
     })

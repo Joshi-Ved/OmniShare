@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerWithEmail } from '../services/firebaseAuthService';
-import { setFirestoreDocument } from '../services/firebaseFirestoreService';
+import { authAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './Auth.css';
 
@@ -18,10 +17,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
@@ -33,40 +29,25 @@ const Register = () => {
     }
 
     setLoading(true);
-
     try {
-      const credential = await registerWithEmail({
+      await authAPI.register(formData);
+
+      const loginResponse = await authAPI.login({
         email: formData.email,
         password: formData.password,
-        displayName: formData.username,
       });
 
-      const idToken = await credential.user.getIdToken();
+      localStorage.setItem('access_token', loginResponse.data.access_token);
+      localStorage.setItem('user', JSON.stringify(loginResponse.data.user));
 
-      const profile = {
-        uid: credential.user.uid,
-        username: formData.username,
-        email: formData.email,
-        role: formData.role,
-        phone_number: formData.phone_number,
-        is_staff: false,
-        updated_at: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-      };
-
-      try {
-        await setFirestoreDocument('users', credential.user.uid, profile, true);
-      } catch {
-      }
-
-      localStorage.setItem('access_token', idToken);
-      localStorage.removeItem('refresh_token');
-      localStorage.setItem('user', JSON.stringify(profile));
-
-      toast.success('Registration successful! Please complete your KYC.');
+      toast.success('Registration successful');
       navigate('/guest/dashboard');
     } catch (error) {
-      toast.error(error?.message || 'Registration failed');
+      const message =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        'Registration failed';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -82,37 +63,17 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Username *</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-                placeholder="Choose a username"
-              />
+              <input type="text" name="username" value={formData.username} onChange={handleChange} required />
             </div>
 
             <div className="form-group">
               <label>Email *</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="your@email.com"
-              />
+              <input type="email" name="email" value={formData.email} onChange={handleChange} required />
             </div>
 
             <div className="form-group">
               <label>Phone Number</label>
-              <input
-                type="tel"
-                name="phone_number"
-                value={formData.phone_number}
-                onChange={handleChange}
-                placeholder="+91 9876543210"
-              />
+              <input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} />
             </div>
 
             <div className="form-group">
@@ -126,27 +87,12 @@ const Register = () => {
 
             <div className="form-group">
               <label>Password *</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                placeholder="Create a strong password"
-                minLength={8}
-              />
+              <input type="password" name="password" value={formData.password} onChange={handleChange} required minLength={8} />
             </div>
 
             <div className="form-group">
               <label>Confirm Password *</label>
-              <input
-                type="password"
-                name="password2"
-                value={formData.password2}
-                onChange={handleChange}
-                required
-                placeholder="Confirm your password"
-              />
+              <input type="password" name="password2" value={formData.password2} onChange={handleChange} required />
             </div>
 
             <button type="submit" className="btn btn-primary" disabled={loading}>
@@ -156,8 +102,7 @@ const Register = () => {
 
           <div className="auth-footer">
             <p>
-              Already have an account?{' '}
-              <Link to="/login">Login</Link>
+              Already have an account? <Link to="/login">Login</Link>
             </p>
           </div>
         </div>

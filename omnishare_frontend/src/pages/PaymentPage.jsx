@@ -1,153 +1,139 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { bookingsAPI, paymentsAPI } from '../services/api';
+import { toast } from 'react-toastify';
 import './PaymentPage.css';
-
-// Razorpay script should be loaded in public/index.html:
-// <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 const PaymentPage = () => {
   const { bookingId } = useParams();
   const navigate = useNavigate();
-  
+
   const [booking, setBooking] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
-  const [orderData, setOrderData] = useState(null);
 
-  // Load booking details
   useEffect(() => {
-    const fetchBooking = async () => {
+    const loadRazorpayScript = () => {
+      return new Promise((resolve) => {
+        if (window.Razorpay) {
+          resolve(true);
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+      });
+    };
+
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const token = localStorage.getItem('access_token');
-        const response = await axios.get(
-          `http://localhost:8001/api/bookings/${bookingId}/`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        setBooking(response.data);
-        setLoading(false);
+        const [bookingRes, previewRes] = await Promise.all([
+          bookingsAPI.getById(bookingId),
+          paymentsAPI.checkoutPreview(bookingId),
+        ]);
+        setBooking(bookingRes.data);
+        setPreview(previewRes.data);
+
+        const scriptLoaded = await loadRazorpayScript();
+        if (!scriptLoaded) {
+          setError('Unable to load Razorpay checkout script.');
+        }
       } catch (err) {
-        setError('Failed to load booking details');
+        setError(err.response?.data?.error || 'Failed to load payment details');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchBooking();
+    fetchData();
   }, [bookingId]);
 
-  // Create payment order
-  const handleCreateOrder = async () => {
-    try {
-      setProcessing(true);
-      setError(null);
-      
-      const token = localStorage.getItem('access_token');
-      const response = await axios.post(
-        'http://localhost:8001/api/payments/create-order/',
-        { booking_id: bookingId },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-
-      setOrderData(response.data);
-      
-      // Open Razorpay modal
-      initiateRazorpayPayment(response.data);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create order');
-      setProcessing(false);
-    }
-  };
-
-  // Handle Razorpay payment
   const initiateRazorpayPayment = (order) => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
     const options = {
       key: order.razorpay_key_id,
       amount: order.amount,
       currency: order.currency,
       order_id: order.order_id,
       name: 'OmniShare',
-      description: `Booking for ${booking?.listing?.title || 'Property'}`,
-      image: '/logo.png', // Add your logo
-      
+      description: `Booking #${bookingId}`,
       handler: async (response) => {
         try {
-          // Verify payment on backend
-          const token = localStorage.getItem('access_token');
-          const verifyResponse = await axios.post(
-            'http://localhost:8001/api/payments/verify/',
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
-            },
-            {
-              headers: { Authorization: `Bearer ${token}` }
-            }
-          );
-
-          // Payment successful
-          alert('Payment successful!');
-          navigate(`/booking/${bookingId}/confirmation`);
+          await paymentsAPI.verifyPayment({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+          });
+          toast.success('Payment successful');
+          navigate(`/bookings/${bookingId}`);
         } catch (err) {
-          setError('Payment verification failed. Please contact support.');
-          console.error('Verification error:', err);
+          setError(err.response?.data?.error || 'Payment verification failed');
+        } finally {
+          setProcessing(false);
         }
       },
-
       prefill: {
-        name: booking?.guest?.first_name + ' ' + booking?.guest?.last_name,
-        email: booking?.guest?.email,
-        contact: booking?.guest?.phone_number || ''
+        name: user.username || '',
+        email: user.email || '',
+        contact: user.phone_number || '',
       },
-
       notes: {
         booking_id: bookingId,
-        listing_id: booking?.listing?.id
+        listing_id: booking?.listing?.id || booking?.listing,
       },
-
       theme: {
-        color: '#3399cc'
+        color: '#3399cc',
       },
-
       modal: {
         ondismiss: () => {
           setProcessing(false);
           setError('Payment cancelled');
-        }
+        },
       },
-
-      timeout: 30 * 60, // 30 minutes
-      redirect: false
     };
 
     const rzp = new window.Razorpay(options);
     rzp.open();
   };
 
+  const handleCreateOrder = async () => {
+    setProcessing(true);
+    setError(null);
+    try {
+      const orderRes = await paymentsAPI.createOrder(bookingId);
+      initiateRazorpayPayment(orderRes.data);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create order');
+      setProcessing(false);
+    }
+  };
+
   if (loading) {
-    return <div className="payment-loading">Loading booking details...</div>;
+    return <div className="payment-loading">Loading payment details...</div>;
   }
 
-  if (!booking) {
+  if (!booking || !preview) {
     return <div className="payment-error">Booking not found</div>;
   }
+
+  const amounts = preview.amounts || {};
 
   return (
     <div className="payment-container">
       <div className="payment-card">
         <h1>Complete Your Payment</h1>
-        
-        {/* Booking Summary */}
+
         <div className="booking-summary">
           <h2>Booking Details</h2>
           <div className="summary-item">
             <span>Listing:</span>
-            <strong>{booking.listing?.title}</strong>
+            <strong>{preview.listing || booking.listing_title}</strong>
           </div>
           <div className="summary-item">
             <span>Check-in:</span>
@@ -163,39 +149,35 @@ const PaymentPage = () => {
           </div>
         </div>
 
-        {/* Price Breakdown */}
         <div className="price-breakdown">
           <h2>Price Breakdown</h2>
           <div className="breakdown-item">
-            <span>Rental Amount ({booking.rental_days} nights × ₹{booking.daily_price}):</span>
-            <span>₹{booking.rental_amount}</span>
+            <span>Rental Amount:</span>
+            <span>₹{amounts.rental_amount}</span>
           </div>
           <div className="breakdown-item">
-            <span>Guest Commission (6%):</span>
-            <span>₹{booking.commission_guest}</span>
+            <span>Guest Commission:</span>
+            <span>₹{amounts.commission_guest}</span>
           </div>
           <div className="breakdown-item">
             <span>Insurance Fee:</span>
-            <span>₹{booking.insurance_fee}</span>
+            <span>₹{amounts.insurance_fee}</span>
           </div>
           <div className="breakdown-item">
-            <span>Deposit (Refundable):</span>
-            <span>₹{booking.deposit}</span>
+            <span>Deposit:</span>
+            <span>₹{amounts.deposit}</span>
           </div>
           <div className="breakdown-total">
             <span>Total Amount:</span>
-            <strong>₹{booking.guest_total}</strong>
+            <strong>₹{amounts.guest_total}</strong>
           </div>
         </div>
 
-        {/* Payment Method Info */}
         <div className="payment-info">
           <h3>Payment Method: Razorpay</h3>
-          <p>You will be redirected to Razorpay's secure payment gateway.</p>
-          <p>Accepted: Credit/Debit Cards, UPI, Wallets, Net Banking</p>
+          <p>Secure checkout via cards, UPI, wallets, and net banking.</p>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div className="error-message">
             {error}
@@ -203,37 +185,20 @@ const PaymentPage = () => {
           </div>
         )}
 
-        {/* Action Buttons */}
         <div className="payment-actions">
-          <button
-            className="btn-pay"
-            onClick={handleCreateOrder}
-            disabled={processing}
-          >
-            {processing ? 'Processing...' : `Pay ₹${booking.guest_total}`}
+          <button className="btn-pay" onClick={handleCreateOrder} disabled={processing}>
+            {processing ? 'Processing...' : `Pay ₹${amounts.guest_total || booking.guest_total}`}
           </button>
-          <button
-            className="btn-cancel"
-            onClick={() => navigate(`/booking/${bookingId}`)}
-            disabled={processing}
-          >
+          <button className="btn-cancel" onClick={() => navigate(`/bookings/${bookingId}`)} disabled={processing}>
             Cancel
           </button>
         </div>
-
-        {/* Security Info */}
-        <div className="security-info">
-          <p>✓ Secure payment powered by Razorpay</p>
-          <p>✓ Your payment information is encrypted</p>
-          <p>✓ Money held in escrow until booking completion</p>
-        </div>
       </div>
 
-      {/* Help Section */}
       <div className="payment-help">
         <h3>Need Help?</h3>
-        <p>If you face any payment issues, please contact our support team.</p>
-        <p>Email: support@omnishare.com</p>
+        <p>If payment fails, retry from your booking page.</p>
+        <p>Invoices are generated automatically after successful verification.</p>
       </div>
     </div>
   );

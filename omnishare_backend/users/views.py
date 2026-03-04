@@ -2,7 +2,9 @@ from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
 from django.utils import timezone
 
 from .serializers import (
@@ -172,3 +174,36 @@ def force_update_trust_scores(request):
     return Response({
         'message': f'Trust scores updated for {count} users'
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    """Simple token login endpoint"""
+    email = request.data.get('email', '').strip().lower()
+    password = request.data.get('password', '')
+
+    if not email or not password:
+        return Response({'error': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email=email).first()
+    if not user:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    auth_user = authenticate(request, username=user.username, password=password)
+    if not auth_user:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    token, _ = Token.objects.get_or_create(user=auth_user)
+    return Response({
+        'access_token': token.key,
+        'user': UserSerializer(auth_user).data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_view(request):
+    """Invalidate current token"""
+    Token.objects.filter(user=request.user).delete()
+    return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
