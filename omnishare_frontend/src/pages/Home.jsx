@@ -1,9 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { listingsAPI } from '../services/api';
+import { useCart } from '../context/CartContext';
+import { toast } from 'react-toastify';
 import './Home.css';
 
+const demoProducts = [
+  { id: 'p1', name: 'Laptop - Dell XPS 13', price: 120, description: 'High-performance ultrabook for professionals', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300' },
+  { id: 'p2', name: 'Nikon Camera D3500', price: 80, description: 'Perfect for photography enthusiasts', image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300' },
+  { id: 'p3', name: 'Drone - DJI Mavic Air', price: 150, description: 'Compact 4K drone for aerial filming', image: 'https://images.unsplash.com/photo-1509669996-5340aa0ee0c1?w=300' },
+  { id: 'p4', name: 'PlayStation 5', price: 50, description: 'Latest gaming console with exclusive games', image: 'https://images.unsplash.com/photo-1535721471918-34fefb025b0f?w=300' },
+];
+
 const Home = () => {
+  const { addItem } = useCart();
   const [listings, setListings] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +25,17 @@ const Home = () => {
     max_price: '',
   });
   const initializedRef = useRef(false);
+
+  const handleAddToCart = (product) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      image: product.image,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -94,6 +115,39 @@ const Home = () => {
             <button onClick={handleSearch} className="btn btn-primary">
               Search
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Demo Products Showcase */}
+      <div className="products-showcase">
+        <div className="container">
+          <h2>✨ Featured Products</h2>
+          <p>Add these items to your cart and test the payment system</p>
+          <div className="products-grid">
+            {demoProducts.map((product) => (
+              <div key={product.id} className="product-card">
+                <img src={product.image} alt={product.name} className="product-image" />
+                <div className="product-content">
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <div className="product-footer">
+                    <div className="product-price">₹{product.price}</div>
+                    <button 
+                      className="btn btn-sm btn-primary"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      Add to Cart 🛒
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="products-cta">
+            <Link to="/cart" className="btn btn-primary">
+              View Shopping Cart
+            </Link>
           </div>
         </div>
       </div>

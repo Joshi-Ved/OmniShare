@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth, useClerk, useUser } from '@clerk/react';
+import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -9,6 +10,7 @@ const Navbar = () => {
   const { isSignedIn } = useAuth();
   const { signOut } = useClerk();
   const { user: clerkUser } = useUser();
+  const { count: cartCount } = useCart();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const handleLogout = async () => {
@@ -38,6 +40,10 @@ const Navbar = () => {
 
           <div className={`nav-menu ${mobileOpen ? 'open' : ''}`}>
             <Link to="/" className="nav-link">Explore</Link>
+            
+            <Link to="/cart" className="nav-link cart-link">
+              🛒 Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+            </Link>
             
             {isSignedIn ? (
               <>

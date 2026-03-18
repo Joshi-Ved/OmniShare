@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Providers
+import { CartProvider } from './context/CartContext';
+
 // Pages
 import Home from './pages/Home';
 import ClerkAuthPage from './pages/ClerkAuthPage';
@@ -15,6 +18,9 @@ import PaymentPage from './pages/PaymentPage';
 import CreateListing from './pages/CreateListing';
 import KYCSubmission from './pages/KYCSubmission';
 import ProfilePage from './pages/ProfilePage';
+import ShoppingCart from './pages/ShoppingCart';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderConfirmation from './pages/OrderConfirmation';
 
 // Components
 import Navbar from './components/Navbar';
@@ -22,10 +28,11 @@ import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <ToastContainer position="top-right" autoClose={3000} />
+    <CartProvider>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <ToastContainer position="top-right" autoClose={3000} />
         
         <Routes>
           {/* Public Routes */}
@@ -84,12 +91,18 @@ function App() {
               <PaymentPage />
             </PrivateRoute>
           } />
+
+          {/* Shopping Cart Routes */}
+          <Route path="/cart" element={<ShoppingCart />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
           
           {/* 404 */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
+    </CartProvider>
   );
 }
 
