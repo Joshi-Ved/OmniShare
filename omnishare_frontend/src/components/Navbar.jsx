@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authAPI } from '../services/api';
+import { useAuth, useClerk, useUser } from '@clerk/react';
 import './Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const token = localStorage.getItem('access_token');
+  const { isSignedIn } = useAuth();
+  const { signOut } = useClerk();
+  const { user: clerkUser } = useUser();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const handleLogout = async () => {
-    try {
-      await authAPI.logout();
-    } catch {
-    }
+    await signOut();
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     setMobileOpen(false);
-    navigate('/login');
+    navigate('/clerk/sign-in');
   };
 
   return (
@@ -40,7 +39,7 @@ const Navbar = () => {
           <div className={`nav-menu ${mobileOpen ? 'open' : ''}`}>
             <Link to="/" className="nav-link">Explore</Link>
             
-            {token ? (
+            {isSignedIn ? (
               <>
                 <Link to="/profile" className="nav-link">Profile</Link>
 
@@ -57,7 +56,7 @@ const Navbar = () => {
                 )}
                 
                 <div className="nav-user">
-                  <span className="user-name">{user.username?.split('@')[0]}</span>
+                  <span className="user-name">{clerkUser?.firstName || clerkUser?.username || user.username?.split('@')[0]}</span>
                   {user.gold_host_flag && <span className="badge badge-warning">⭐</span>}
                 </div>
                 
@@ -67,10 +66,10 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="btn btn-primary">
+                <Link to="/clerk/sign-in" className="btn btn-primary">
                   Login
                 </Link>
-                <Link to="/register" className="btn btn-secondary">
+                <Link to="/clerk/sign-up" className="btn btn-secondary">
                   Sign Up
                 </Link>
               </>

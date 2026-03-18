@@ -5,8 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Pages
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import ClerkAuthPage from './pages/ClerkAuthPage';
 import HostDashboard from './pages/HostDashboard';
 import GuestDashboard from './pages/GuestDashboard';
@@ -32,8 +30,8 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Navigate to="/clerk/sign-in" replace />} />
+          <Route path="/register" element={<Navigate to="/clerk/sign-up" replace />} />
           <Route path="/clerk/sign-in" element={<ClerkAuthPage mode="signin" />} />
           <Route path="/clerk/sign-up" element={<ClerkAuthPage mode="signup" />} />
           <Route path="/listings/:id" element={<ListingDetails />} />

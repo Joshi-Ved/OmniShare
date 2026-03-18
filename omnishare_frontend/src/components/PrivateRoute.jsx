@@ -1,12 +1,17 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '@clerk/react';
 
 const PrivateRoute = ({ children, adminOnly = false }) => {
-  const token = localStorage.getItem('access_token');
+  const { isLoaded, isSignedIn } = useAuth();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!isSignedIn) {
+    return <Navigate to="/clerk/sign-in" replace />;
   }
 
   if (adminOnly && user.role !== 'admin' && !user.is_staff) {
