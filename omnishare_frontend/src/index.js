@@ -6,14 +6,13 @@ import App from './App';
 import './services/firebase';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const clerkKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const clerkKey =
+  process.env.REACT_APP_CLERK_PUBLISHABLE_KEY ||
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  'pk_test_c2ltcGxlLWhlcnJpbmctNC5jbGVyay5hY2NvdW50cy5kZXYk';
 
-if (clerkKey) {
-	root.render(
-		<ClerkProvider publishableKey={clerkKey}>
-			<App />
-		</ClerkProvider>
-	);
-} else {
-	root.render(<App />);
-}
+root.render(
+  <ClerkProvider publishableKey={clerkKey}>
+    <App />
+  </ClerkProvider>
+);

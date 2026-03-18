@@ -4,7 +4,10 @@ import { SignIn, SignUp } from '@clerk/react';
 import './Auth.css';
 
 const ClerkAuthPage = ({ mode = 'signin' }) => {
-  const publishableKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  const publishableKey =
+    process.env.REACT_APP_CLERK_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+    'pk_test_c2ltcGxlLWhlcnJpbmctNC5jbGVyay5hY2NvdW50cy5kZXYk';
 
   if (!publishableKey) {
     return <Navigate to="/" replace />;
