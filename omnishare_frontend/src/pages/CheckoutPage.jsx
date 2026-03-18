@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@clerk/react';
 import { useCart } from '../context/CartContext';
-import { paymentsAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
   const { user: clerkUser } = useAuth();
-  const { items, total, count, clearCart } = useCart();
+  const { items, total, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [selectedGateway, setSelectedGateway] = useState('demo');
   const [formData, setFormData] = useState({

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useMemo } from 'react';
 
 const CartContext = createContext();
 
@@ -105,7 +105,7 @@ export const CartProvider = ({ children }) => {
     dispatch({ type: 'CLEAR_CART' });
   };
 
-  const value = {
+  const value = useMemo(() => ({
     items: state.items,
     total: state.total,
     count: state.count,
@@ -113,7 +113,7 @@ export const CartProvider = ({ children }) => {
     removeItem,
     updateQuantity,
     clearCart,
-  };
+  }), [state]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
