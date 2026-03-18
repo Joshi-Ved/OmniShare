@@ -1,134 +1,103 @@
 .dashboard-page {
-  min-height: calc(100vh - 80px);
-  background-color: var(--gray-50);
-  padding: 40px 0;
+  min-height: calc(100vh - 76px);
+  padding: 32px 0 46px;
 }
 
 .dashboard-page h1 {
-  margin-bottom: 30px;
-  color: var(--gray-900);
+  color: #17304f;
+  margin-bottom: 18px;
 }
 
 .dashboard-stats {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .stat-card {
-  text-align: center;
-  padding: 30px 20px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  right: -26px;
+  bottom: -24px;
+  width: 88px;
+  height: 88px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(0, 166, 251, 0.2), transparent 70%);
 }
 
 .stat-card h3 {
-  color: var(--gray-600);
-  font-size: 14px;
-  font-weight: 600;
+  color: #4c647f;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  font-size: 0.75rem;
+  margin-bottom: 8px;
 }
 
 .stat-number {
-  color: var(--primary-color);
-  font-size: 32px;
-  font-weight: bold;
-  margin: 0;
+  color: #17304f;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 700;
 }
 
 .dashboard-tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 30px;
-  border-bottom: 2px solid var(--gray-200);
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
 .dashboard-tabs .tab {
-  padding: 12px 24px;
-  border: none;
-  background: transparent;
-  color: var(--gray-600);
-  font-size: 16px;
+  border: 1px solid #bfd4e7;
+  border-radius: 999px;
+  background: #fff;
+  color: #334966;
+  font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.3s;
-}
-
-.dashboard-tabs .tab:hover {
-  color: var(--primary-color);
+  padding: 10px 14px;
 }
 
 .dashboard-tabs .tab.active {
-  color: var(--primary-color);
-  border-bottom-color: var(--primary-color);
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.listing-card {
-  padding: 20px;
-}
-
-.listing-card h3 {
-  margin: 0 0 10px 0;
-  color: var(--gray-900);
-}
-
-.listing-stats {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 15px 0;
+  background: linear-gradient(130deg, #00a6fb, #1d3557);
+  color: #fff;
+  border-color: transparent;
 }
 
 .bookings-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  gap: 14px;
 }
 
-.booking-card {
-  padding: 20px;
+.booking-card,
+.listing-card {
+  border: 1px solid rgba(0, 116, 182, 0.14);
 }
 
 .booking-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--gray-200);
+  gap: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e1ecf6;
+  padding-bottom: 10px;
 }
 
 .booking-header h3 {
-  margin: 0;
-  color: var(--gray-900);
+  color: #17304f;
 }
 
-.booking-details {
-  margin-bottom: 15px;
-}
-
-.booking-details p {
-  margin: 8px 0;
-  color: var(--gray-700);
+.listing-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
 }
 
 @media (max-width: 768px) {
-  .dashboard-stats {
-    gap: 15px;
-  }
-  
-  .stat-number {
-    font-size: 24px;
-  }
-  
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+  .dashboard-page {
+    padding-top: 20px;
   }
 }

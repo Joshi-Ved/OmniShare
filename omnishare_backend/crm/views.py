@@ -10,7 +10,7 @@ Covers:
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from django.db.models import Avg, Count, Sum, Q, F, ExpressionWrapper, DecimalField
+from django.db.models import Avg, Count, Sum, Q
 from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -20,6 +20,7 @@ from users.models import User
 from listings.models import Listing
 from bookings.models import Booking
 from users.permissions import IsAdmin
+from payments.models import Transaction, Invoice
 
 
 def _parse_date(date_str, fallback):
@@ -382,6 +383,43 @@ def decision_support_dashboard(request):
         completed_30=Count('bookings', filter=Q(bookings__created_at__gte=thirty_days_ago, bookings__booking_status='completed'))
     ).filter(verification_status='approved', is_available=True, completed_30=0)[:20]
 
+    payment_qs = Transaction.objects.filter(created_at__gte=thirty_days_ago)
+    invoice_qs = Invoice.objects.filter(created_at__gte=thirty_days_ago)
+
+    payment_success_count = payment_qs.filter(
+        transaction_type='booking_payment',
+        status='success',
+    ).count()
+    payment_failed_count = payment_qs.filter(
+        transaction_type='booking_payment',
+        status='failed',
+    ).count()
+    refund_count = payment_qs.filter(transaction_type='refund', status='success').count()
+    invoice_generated_count = invoice_qs.count()
+    invoice_pdf_count = invoice_qs.filter(pdf_generated=True).count()
+
+    sales_trend = []
+    cursor = (now - timedelta(days=29)).date()
+    end_cursor = now.date()
+    while cursor <= end_cursor:
+        day_completed = Booking.objects.filter(
+            created_at__date=cursor,
+            booking_status='completed',
+        )
+        day_payments = Transaction.objects.filter(
+            created_at__date=cursor,
+            transaction_type='booking_payment',
+            status='success',
+        )
+        sales_trend.append({
+            'date': cursor,
+            'completed_bookings': day_completed.count(),
+            'gmv': float(day_completed.aggregate(v=Sum('rental_amount'))['v'] or 0),
+            'platform_commission': float(day_completed.aggregate(v=Sum('platform_commission'))['v'] or 0),
+            'successful_payments': day_payments.count(),
+        })
+        cursor += timedelta(days=1)
+
     recommendations = []
     if disputes > 0:
         recommendations.append('Increase dispute monitoring and tighten host/guest handover SOPs for flagged bookings.')
@@ -403,6 +441,24 @@ def decision_support_dashboard(request):
             'disputes': disputes,
             'average_trust_score': float(User.objects.aggregate(v=Avg('trust_score'))['v'] or 0),
         },
+        'payment_kpis': {
+            'successful_booking_payments': payment_success_count,
+            'failed_booking_payments': payment_failed_count,
+            'payment_success_rate_percent': round(
+                (payment_success_count / (payment_success_count + payment_failed_count)) * 100,
+                2,
+            ) if (payment_success_count + payment_failed_count) else 0,
+            'refunds_processed': refund_count,
+        },
+        'invoice_kpis': {
+            'invoices_generated': invoice_generated_count,
+            'pdf_generated': invoice_pdf_count,
+            'delivery_coverage_percent': round(
+                (invoice_pdf_count / invoice_generated_count) * 100,
+                2,
+            ) if invoice_generated_count else 0,
+        },
+        'sales_trend': sales_trend,
         'host_actions': host_actions[:20],
         'underperforming_inventory': [
             {
@@ -415,6 +471,119 @@ def decision_support_dashboard(request):
             for listing in underperforming_inventory
         ],
         'recommendations': recommendations,
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdmin])
+def scm_dashboard(request):
+    """ERP-SCM dashboard for procurement, supplier performance, and logistics signals."""
+    end_date = _parse_date(request.query_params.get('end_date'), timezone.now())
+    start_date = _parse_date(request.query_params.get('start_date'), end_date - timedelta(days=30))
+
+    booking_window = Booking.objects.filter(created_at__gte=start_date, created_at__lte=end_date)
+    completed_window = booking_window.filter(booking_status='completed')
+
+    inventory_rows = Listing.objects.select_related('host', 'category').annotate(
+        completed_window=Count(
+            'bookings',
+            filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='completed'),
+        ),
+        cancelled_window=Count(
+            'bookings',
+            filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='cancelled'),
+        ),
+        active_commitments=Count(
+            'bookings',
+            filter=Q(bookings__booking_status__in=['confirmed', 'in_use']),
+        ),
+        generated_gmv=Sum(
+            'bookings__rental_amount',
+            filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='completed'),
+        ),
+    )
+
+    procurement_signals = []
+    for listing in inventory_rows:
+        demand_score = (listing.completed_window or 0) + (listing.active_commitments or 0)
+        if demand_score >= 4:
+            procurement_signals.append({
+                'listing_id': listing.id,
+                'title': listing.title,
+                'category': listing.category.name if listing.category else 'Uncategorized',
+                'host': listing.host.username,
+                'signal': 'restock_priority',
+                'reason': 'High demand observed in current window',
+                'demand_score': demand_score,
+                'window_gmv': float(listing.generated_gmv or 0),
+            })
+        elif listing.cancelled_window >= 2:
+            procurement_signals.append({
+                'listing_id': listing.id,
+                'title': listing.title,
+                'category': listing.category.name if listing.category else 'Uncategorized',
+                'host': listing.host.username,
+                'signal': 'supply_risk',
+                'reason': 'Cancellation spikes suggest unstable supply quality/availability',
+                'demand_score': demand_score,
+                'window_gmv': float(listing.generated_gmv or 0),
+            })
+
+    supplier_rows = User.objects.filter(role__in=['host', 'both']).annotate(
+        active_listings=Count('listings', filter=Q(listings__is_available=True), distinct=True),
+        completed_bookings=Count(
+            'host_bookings',
+            filter=Q(host_bookings__created_at__gte=start_date, host_bookings__created_at__lte=end_date, host_bookings__booking_status='completed'),
+            distinct=True,
+        ),
+        total_bookings=Count(
+            'host_bookings',
+            filter=Q(host_bookings__created_at__gte=start_date, host_bookings__created_at__lte=end_date),
+            distinct=True,
+        ),
+        disputed=Count(
+            'host_bookings',
+            filter=Q(host_bookings__created_at__gte=start_date, host_bookings__created_at__lte=end_date, host_bookings__dispute_flag=True),
+            distinct=True,
+        ),
+        gmv=Sum(
+            'host_bookings__rental_amount',
+            filter=Q(host_bookings__created_at__gte=start_date, host_bookings__created_at__lte=end_date, host_bookings__booking_status='completed'),
+        ),
+    )
+
+    supplier_performance = []
+    for host in supplier_rows:
+        fill_rate = round((host.completed_bookings / host.total_bookings) * 100, 2) if host.total_bookings else 0
+        supplier_performance.append({
+            'host_id': host.id,
+            'username': host.username,
+            'active_listings': host.active_listings,
+            'fill_rate_percent': fill_rate,
+            'dispute_count': host.disputed,
+            'gmv': float(host.gmv or 0),
+            'risk_band': 'high' if host.disputed >= 2 or fill_rate < 50 else 'normal',
+        })
+
+    logistics_kpis = {
+        'handover_completed': booking_window.filter(handover_at__isnull=False).count(),
+        'returns_completed': booking_window.filter(return_at__isnull=False).count(),
+        'handover_pending': booking_window.filter(booking_status='confirmed', handover_at__isnull=True).count(),
+        'return_pending': booking_window.filter(booking_status='in_use', return_at__isnull=True).count(),
+        'disputed_orders': booking_window.filter(dispute_flag=True).count(),
+    }
+
+    return Response({
+        'range': {'start_date': start_date, 'end_date': end_date},
+        'scm_summary': {
+            'total_inventory_nodes': Listing.objects.count(),
+            'available_inventory_nodes': Listing.objects.filter(is_available=True, verification_status='approved').count(),
+            'window_completed_orders': completed_window.count(),
+            'window_gmv': float(completed_window.aggregate(v=Sum('rental_amount'))['v'] or 0),
+        },
+        'procurement_signals': procurement_signals[:100],
+        'supplier_performance': supplier_performance[:100],
+        'logistics_kpis': logistics_kpis,
     })
 
 

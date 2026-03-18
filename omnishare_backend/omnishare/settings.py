@@ -4,6 +4,7 @@ Django settings for omnishare project.
 
 from pathlib import Path
 from datetime import timedelta
+from urllib.parse import parse_qs, urlparse
 from decouple import config
 
 # Build paths inside the project
@@ -76,6 +77,27 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASE_URL = config('DATABASE_URL', default='').strip()
+if DATABASE_URL:
+    parsed = urlparse(DATABASE_URL)
+    query = parse_qs(parsed.query)
+    db_options = {}
+
+    if query.get('sslmode'):
+        db_options['sslmode'] = query['sslmode'][0]
+    if query.get('channel_binding'):
+        db_options['channel_binding'] = query['channel_binding'][0]
+
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed.path.lstrip('/'),
+        'USER': parsed.username,
+        'PASSWORD': parsed.password,
+        'HOST': parsed.hostname,
+        'PORT': parsed.port or '5432',
+        'OPTIONS': db_options,
+    }
 
 # For PostgreSQL (uncomment for production):
 # DATABASES = {
@@ -153,6 +175,17 @@ CORS_ALLOW_CREDENTIALS = True
 # Razorpay Settings
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='')
 RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET', default='')
+
+# Stripe Settings
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', default='')
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', default='')
+STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
+STRIPE_USE_DEMO = config('STRIPE_USE_DEMO', default=True, cast=bool)
+FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='http://localhost:3000')
+
+# Clerk Settings
+CLERK_SECRET_KEY = config('CLERK_SECRET_KEY', default='')
+CLERK_PUBLISHABLE_KEY = config('CLERK_PUBLISHABLE_KEY', default='')
 
 # AWS S3 Settings (for production)
 USE_S3 = config('USE_S3', default=False, cast=bool)

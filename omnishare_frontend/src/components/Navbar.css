@@ -1,114 +1,74 @@
-/* Navbar Styles */
 .navbar {
-  background: var(--neutral-0);
-  border-bottom: 1px solid var(--neutral-200);
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(0, 116, 182, 0.18);
+  backdrop-filter: blur(14px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 251, 255, 0.9));
 }
 
 .navbar-content {
+  min-height: 76px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
+  justify-content: space-between;
 }
 
 .navbar .logo {
-  font-size: 1.25rem;
+  font-size: 1.45rem;
+  color: #17304f;
   font-weight: 700;
-  color: var(--primary);
-  text-decoration: none;
-  letter-spacing: -0.5px;
-  transition: color 0.2s;
-  min-width: 120px;
+  letter-spacing: -0.03em;
 }
 
-.navbar .logo:hover {
-  color: var(--primary-dark);
-}
-
-/* Navigation Menu */
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 14px;
 }
 
 .nav-link {
-  color: var(--neutral-600);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: color 0.2s;
-  position: relative;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  color: #244261;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
-  color: var(--primary);
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.2s;
-}
-
-.nav-link:hover::after {
-  width: 100%;
+  background: rgba(0, 166, 251, 0.12);
+  color: #17304f;
 }
 
 .nav-user {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: var(--neutral-700);
-  font-weight: 500;
-  font-size: 0.95rem;
+  border: 1px solid rgba(6, 214, 160, 0.35);
+  background: rgba(6, 214, 160, 0.1);
+  border-radius: 999px;
+  padding: 6px 12px;
 }
 
 .user-name {
-  max-width: 150px;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #0c3445;
+  font-weight: 600;
 }
 
-/* Buttons in nav */
-.nav-menu .btn {
-  margin-left: 8px;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-}
-
-.nav-menu .btn-secondary {
-  display: none;
-}
-
-/* Mobile Menu Button */
 .mobile-menu-btn {
   display: none;
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 1.5rem;
-  color: var(--neutral-700);
-  cursor: pointer;
-  padding: 8px;
-  margin-right: 16px;
+  font-size: 1.4rem;
+  color: #17304f;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .navbar-content {
-    position: relative;
-  }
-
+@media (max-width: 880px) {
   .mobile-menu-btn {
     display: block;
   }
@@ -116,66 +76,28 @@
   .nav-menu {
     position: absolute;
     top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--neutral-0);
-    border-bottom: 1px solid var(--neutral-200);
+    left: 14px;
+    right: 14px;
+    display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 16px;
+    align-items: stretch;
+    gap: 8px;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 116, 182, 0.2);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 248, 254, 0.98));
+    transition: max-height 0.25s ease;
   }
 
   .nav-menu.open {
-    max-height: 500px;
-    box-shadow: var(--shadow-md);
+    max-height: 460px;
+    padding: 12px;
+    box-shadow: 0 16px 30px rgba(21, 34, 56, 0.14);
   }
 
-  .nav-link {
-    width: 100%;
-    padding: 8px 0;
-  }
-
-  .nav-link::after {
-    display: none;
-  }
-
-  .nav-link:active {
-    color: var(--primary);
-  }
-
-  .nav-user {
-    width: 100%;
-    padding: 8px 0;
-    display: flex;
-    justify-content: space-between;
-  }
-
+  .nav-link,
   .nav-menu .btn {
     width: 100%;
-    margin-left: 0;
-    margin-top: 8px;
-  }
-
-  .nav-menu .btn-secondary {
-    display: inline-flex;
-  }
-
-  .navbar .logo {
-    font-size: 1.1rem;
-  }
-}
-
-
-@media (max-width: 768px) {
-  .navbar .nav-links {
-    gap: 10px;
-    font-size: 14px;
-  }
-  
-  .navbar .logo h2 {
-    font-size: 20px;
   }
 }

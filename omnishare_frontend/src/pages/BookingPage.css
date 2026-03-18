@@ -1,5 +1,35 @@
 .booking-page {
-  min-height: calc(100vh - 80px);
-  background-color: var(--gray-50);
-  padding: 40px 0;
+  min-height: calc(100vh - 76px);
+  padding: 28px 0 42px;
+}
+
+.booking-page h1 {
+  color: #17304f;
+  margin-bottom: 14px;
+}
+
+.booking-page .card {
+  margin-bottom: 12px;
+}
+
+.booking-page img {
+  border-radius: 12px;
+  border: 1px solid #c4d8eb;
+}
+
+.booking-page .bookings-list {
+  display: grid;
+  gap: 10px;
+}
+
+.booking-page .booking-card {
+  padding: 14px;
+}
+
+.booking-page .booking-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #d9e6f1;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
 }

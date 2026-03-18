@@ -25,7 +25,7 @@ from .serializers_enhanced import (
     InvoiceSerializer,
     WebhookLogSerializer,
 )
-from .payment_services import RazorpayService, EscrowService, InvoiceService, SettlementService
+from .payment_services import RazorpayService, StripeService, EscrowService, InvoiceService, SettlementService
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +41,39 @@ class PaymentViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff or self.request.user.role == 'admin':
             return self.queryset
         return self.queryset.filter(user=self.request.user)
+
+    def _finalize_successful_booking_payment(self, trans, payment_id, signature='', metadata=None):
+        """Mark transaction success, confirm booking, create invoice and settlement."""
+        booking = trans.booking
+        invoice = getattr(booking, 'invoice', None)
+
+        with transaction.atomic():
+            trans.status = 'success'
+            trans.razorpay_payment_id = payment_id
+            trans.razorpay_signature = signature
+            trans.completed_at = timezone.now()
+            trans.description = 'Payment verified successfully'
+            if metadata:
+                merged = dict(trans.metadata or {})
+                merged.update(metadata)
+                trans.metadata = merged
+            trans.save()
+
+            if booking.can_confirm():
+                booking.confirm_booking()
+
+            invoice_service = InvoiceService()
+            if invoice is None:
+                invoice = invoice_service.generate_invoice(booking)
+                try:
+                    invoice_service.send_invoice_email(invoice)
+                except Exception as mail_exc:
+                    logger.warning('Invoice email send failed for booking %s: %s', booking.id, str(mail_exc))
+
+            if hasattr(booking, 'escrow') and booking.escrow.status == 'active':
+                SettlementService().create_settlement(booking.escrow)
+
+        return booking
 
     @action(detail=False, methods=['post'], url_path='checkout-preview')
     def checkout_preview(self, request):
@@ -127,6 +160,64 @@ class PaymentViewSet(viewsets.ModelViewSet):
             logger.error('Payment order creation failed: %s', str(exc))
             return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['post'], url_path='stripe-create-session')
+    def stripe_create_session(self, request):
+        """Create Stripe Checkout session and pending transaction for a booking."""
+        booking_id = request.data.get('booking_id')
+        booking = get_object_or_404(Booking, id=booking_id, guest=request.user)
+
+        if booking.booking_status not in ['pending']:
+            return Response(
+                {'error': 'Payment can only be initiated for pending bookings'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        existing_success = Transaction.objects.filter(
+            booking=booking,
+            transaction_type='booking_payment',
+            status='success',
+        ).exists()
+        if existing_success:
+            return Response({'error': 'Booking is already paid'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            with transaction.atomic():
+                stripe_service = StripeService()
+                stripe_session = stripe_service.create_checkout_session(booking)
+
+                escrow = getattr(booking, 'escrow', None)
+                if escrow is None:
+                    escrow = EscrowService().create_escrow(booking)
+
+                trans = Transaction.objects.create(
+                    booking=booking,
+                    user=request.user,
+                    escrow=escrow,
+                    transaction_type='booking_payment',
+                    amount=booking.guest_total,
+                    status='pending',
+                    description=f'Stripe checkout initiated for booking {booking.id}',
+                    metadata={
+                        'gateway': 'stripe',
+                        'stripe_session_id': stripe_session['id'],
+                        'stripe_demo': stripe_session.get('demo', False),
+                    },
+                )
+
+            return Response(
+                {
+                    'session_id': stripe_session['id'],
+                    'checkout_url': stripe_session['url'],
+                    'publishable_key': stripe_session.get('publishable_key', ''),
+                    'demo': stripe_session.get('demo', False),
+                    'transaction': TransactionSerializer(trans).data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        except Exception as exc:
+            logger.error('Stripe session creation failed: %s', str(exc))
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=False, methods=['post'], url_path='verify')
     def verify(self, request):
         """Verify payment signature, mark transaction success, confirm booking, and generate invoice."""
@@ -158,32 +249,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
             trans.save(update_fields=['status', 'razorpay_payment_id', 'razorpay_signature', 'description'])
             return Response({'error': 'Payment verification failed'}, status=status.HTTP_400_BAD_REQUEST)
 
-        booking = trans.booking
-
         try:
-            with transaction.atomic():
-                trans.status = 'success'
-                trans.razorpay_payment_id = razorpay_payment_id
-                trans.razorpay_signature = razorpay_signature
-                trans.completed_at = timezone.now()
-                trans.description = 'Payment verified successfully'
-                trans.save()
-
-                if booking.can_confirm():
-                    booking.confirm_booking()
-
-                invoice_service = InvoiceService()
-                invoice = getattr(booking, 'invoice', None)
-                if invoice is None:
-                    invoice = invoice_service.generate_invoice(booking)
-                    try:
-                        invoice_service.send_invoice_email(invoice)
-                    except Exception as mail_exc:
-                        logger.warning('Invoice email send failed for booking %s: %s', booking.id, str(mail_exc))
-
-                if hasattr(booking, 'escrow') and booking.escrow.status == 'active':
-                    settlement_service = SettlementService()
-                    settlement_service.create_settlement(booking.escrow)
+            booking = self._finalize_successful_booking_payment(
+                trans,
+                razorpay_payment_id,
+                signature=razorpay_signature,
+                metadata={'gateway': 'razorpay'},
+            )
 
             return Response(
                 {
@@ -196,6 +268,119 @@ class PaymentViewSet(viewsets.ModelViewSet):
             )
         except Exception as exc:
             logger.error('Payment verification flow failed: %s', str(exc))
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'], url_path='stripe-verify-session')
+    def stripe_verify_session(self, request):
+        """Verify Stripe checkout session and finalize booking payment."""
+        booking_id = request.data.get('booking_id')
+        session_id = request.data.get('session_id')
+
+        if not booking_id or not session_id:
+            return Response({'error': 'booking_id and session_id are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        booking = get_object_or_404(Booking, id=booking_id, guest=request.user)
+        stripe_transactions = Transaction.objects.filter(
+            booking=booking,
+            user=request.user,
+            transaction_type='booking_payment',
+            status='pending',
+        ).order_by('-created_at')
+
+        trans = None
+        for candidate in stripe_transactions:
+            candidate_meta = candidate.metadata or {}
+            if candidate_meta.get('gateway') == 'stripe' and candidate_meta.get('stripe_session_id') == session_id:
+                trans = candidate
+                break
+
+        if trans is None:
+            return Response({'error': 'Pending Stripe transaction not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            verification = StripeService().verify_checkout_session(session_id)
+            if not verification.get('paid'):
+                return Response({'error': 'Stripe session is not paid yet'}, status=status.HTTP_400_BAD_REQUEST)
+
+            booking = self._finalize_successful_booking_payment(
+                trans,
+                payment_id=session_id,
+                signature='',
+                metadata={
+                    'gateway': 'stripe',
+                    'stripe_verification': verification,
+                },
+            )
+
+            return Response(
+                {
+                    'message': 'Stripe payment successful',
+                    'transaction': TransactionSerializer(trans).data,
+                    'booking_status': booking.booking_status,
+                    'invoice_number': getattr(booking.invoice, 'invoice_number', None),
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as exc:
+            logger.error('Stripe verification failed: %s', str(exc))
+            return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['post'], url_path='demo-complete')
+    def demo_complete(self, request):
+        """Instantly complete booking payment for demonstration without external gateway."""
+        booking_id = request.data.get('booking_id')
+        booking = get_object_or_404(Booking, id=booking_id, guest=request.user)
+
+        if booking.booking_status not in ['pending']:
+            return Response(
+                {'error': 'Payment can only be initiated for pending bookings'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        existing_success = Transaction.objects.filter(
+            booking=booking,
+            transaction_type='booking_payment',
+            status='success',
+        ).exists()
+        if existing_success:
+            return Response({'error': 'Booking is already paid'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            with transaction.atomic():
+                escrow = getattr(booking, 'escrow', None)
+                if escrow is None:
+                    escrow = EscrowService().create_escrow(booking)
+
+                trans = Transaction.objects.create(
+                    booking=booking,
+                    user=request.user,
+                    escrow=escrow,
+                    transaction_type='booking_payment',
+                    amount=booking.guest_total,
+                    status='pending',
+                    description=f'Demo payment initiated for booking {booking.id}',
+                    metadata={'gateway': 'demo_instant'},
+                )
+
+            demo_payment_id = f'demo_pay_{booking.id}_{int(timezone.now().timestamp())}'
+            booking = self._finalize_successful_booking_payment(
+                trans,
+                payment_id=demo_payment_id,
+                signature='',
+                metadata={'gateway': 'demo_instant'},
+            )
+
+            return Response(
+                {
+                    'message': 'Demo payment successful',
+                    'transaction': TransactionSerializer(trans).data,
+                    'booking_status': booking.booking_status,
+                    'invoice_number': getattr(booking.invoice, 'invoice_number', None),
+                },
+                status=status.HTTP_200_OK,
+            )
+        except Exception as exc:
+            logger.error('Demo payment failed: %s', str(exc))
             return Response({'error': str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['post'], url_path='refund')

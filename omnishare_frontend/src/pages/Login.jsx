@@ -80,6 +80,10 @@ const Login = () => {
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
+
+            <Link to="/clerk/sign-in" className="btn btn-secondary" style={{ width: '100%' }}>
+              Continue with Clerk
+            </Link>
           </form>
 
           <div className="auth-footer">

@@ -36,9 +36,9 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         # Check guest permissions
         user = self.context['request'].user
         if not user.can_book():
-            raise serializers.ValidationError(
-                "You must complete KYC verification to make bookings"
-            )
+            raise serializers.ValidationError({
+                "error": "You must complete KYC verification to make bookings"
+            })
         
         # Check if guest is trying to book own listing
         if listing.host == user:

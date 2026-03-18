@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { listingsAPI, bookingsAPI } from '../services/api';
+import { listingsAPI, bookingsAPI, paymentsAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './Dashboard.css';
 
 const HostDashboard = () => {
   const [listings, setListings] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [settlements, setSettlements] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('listings');
 
@@ -23,19 +25,52 @@ const HostDashboard = () => {
         setLoading(false);
         return;
       }
-      const [listingsRes, bookingsRes] = await Promise.all([
+      const [listingsRes, bookingsRes, settlementsRes, invoicesRes] = await Promise.all([
         listingsAPI.getMyListings().catch(() => ({ data: { results: [] } })),
         bookingsAPI.getMyBookings('host').catch(() => ({ data: { results: [] } })),
+        paymentsAPI.getSettlements().catch(() => ({ data: [] })),
+        paymentsAPI.getInvoices().catch(() => ({ data: [] })),
       ]);
       setListings(listingsRes.data.results || listingsRes.data || []);
       setBookings(bookingsRes.data.results || bookingsRes.data || []);
+      setSettlements(settlementsRes.data.results || settlementsRes.data || []);
+      setInvoices(invoicesRes.data.results || invoicesRes.data || []);
     } catch (error) {
       console.error('Dashboard error:', error.message);
       setListings([]);
       setBookings([]);
+      setSettlements([]);
+      setInvoices([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInvoiceDownload = async (invoiceId, invoiceNumber) => {
+    try {
+      const response = await paymentsAPI.downloadInvoice(invoiceId);
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${invoiceNumber || `invoice-${invoiceId}`}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      toast.error('Failed to download invoice');
+    }
+  };
+
+  const getSettlementBadge = (status) => {
+    const statusMap = {
+      completed: 'badge-success',
+      pending: 'badge-warning',
+      processing: 'badge-info',
+      failed: 'badge-danger',
+    };
+    return `badge ${statusMap[status] || 'badge-info'}`;
   };
 
   const getStatusBadge = (status) => {
@@ -81,6 +116,10 @@ const HostDashboard = () => {
                 .reduce((sum, b) => sum + parseFloat(b.host_payout || 0), 0).toFixed(2)}
             </p>
           </div>
+          <div className="stat-card card">
+            <h3>Settlements</h3>
+            <p className="stat-number">{settlements.length}</p>
+          </div>
         </div>
 
         <div className="dashboard-tabs">
@@ -95,6 +134,18 @@ const HostDashboard = () => {
             onClick={() => setActiveTab('bookings')}
           >
             Bookings
+          </button>
+          <button
+            className={`tab ${activeTab === 'settlements' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settlements')}
+          >
+            Settlements
+          </button>
+          <button
+            className={`tab ${activeTab === 'invoices' ? 'active' : ''}`}
+            onClick={() => setActiveTab('invoices')}
+          >
+            Invoices
           </button>
         </div>
 
@@ -153,6 +204,55 @@ const HostDashboard = () => {
                   </Link>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'settlements' && (
+          <div className="bookings-section">
+            <h2>Settlement Timeline</h2>
+            <div className="bookings-list">
+              {settlements.map((settlement) => (
+                <div key={settlement.id} className="booking-card card">
+                  <div className="booking-header">
+                    <h3>{settlement.settlement_type.replace('_', ' ')}</h3>
+                    <span className={getSettlementBadge(settlement.status)}>{settlement.status}</span>
+                  </div>
+                  <p><strong>Amount:</strong> ₹{settlement.amount}</p>
+                  <p><strong>Created:</strong> {new Date(settlement.created_at).toLocaleString()}</p>
+                  {settlement.processed_at && <p><strong>Processed:</strong> {new Date(settlement.processed_at).toLocaleString()}</p>}
+                </div>
+              ))}
+              {settlements.length === 0 && <div className="no-results"><p>No settlements found.</p></div>}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'invoices' && (
+          <div className="bookings-section">
+            <h2>Invoices</h2>
+            <div className="bookings-list">
+              {invoices.map((inv) => (
+                <div key={inv.id} className="booking-card card">
+                  <div className="booking-header">
+                    <h3>{inv.invoice_number}</h3>
+                    <span className={getSettlementBadge(inv.pdf_generated ? 'completed' : 'pending')}>
+                      {inv.pdf_generated ? 'ready' : 'processing'}
+                    </span>
+                  </div>
+                  <p><strong>Booking:</strong> #{inv.booking}</p>
+                  <p><strong>Total:</strong> ₹{inv.total_amount}</p>
+                  <p><strong>Date:</strong> {inv.invoice_date}</p>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleInvoiceDownload(inv.id, inv.invoice_number)}
+                    disabled={!inv.pdf_generated}
+                  >
+                    Download PDF
+                  </button>
+                </div>
+              ))}
+              {invoices.length === 0 && <div className="no-results"><p>No invoices found.</p></div>}
             </div>
           </div>
         )}

@@ -42,6 +42,8 @@ const Navbar = () => {
             
             {token ? (
               <>
+                <Link to="/profile" className="nav-link">Profile</Link>
+
                 {(user.role === 'host' || user.role === 'both') && (
                   <Link to="/host/dashboard" className="nav-link">Host</Link>
                 )}

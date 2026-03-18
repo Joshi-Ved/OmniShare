@@ -91,9 +91,32 @@ const ListingDetails = () => {
       toast.success('Booking created! Proceeding to payment...');
       navigate(`/bookings/${response.data.booking.id}`);
     } catch (error) {
-      const errorMsg = error.response?.data?.dates || 
-                      error.response?.data?.listing ||
-                      'Failed to create booking';
+      const payload = error.response?.data;
+      let errorMsg = 'Failed to create booking';
+
+      if (typeof payload === 'string') {
+        errorMsg = payload;
+      } else if (payload?.error) {
+        errorMsg = Array.isArray(payload.error) ? payload.error[0] : payload.error;
+      } else if (payload?.non_field_errors?.length) {
+        errorMsg = payload.non_field_errors[0];
+      } else if (payload?.dates) {
+        errorMsg = Array.isArray(payload.dates) ? payload.dates[0] : payload.dates;
+      } else if (payload?.listing) {
+        errorMsg = Array.isArray(payload.listing) ? payload.listing[0] : payload.listing;
+      } else if (payload?.start_date) {
+        errorMsg = Array.isArray(payload.start_date) ? payload.start_date[0] : payload.start_date;
+      } else if (payload?.end_date) {
+        errorMsg = Array.isArray(payload.end_date) ? payload.end_date[0] : payload.end_date;
+      } else if (payload && typeof payload === 'object') {
+        const firstValue = Object.values(payload)[0];
+        if (Array.isArray(firstValue) && firstValue.length) {
+          errorMsg = firstValue[0];
+        } else if (typeof firstValue === 'string') {
+          errorMsg = firstValue;
+        }
+      }
+
       toast.error(errorMsg);
     }
   };

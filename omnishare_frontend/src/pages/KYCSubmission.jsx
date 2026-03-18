@@ -11,6 +11,13 @@ const KYCSubmission = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const getDashboardRoute = (profile) => {
+    if (!profile) return '/';
+    if (profile.role === 'admin' || profile.is_staff) return '/admin/dashboard';
+    if (profile.role === 'host') return '/host/dashboard';
+    return '/guest/dashboard';
+  };
+
   useEffect(() => {
     fetchUserProfile();
   }, []);
@@ -88,7 +95,7 @@ const KYCSubmission = () => {
       
       // Redirect after success
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate(getDashboardRoute(user));
       }, 2000);
     } catch (error) {
       console.error('KYC submission error:', error);
@@ -244,7 +251,7 @@ const KYCSubmission = () => {
           {user.kyc_status === 'pending' && (
             <div className="pending-message">
               <p>Your KYC document has been submitted and is under review.</p>
-              <button className="btn btn-secondary" onClick={() => navigate('/dashboard')}>
+              <button className="btn btn-secondary" onClick={() => navigate(getDashboardRoute(user))}>
                 Go to Dashboard
               </button>
             </div>
@@ -254,7 +261,7 @@ const KYCSubmission = () => {
           {user.kyc_status === 'verified' && (
             <div className="verified-message">
               <p>🎉 Congratulations! Your account is verified.</p>
-              <button className="btn btn-primary" onClick={() => navigate('/dashboard')}>
+              <button className="btn btn-primary" onClick={() => navigate(getDashboardRoute(user))}>
                 Go to Dashboard
               </button>
             </div>

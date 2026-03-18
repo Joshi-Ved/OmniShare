@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { bookingsAPI, paymentsAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './PaymentPage.css';
@@ -7,12 +7,15 @@ import './PaymentPage.css';
 const PaymentPage = () => {
   const { bookingId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const handledStripeSessionRef = useRef('');
 
   const [booking, setBooking] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedGateway, setSelectedGateway] = useState('demo');
 
   useEffect(() => {
     const loadRazorpayScript = () => {
@@ -39,10 +42,7 @@ const PaymentPage = () => {
         setBooking(bookingRes.data);
         setPreview(previewRes.data);
 
-        const scriptLoaded = await loadRazorpayScript();
-        if (!scriptLoaded) {
-          setError('Unable to load Razorpay checkout script.');
-        }
+        await loadRazorpayScript();
       } catch (err) {
         setError(err.response?.data?.error || 'Failed to load payment details');
       } finally {
@@ -52,6 +52,52 @@ const PaymentPage = () => {
 
     fetchData();
   }, [bookingId]);
+
+  useEffect(() => {
+    const gatewayFromQuery = searchParams.get('gateway');
+    if (gatewayFromQuery === 'stripe' || gatewayFromQuery === 'razorpay' || gatewayFromQuery === 'demo') {
+      setSelectedGateway(gatewayFromQuery);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const stripeStatus = searchParams.get('stripe_status');
+    const sessionId = searchParams.get('session_id');
+
+    const verifyStripeReturn = async () => {
+      if (stripeStatus !== 'success' || !sessionId || handledStripeSessionRef.current === sessionId) {
+        return;
+      }
+
+      handledStripeSessionRef.current = sessionId;
+      setProcessing(true);
+      setError(null);
+      try {
+        const verifyRes = await paymentsAPI.verifyStripeSession({
+          booking_id: bookingId,
+          session_id: sessionId,
+        });
+        toast.success('Stripe payment successful');
+        navigate(`/bookings/${bookingId}`, {
+          state: {
+            paymentSuccess: true,
+            invoiceNumber: verifyRes?.data?.invoice_number,
+          },
+          replace: true,
+        });
+      } catch (err) {
+        setError(err.response?.data?.error || 'Stripe payment verification failed');
+      } finally {
+        setProcessing(false);
+      }
+    };
+
+    if (stripeStatus === 'cancelled') {
+      setError('Stripe payment was cancelled. You can retry anytime.');
+    } else {
+      verifyStripeReturn();
+    }
+  }, [bookingId, navigate, searchParams]);
 
   const initiateRazorpayPayment = (order) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -65,13 +111,18 @@ const PaymentPage = () => {
       description: `Booking #${bookingId}`,
       handler: async (response) => {
         try {
-          await paymentsAPI.verifyPayment({
+          const verifyRes = await paymentsAPI.verifyPayment({
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
           });
           toast.success('Payment successful');
-          navigate(`/bookings/${bookingId}`);
+          navigate(`/bookings/${bookingId}`, {
+            state: {
+              paymentSuccess: true,
+              invoiceNumber: verifyRes?.data?.invoice_number,
+            },
+          });
         } catch (err) {
           setError(err.response?.data?.error || 'Payment verification failed');
         } finally {
@@ -103,9 +154,32 @@ const PaymentPage = () => {
   };
 
   const handleCreateOrder = async () => {
+    if (processing) return;
     setProcessing(true);
     setError(null);
     try {
+      if (selectedGateway === 'demo') {
+        const demoRes = await paymentsAPI.demoCompletePayment(bookingId);
+        toast.success('Demo payment successful');
+        navigate(`/bookings/${bookingId}`, {
+          state: {
+            paymentSuccess: true,
+            invoiceNumber: demoRes?.data?.invoice_number,
+          },
+        });
+        return;
+      }
+
+      if (selectedGateway === 'stripe') {
+        const sessionRes = await paymentsAPI.createStripeSession(bookingId);
+        const checkoutUrl = sessionRes?.data?.checkout_url;
+        if (!checkoutUrl) {
+          throw new Error('Stripe checkout URL not returned by server');
+        }
+        window.location.href = checkoutUrl;
+        return;
+      }
+
       const orderRes = await paymentsAPI.createOrder(bookingId);
       initiateRazorpayPayment(orderRes.data);
     } catch (err) {
@@ -174,8 +248,40 @@ const PaymentPage = () => {
         </div>
 
         <div className="payment-info">
-          <h3>Payment Method: Razorpay</h3>
-          <p>Secure checkout via cards, UPI, wallets, and net banking.</p>
+          <h3>Choose Payment Gateway</h3>
+          <div className="gateway-selector">
+            <button
+              type="button"
+              className={`gateway-chip ${selectedGateway === 'demo' ? 'active' : ''}`}
+              onClick={() => setSelectedGateway('demo')}
+              disabled={processing}
+            >
+              Instant Demo API
+            </button>
+            <button
+              type="button"
+              className={`gateway-chip ${selectedGateway === 'razorpay' ? 'active' : ''}`}
+              onClick={() => setSelectedGateway('razorpay')}
+              disabled={processing}
+            >
+              Razorpay Sandbox
+            </button>
+            <button
+              type="button"
+              className={`gateway-chip ${selectedGateway === 'stripe' ? 'active' : ''}`}
+              onClick={() => setSelectedGateway('stripe')}
+              disabled={processing}
+            >
+              Stripe Sandbox
+            </button>
+          </div>
+          {selectedGateway === 'demo' ? (
+            <p>Instantly marks payment successful for demonstration and generates invoice.</p>
+          ) : selectedGateway === 'razorpay' ? (
+            <p>Secure checkout via cards, UPI, wallets, and net banking.</p>
+          ) : (
+            <p>Stripe Checkout supports demo card testing and redirected confirmation.</p>
+          )}
         </div>
 
         {error && (
@@ -186,13 +292,25 @@ const PaymentPage = () => {
         )}
 
         <div className="payment-actions">
-          <button className="btn-pay" onClick={handleCreateOrder} disabled={processing}>
-            {processing ? 'Processing...' : `Pay ₹${amounts.guest_total || booking.guest_total}`}
+          <button
+            className="btn-pay"
+            onClick={handleCreateOrder}
+            disabled={processing || booking.booking_status !== 'pending'}
+          >
+            {processing
+              ? 'Processing...'
+              : `${selectedGateway === 'demo' ? 'Pay Instantly (Demo)' : selectedGateway === 'stripe' ? 'Pay with Stripe' : 'Pay with Razorpay'} ₹${amounts.guest_total || booking.guest_total}`}
           </button>
           <button className="btn-cancel" onClick={() => navigate(`/bookings/${bookingId}`)} disabled={processing}>
             Cancel
           </button>
         </div>
+
+        {booking.booking_status !== 'pending' && (
+          <p style={{ marginTop: '10px', color: '#6b7280' }}>
+            This booking is no longer in pending state, so checkout is disabled.
+          </p>
+        )}
       </div>
 
       <div className="payment-help">

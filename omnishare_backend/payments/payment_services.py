@@ -9,6 +9,7 @@ Handles all payment operations including:
 """
 
 import razorpay
+import stripe
 from django.conf import settings
 from django.db import transaction as db_transaction
 from django.utils import timezone
@@ -177,6 +178,88 @@ class RazorpayService:
         except Exception as e:
             logger.error(f"Failed to fetch payment {razorpay_payment_id}: {str(e)}")
             raise
+
+
+class StripeService:
+    """Handles Stripe checkout operations with sandbox/demo support."""
+
+    def __init__(self):
+        self.secret_key = settings.STRIPE_SECRET_KEY
+        self.publishable_key = settings.STRIPE_PUBLISHABLE_KEY
+        self.use_demo = settings.STRIPE_USE_DEMO or not self.secret_key
+        if self.secret_key:
+            stripe.api_key = self.secret_key
+
+    def create_checkout_session(self, booking):
+        """Create Stripe Checkout session for booking payment."""
+        frontend_url = settings.FRONTEND_BASE_URL.rstrip('/')
+        success_url = (
+            f"{frontend_url}/payments/{booking.id}"
+            "?gateway=stripe&stripe_status=success&session_id={CHECKOUT_SESSION_ID}"
+        )
+        cancel_url = f"{frontend_url}/payments/{booking.id}?gateway=stripe&stripe_status=cancelled"
+
+        if self.use_demo:
+            session_id = f"demo_cs_{booking.id}_{int(timezone.now().timestamp())}"
+            return {
+                'id': session_id,
+                'url': success_url.replace('{CHECKOUT_SESSION_ID}', session_id),
+                'payment_status': 'unpaid',
+                'demo': True,
+                'publishable_key': self.publishable_key,
+            }
+
+        session = stripe.checkout.Session.create(
+            mode='payment',
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'inr',
+                        'unit_amount': int(float(booking.guest_total) * 100),
+                        'product_data': {
+                            'name': f'OmniShare Booking #{booking.id}',
+                            'description': f'{booking.listing.title} ({booking.start_date} to {booking.end_date})',
+                        },
+                    },
+                    'quantity': 1,
+                }
+            ],
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                'booking_id': str(booking.id),
+                'guest_id': str(booking.guest_id),
+                'host_id': str(booking.host_id),
+            },
+        )
+        return {
+            'id': session.id,
+            'url': session.url,
+            'payment_status': session.payment_status,
+            'demo': False,
+            'publishable_key': self.publishable_key,
+        }
+
+    def verify_checkout_session(self, session_id):
+        """Verify Stripe Checkout session payment status."""
+        if self.use_demo:
+            return {
+                'id': session_id,
+                'payment_status': 'paid',
+                'status': 'complete',
+                'paid': True,
+                'demo': True,
+            }
+
+        session = stripe.checkout.Session.retrieve(session_id)
+        return {
+            'id': session.id,
+            'payment_status': session.payment_status,
+            'status': session.status,
+            'paid': session.payment_status == 'paid',
+            'demo': False,
+        }
 
 
 class EscrowService:

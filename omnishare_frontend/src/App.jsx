@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ClerkAuthPage from './pages/ClerkAuthPage';
 import HostDashboard from './pages/HostDashboard';
 import GuestDashboard from './pages/GuestDashboard';
 import AdminDashboard from './pages/AdminDashboard';
@@ -15,6 +16,7 @@ import BookingPage from './pages/BookingPage';
 import PaymentPage from './pages/PaymentPage';
 import CreateListing from './pages/CreateListing';
 import KYCSubmission from './pages/KYCSubmission';
+import ProfilePage from './pages/ProfilePage';
 
 // Components
 import Navbar from './components/Navbar';
@@ -32,6 +34,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/clerk/sign-in" element={<ClerkAuthPage mode="signin" />} />
+          <Route path="/clerk/sign-up" element={<ClerkAuthPage mode="signup" />} />
           <Route path="/listings/:id" element={<ListingDetails />} />
           
           {/* Protected Routes */}
@@ -62,6 +66,12 @@ function App() {
           <Route path="/kyc/submit" element={
             <PrivateRoute>
               <KYCSubmission />
+            </PrivateRoute>
+          } />
+
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <ProfilePage />
             </PrivateRoute>
           } />
           

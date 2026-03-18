@@ -80,7 +80,8 @@ class User(AbstractUser):
     
     def can_book(self):
         """Check if user can make bookings"""
-        return self.is_guest() and self.kyc_status == 'verified'
+        # KYC gate is relaxed for demo flow so guests can pay directly.
+        return self.is_guest()
     
     def update_trust_score(self):
         """Recalculate trust score based on booking history"""

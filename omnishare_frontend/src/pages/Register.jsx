@@ -98,6 +98,10 @@ const Register = () => {
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Creating account...' : 'Sign Up'}
             </button>
+
+            <Link to="/clerk/sign-up" className="btn btn-secondary" style={{ width: '100%' }}>
+              Sign up with Clerk
+            </Link>
           </form>
 
           <div className="auth-footer">
