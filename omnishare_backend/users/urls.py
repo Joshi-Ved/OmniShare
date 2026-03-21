@@ -5,6 +5,7 @@ urlpatterns = [
     # Authentication
     path('register/', views.UserRegistrationView.as_view(), name='user-register'),
     path('login/', views.login_view, name='user-login'),
+    path('clerk-sync-login/', views.clerk_sync_login, name='clerk-sync-login'),
     path('logout/', views.logout_view, name='user-logout'),
     
     # Profile

@@ -30,7 +30,9 @@ const PrivateRoute = ({ children, adminOnly = false }) => {
     return <Navigate to="/clerk/sign-in" replace />;
   }
 
-  if (adminOnly && user.role !== 'admin' && !user.is_staff) {
+  // Avoid redirect flicker while client profile token sync is still populating local user data.
+  const hasUserSnapshot = user && Object.keys(user).length > 0;
+  if (adminOnly && hasUserSnapshot && user.role !== 'admin' && !user.is_staff) {
     return <Navigate to="/" replace />;
   }
 

@@ -36,6 +36,7 @@ api.interceptors.response.use(
 export const authAPI = {
   register: (data) => api.post('/users/register/', data),
   login: (data) => api.post('/users/login/', data),
+  clerkSyncLogin: (data) => api.post('/users/clerk-sync-login/', data),
   logout: () => api.post('/users/logout/'),
   getProfile: () => api.get('/users/profile/'),
   updateProfile: (data) => api.put('/users/profile/', data),
@@ -106,6 +107,7 @@ export const adminAPI = {
   getPendingKYC: () => api.get('/users/kyc/pending/'),
   verifyKYC: (data) => api.post('/users/kyc/verify/', data),
   getDisputedBookings: () => api.get('/bookings/disputed/'),
+  getOrders: (params) => api.get('/bookings/admin/orders/', { params }),
   resolveDispute: (data) => api.post('/bookings/resolve-dispute/', data),
 };
 

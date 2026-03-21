@@ -8,9 +8,15 @@ const AdminDashboard = () => {
   const [pendingListings, setPendingListings] = useState([]);
   const [pendingKYC, setPendingKYC] = useState([]);
   const [disputes, setDisputes] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [orderStatusFilter, setOrderStatusFilter] = useState('');
+  const [orderSearch, setOrderSearch] = useState('');
   const [customers, setCustomers] = useState([]);
   const [sales, setSales] = useState(null);
   const [inventory, setInventory] = useState(null);
+  const [basicInventory, setBasicInventory] = useState([]);
+  const [inventoryQuery, setInventoryQuery] = useState('');
+  const [inventoryStatusFilter, setInventoryStatusFilter] = useState('all');
   const [scm, setScm] = useState(null);
   const [decisionSupport, setDecisionSupport] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,6 +34,7 @@ const AdminDashboard = () => {
         listingsRes,
         kycRes,
         disputesRes,
+        ordersRes,
         customersRes,
         salesRes,
         inventoryRes,
@@ -38,6 +45,7 @@ const AdminDashboard = () => {
         adminAPI.getPendingListings().catch(() => ({ data: { results: [] } })),
         adminAPI.getPendingKYC().catch(() => ({ data: { results: [] } })),
         adminAPI.getDisputedBookings().catch(() => ({ data: { results: [] } })),
+        adminAPI.getOrders({}).catch(() => ({ data: [] })),
         adminAPI.getCustomers({}).catch(() => ({ data: { results: [] } })),
         adminAPI.getSalesReport({ group_by: 'week' }).catch(() => ({ data: null })),
         adminAPI.getInventoryLinkage({}).catch(() => ({ data: null })),
@@ -49,9 +57,17 @@ const AdminDashboard = () => {
       setPendingListings(listingsRes.data.results || listingsRes.data || []);
       setPendingKYC(kycRes.data.results || kycRes.data || []);
       setDisputes(disputesRes.data.results || disputesRes.data || []);
+      setOrders(Array.isArray(ordersRes.data) ? ordersRes.data : ordersRes.data.results || []);
       setCustomers(customersRes.data.results || []);
       setSales(salesRes.data);
       setInventory(inventoryRes.data);
+      const inventoryRows = (inventoryRes.data?.inventory_linkage || []).slice(0, 80).map((item) => ({
+        ...item,
+        sku: `SKU-${item.listing_id}`,
+        stock: Math.max(1, Math.round((item.utilization_percent ?? 0) / 10) || 1),
+        status: item.is_available ? 'available' : 'maintenance',
+      }));
+      setBasicInventory(inventoryRows);
       setScm(scmRes.data);
       setDecisionSupport(decisionRes.data);
     } catch (error) {
@@ -102,6 +118,31 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleApplyOrderFilters = async () => {
+    try {
+      const response = await adminAPI.getOrders({
+        status: orderStatusFilter || undefined,
+        search: orderSearch || undefined,
+      });
+      setOrders(Array.isArray(response.data) ? response.data : response.data.results || []);
+    } catch {
+      toast.error('Failed to filter orders');
+    }
+  };
+
+  const updateInventoryItem = (listingId, updates) => {
+    setBasicInventory((prev) =>
+      prev.map((item) => (item.listing_id === listingId ? { ...item, ...updates } : item))
+    );
+  };
+
+  const filteredInventory = basicInventory.filter((item) => {
+    const text = `${item.title || ''} ${item.host || ''} ${item.sku || ''}`.toLowerCase();
+    const matchesQuery = text.includes(inventoryQuery.toLowerCase());
+    const matchesStatus = inventoryStatusFilter === 'all' || item.status === inventoryStatusFilter;
+    return matchesQuery && matchesStatus;
+  });
+
   if (loading) return <div className="loading">Loading...</div>;
 
   return (
@@ -115,6 +156,8 @@ const AdminDashboard = () => {
             ['listings', `Pending Listings (${pendingListings.length})`],
             ['kyc', `Pending KYC (${pendingKYC.length})`],
             ['disputes', `Disputes (${disputes.length})`],
+            ['orders', `Orders (${orders.length})`],
+            ['basic_inventory', `Basic Inventory (${basicInventory.length})`],
             ['customers', 'Customers'],
             ['sales', 'Sales Report'],
             ['inventory', 'Inventory Linkage'],
@@ -214,6 +257,160 @@ const AdminDashboard = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {activeTab === 'orders' && (
+          <div className="card">
+            <h2>Order Management</h2>
+            <div className="order-toolbar">
+              <input
+                value={orderSearch}
+                onChange={(e) => setOrderSearch(e.target.value)}
+                placeholder="Search by order id, listing, guest or host"
+              />
+              <select value={orderStatusFilter} onChange={(e) => setOrderStatusFilter(e.target.value)}>
+                <option value="">All statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="in_use">In Use</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="disputed">Disputed</option>
+              </select>
+              <button className="btn btn-primary" onClick={handleApplyOrderFilters}>Apply</button>
+            </div>
+
+            <div className="orders-grid">
+              <div className="stat-card card">
+                <h3>Total Orders</h3>
+                <p className="stat-number">{orders.length}</p>
+              </div>
+              <div className="stat-card card">
+                <h3>Disputed Orders</h3>
+                <p className="stat-number">{orders.filter((o) => o.dispute_flag).length}</p>
+              </div>
+              <div className="stat-card card">
+                <h3>Completed Orders</h3>
+                <p className="stat-number">{orders.filter((o) => o.booking_status === 'completed').length}</p>
+              </div>
+            </div>
+
+            <div className="orders-table-wrap">
+              <table className="orders-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Listing</th>
+                    <th>Guest</th>
+                    <th>Host</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.slice(0, 80).map((order) => (
+                    <tr key={order.id}>
+                      <td>#{order.id}</td>
+                      <td>{order.listing_title || 'Listing'}</td>
+                      <td>{order.guest_name || '-'}</td>
+                      <td>{order.host_name || '-'}</td>
+                      <td>
+                        <span className={`badge ${order.booking_status === 'completed' ? 'badge-success' : order.booking_status === 'disputed' ? 'badge-danger' : order.booking_status === 'cancelled' ? 'badge-warning' : 'badge-info'}`}>
+                          {order.booking_status}
+                        </span>
+                      </td>
+                      <td>₹{Number(order.guest_total || 0).toFixed(2)}</td>
+                      <td>
+                        {order.booking_status === 'disputed' ? (
+                          <button className="btn btn-warning" onClick={() => handleResolveDispute(order.id, false)}>Resolve</button>
+                        ) : (
+                          <span className="order-action-muted">No action</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'basic_inventory' && (
+          <div className="card">
+            <h2>Basic Inventory System</h2>
+            <div className="inventory-toolbar">
+              <input
+                value={inventoryQuery}
+                onChange={(e) => setInventoryQuery(e.target.value)}
+                placeholder="Search by listing, host or SKU"
+              />
+              <select value={inventoryStatusFilter} onChange={(e) => setInventoryStatusFilter(e.target.value)}>
+                <option value="all">All statuses</option>
+                <option value="available">Available</option>
+                <option value="rented">Rented</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+            </div>
+
+            <div className="orders-grid">
+              <div className="stat-card card">
+                <h3>Total Items</h3>
+                <p className="stat-number">{filteredInventory.length}</p>
+              </div>
+              <div className="stat-card card">
+                <h3>Available</h3>
+                <p className="stat-number">{filteredInventory.filter((i) => i.status === 'available').length}</p>
+              </div>
+              <div className="stat-card card">
+                <h3>Maintenance</h3>
+                <p className="stat-number">{filteredInventory.filter((i) => i.status === 'maintenance').length}</p>
+              </div>
+            </div>
+
+            <div className="orders-table-wrap">
+              <table className="orders-table inventory-table">
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Item</th>
+                    <th>Host</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredInventory.slice(0, 120).map((item) => (
+                    <tr key={item.listing_id}>
+                      <td>{item.sku}</td>
+                      <td>{item.title}</td>
+                      <td>{item.host}</td>
+                      <td>
+                        <div className="inventory-stepper">
+                          <button className="btn btn-secondary" onClick={() => updateInventoryItem(item.listing_id, { stock: Math.max(0, (item.stock || 0) - 1) })}>-</button>
+                          <span>{item.stock}</span>
+                          <button className="btn btn-secondary" onClick={() => updateInventoryItem(item.listing_id, { stock: (item.stock || 0) + 1 })}>+</button>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`badge ${item.status === 'available' ? 'badge-success' : item.status === 'maintenance' ? 'badge-warning' : 'badge-info'}`}>
+                          {item.status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="listing-actions">
+                          <button className="btn btn-secondary" onClick={() => updateInventoryItem(item.listing_id, { status: 'available' })}>Set Available</button>
+                          <button className="btn btn-warning" onClick={() => updateInventoryItem(item.listing_id, { status: 'maintenance' })}>Maintenance</button>
+                          <button className="btn btn-primary" onClick={() => updateInventoryItem(item.listing_id, { status: 'rented' })}>Mark Rented</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 

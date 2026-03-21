@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniShare - Explore</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#006b5b",
+                        "outline": "#6e7976",
+                        "background": "#f7f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9ff",
+                        "tertiary-fixed-dim": "#ffb5a1",
+                        "on-secondary-fixed-variant": "#334b47",
+                        "inverse-primary": "#83d6c2",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f1f4fa",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#061f1c",
+                        "primary-fixed": "#9ff2de",
+                        "surface-container-high": "#e5e8ee",
+                        "primary": "#005144",
+                        "primary-fixed-dim": "#83d6c2",
+                        "tertiary": "#892000",
+                        "primary-container": "#006b5b",
+                        "on-primary-container": "#95e8d4",
+                        "on-tertiary-container": "#ffcec2",
+                        "on-surface": "#181c20",
+                        "on-background": "#181c20",
+                        "inverse-surface": "#2d3135",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00201a",
+                        "on-primary-fixed-variant": "#005144",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#b1ccc6",
+                        "surface-container-highest": "#dfe3e8",
+                        "surface-container": "#ebeef4",
+                        "surface-dim": "#d7dae0",
+                        "tertiary-fixed": "#ffdbd1",
+                        "on-tertiary-fixed-variant": "#881f00",
+                        "on-secondary-container": "#4e6862",
+                        "surface": "#f7f9ff",
+                        "on-tertiary-fixed": "#3b0800",
+                        "tertiary-container": "#b22d01",
+                        "surface-variant": "#dfe3e8",
+                        "secondary": "#4a635e",
+                        "secondary-fixed": "#cde8e2",
+                        "inverse-on-surface": "#eef1f7",
+                        "secondary-container": "#cae5df",
+                        "outline-variant": "#bec9c4",
+                        "on-surface-variant": "#3e4946"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-white/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm shadow-emerald-900/5 px-6 py-3 flex justify-between items-center w-full">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-emerald-900 hover:bg-emerald-50/50 p-2 rounded-full transition-colors active:scale-95 duration-200">
+                menu
+            </button>
+<span class="text-xl font-black text-emerald-900 tracking-tighter font-headline">OmniShare</span>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-slate-500 font-medium hover:text-emerald-600 transition-colors" href="#">Home</a>
+<a class="text-emerald-700 font-semibold transition-colors" href="#">Explore</a>
+<a class="text-slate-500 font-medium hover:text-emerald-600 transition-colors" href="#">Cart</a>
+</nav>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border-2 border-primary-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User profile avatar circle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv1fUWPHhYbfvijIfuy6FzLHrdK_kitMqLel0XlQmi2xFyffRqF3lYg_LLiIv55Lhnd60zFM_EzQyNuE-zZUb-zavewPXkDedKLPCtaCKTKKmXZz5lSfa_FwPky3QAt2DtfGAIKEBW_tom-AGkncpVxdCTDcsGXs2MS1Y5GGS8OpWD35fOmgBoP-4M-i2pSDrj9XEmoTsS1ZNi3ypnJQwpH2d8zXX5vPEWfZcx71iXz70-6y_rhz9vUJyHqfvCmoObe05okViJhHY"/>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<!-- Search & Editorial Header -->
+<section class="mb-12">
+<div class="max-w-2xl mb-8">
+<h1 class="text-5xl font-extrabold tracking-tight text-on-background mb-4 leading-tight">
+                    Discover <span class="text-primary italic">Everyday</span> Essentials.
+                </h1>
+<p class="text-on-surface-variant text-lg leading-relaxed">Curated high-end equipment for your next project, adventure, or celebration.</p>
+</div>
+<!-- Search and Sort Container -->
+<div class="flex flex-col md:flex-row gap-4 items-center">
+<div class="relative flex-grow w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-high border-none rounded-xl focus:ring-2 focus:ring-primary/30 focus:bg-surface-container-lowest transition-all text-on-surface placeholder:text-on-surface-variant/60" placeholder="Search premium rentals..." type="text"/>
+</div>
+<div class="relative w-full md:w-48">
+<select class="w-full appearance-none bg-surface-container-high border-none py-4 px-4 pr-10 rounded-xl font-medium text-on-surface focus:ring-2 focus:ring-primary/30">
+<option>Sort by: Newest</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Top Rated</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+</section>
+<!-- Filter Chips Section -->
+<section class="flex flex-wrap gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-white font-medium shadow-md shadow-primary/20 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">tune</span>
+<span class="text-sm">All Filters</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-colors">
+<span class="text-sm">Price Range</span>
+<span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-colors">
+<span class="text-sm">Category</span>
+<span class="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-lowest text-on-surface font-medium hover:bg-surface-container-low transition-colors">
+<span class="text-sm">Distance</span>
+<span class="material-symbols-outlined text-sm">near_me</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30 mx-2 self-center"></div>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-medium">Electronics</button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-medium">Outdoors</button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-medium">Cameras</button>
+</section>
+<!-- Products Grid (Bento-style layout variations) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
+<!-- Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High-end professional DSLR camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfzshb8HJcafYkHmc-QngzmrVyXflcrpN8_ygowYGCCQaYs9mnVMbsHKy1VMjWNrQuID4lHSYqW1xpYQdfil3N9gCnuisoyXVLHMCEHhTE3jMIEdH0S86n3L4eiXZnItz_dBeJdHF7zt5wR44gx9I7NkbSI7prcSY6H5F6n7W9jEbyusAYYSUmOfBQLFYqFJvHuOCFU69vB85ebATf5-Zd1CMiY5bu2bhpdrqDMPssNFEOO6oyWAUhk-vF0XFnhX2RxgMjtPt-6ZU"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Sony Alpha A7 IV</h3>
+<p class="text-on-surface-variant text-sm mb-2">Professional Imaging</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.9 (128 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$45</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Modern electric mountain bike" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0aFQ42YinZShMFumk9yn-yasxa-xwE6Z80ySn5Z2zBad7Xb-7rNgaTmlCY_thS9cr5IUeIjN_axj4SuNoBKyLEHbNi5eSHCHpU6akKhGDohV_LHtQcVrbZb_NeuiQV0t5HNkA79XWOOtIxyAJI47SYu9LxrDOtHW9ZMf-Fko8VYJhU6Xx15TRWsKkl-k0TzIUQpZcnybJobRAUD4kZUJlefQhYtL9YR989Lkk7aztFknKOyf6yQFa_DGT_co4FxYANPHEMh8NGVQ"/>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-on-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-xl">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Specialized Levo E-Bike</h3>
+<p class="text-on-surface-variant text-sm mb-2">Mountain &amp; Trail</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.8 (84 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$62</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High performance workstation laptop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgCOT1AK4whAqFRjNt91086yL-H-jDEr7IeWQKvhHYFt7CCqpdORPhgexeVkWcUhbq9ur8cgpYeOiIAJ2HLql9oAMoC3Ldm1MCM8mCDc1OAtrueYUX7mnJBpN871JCHjXTbCq85Hxv3PaUmXH-H_he41vajvcjj1XeezmjorPseoKyy6D9Z4vQJ9J1oFqLqUBb_Dqkz8MAK2vTvds-TMh39vizkUvV8v16HJIkoaOqQhUPH-3Q-xOlDrTqYfCCHXX_dzBZjrn11-4"/>
+<div class="absolute top-4 left-4 bg-primary-container text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Top Rated</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">MacBook Pro M2 Max</h3>
+<p class="text-on-surface-variant text-sm mb-2">Creative Computing</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">5.0 (215 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$85</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Luxury analog wristwatch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOrunSAWI4lZa4zA6s1tLvQ_B4xFcxrzElyWzZw5OCRFH6hpNVJ33N9omeyccXu3f_ZIVi576jdOM9Q1ygI9r2Rm1jDOzraLVBFGibpjrQfMKZm8P7c6cE3chSGuwLfzM2l-bkyujCf03i0in50tja9OOlPTfwbHoYOKiSp5fUPn-8agzXuraxLLYXSeNZjH8BFaZFPSDfdbWM3d7ABsxD_-Q654txXeJNiffM6SCGE1PIZbyUJIozv6eSRMLP6lOfYaZ7G9FXf70"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Tudor Black Bay 58</h3>
+<p class="text-on-surface-variant text-sm mb-2">Luxury Accessories</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.7 (42 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$30</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Wireless noise-cancelling headphones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRhD_wcPJDjVA7IVk98yzUVniZuGlfF1DwBr0f9Hjpl0sJcAWk-nDuH5Wqn7Kx9jL9bj8FTV-GdZ6OLGVBRuAzL7Jba-zJahuN1ByZCQotCFvuYGW0sWZUPJslmvLwePghnJGsCsMcnw5UvSjdR-l6LeE5VqvlsijaFSPCYGd1bZxQCesAfcSkabGrbu8qVDEmVHjPikNYV1zNHl8HcbHBUp79QPBut3mC7ouhn5KGseM2iOHtYJS4vMpx_aZ3v_QkcVT4Xk1MwBA"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Bose QuietComfort Ultra</h3>
+<p class="text-on-surface-variant text-sm mb-2">Premium Audio</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.9 (310 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$15</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Compact city commuter car" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKrqXkCZR9jawiw9C4rysEGGkBTyKZrKkjG-jrfsBxNQ4ec4FAowYGWgE_NoCJhoLXZo1P-48XfddcZbmxYBxxarrDq3CXxm0BDMDDgO58DIPAfFDmTqj-dlnObjNY2e0RJz8bbgQxMOxXARNmzq2qvI_dJqGwCkxLDez7N6pkg43PLVV6fi7ylzCKwVcMT--kaBe9iLUyCa5EH_KjwKeX6V1fykVilA9r_v_EOxndFwAxeEXTTiq3Sn0igKURp05EIdmZKjzf_HM"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Tesla Model 3</h3>
+<p class="text-on-surface-variant text-sm mb-2">Electric Vehicles</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.6 (152 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$95</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 7 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Minimalist camping tent in forest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP7QiTd3F9vSAmFlBrAmCne9t8Tp87xxnpcGNfLywlE7e4PQSXAWuKIHolsoJik25MybpA-4UMJhvbz_LHlsnbyFs7uhvYIXBDhXDxNjY1y8XW5MBfKe3o1Kpd4bFcBdOd9Mcxe5jg0eXapJAgr1qOQzJopVTc6pbdR6pOKs-1GQxnre-bS1oJPDajE4_70I3JmhlIxghZSt-EfA9-B7AcWfKIUkhqivN4htAqljylFSvT0_nEQLX7-0_6IvaASJ39av4Pl-BSkYA"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">MSR Hubba Hubba 2P</h3>
+<p class="text-on-surface-variant text-sm mb-2">Adventure Gear</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.8 (67 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$28</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+<!-- Card 8 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-surface-container-low shadow-sm transition-all group-hover:shadow-xl group-hover:shadow-emerald-900/5">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High-end espresso machine" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS5TN8BSy3JYCYlWMp44dQ2vAjoSDPG_Y0w9Ifkjq7o_RJEGdVaG6ZsHau4XJosL_e5p5CG0qD07h6XTTFc484ANL16tDUzTZkBjkI1EUaYOQPtwaxeeM5C-BZ8ailIkWOHtP6w6eSq75Km1OF760jjHllMTFRU4-U7lc3KU24jgBOeS7jPrGh6YONkYVTjUo3bMPC8vv06rIBNwYypaTubxE42MVud5dgng66kAueWGtNAr3ELI_gSFTHeJ7-g4JTPC0dUbJwZzg"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface group-hover:text-primary transition-colors">Breville Oracle Touch</h3>
+<p class="text-on-surface-variant text-sm mb-2">Kitchen Appliances</p>
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold font-body">4.9 (18 reviews)</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xl font-black text-primary font-headline">$40</p>
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant">Per Day</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pagination / Load More (Editorial Style) -->
+<div class="mt-20 flex flex-col items-center">
+<p class="text-on-surface-variant text-sm mb-6 font-medium">Showing 8 of 142 premium listings</p>
+<button class="px-10 py-4 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-bold rounded-xl transition-all active:scale-95 shadow-sm">
+                Explore More
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-lg z-50 rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)] border-t border-emerald-900/5 md:hidden">
+<a class="flex flex-col items-center justify-center text-slate-400 group active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:text-emerald-600 transition-colors">home</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-emerald-900 bg-emerald-100/50 rounded-xl px-3 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 group active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:text-emerald-600 transition-colors">shopping_cart</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest">Cart</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 group active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:text-emerald-600 transition-colors">person</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>

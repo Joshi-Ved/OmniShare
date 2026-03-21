@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth, useUser } from '@clerk/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,9 +27,75 @@ import OrderConfirmation from './pages/OrderConfirmation';
 // Components
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
+import { authAPI } from './services/api';
 
 function AppContent() {
   const { theme, isDark, toggleTheme } = useTheme();
+  const { isLoaded, isSignedIn } = useAuth();
+  const { user: clerkUser } = useUser();
+  const didSyncRef = useRef(false);
+  const syncKeyRef = useRef('');
+  const clerkId = clerkUser?.id || '';
+  const clerkEmail = clerkUser?.primaryEmailAddress?.emailAddress || clerkUser?.emailAddresses?.[0]?.emailAddress || '';
+  const clerkUsername = clerkUser?.username || '';
+  const clerkFirstName = clerkUser?.firstName || '';
+  const clerkLastName = clerkUser?.lastName || '';
+
+  useEffect(() => {
+    const syncAuth = async () => {
+      if (!isLoaded) return;
+
+      if (!isSignedIn) {
+        didSyncRef.current = false;
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        syncKeyRef.current = '';
+        return;
+      }
+
+      const existingToken = localStorage.getItem('access_token');
+      const existingUser = localStorage.getItem('user');
+      if (existingToken && existingUser) {
+        didSyncRef.current = true;
+        return;
+      }
+
+      if (didSyncRef.current) return;
+
+      const syncKey = `${clerkId}:${clerkEmail}`;
+      if (syncKey && syncKeyRef.current === syncKey) return;
+      syncKeyRef.current = syncKey;
+      didSyncRef.current = true;
+
+      try {
+        const email = clerkEmail;
+        const username = clerkUsername || clerkId || email;
+
+        if (!email) return;
+
+        const response = await authAPI.clerkSyncLogin({
+          email,
+          username,
+          first_name: clerkFirstName,
+          last_name: clerkLastName,
+        });
+
+        if (response?.data?.access_token) {
+          localStorage.setItem('access_token', response.data.access_token);
+        }
+
+        if (response?.data?.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
+      } catch (error) {
+        console.error('Failed to sync Clerk login with backend token', error);
+        didSyncRef.current = false;
+        syncKeyRef.current = '';
+      }
+    };
+
+    syncAuth();
+  }, [isLoaded, isSignedIn, clerkId, clerkEmail, clerkUsername, clerkFirstName, clerkLastName]);
 
   return (
     <Router>

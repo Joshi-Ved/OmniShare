@@ -17,6 +17,7 @@ urlpatterns = [
     path('raise-dispute/', views.RaiseDisputeView.as_view(), name='raise-dispute'),
     path('resolve-dispute/', views.ResolveDisputeView.as_view(), name='resolve-dispute'),
     path('disputed/', views.DisputedBookingsView.as_view(), name='disputed-bookings'),
+    path('admin/orders/', views.AdminBookingsView.as_view(), name='admin-bookings'),
     
     # Cancellation
     path('cancel/', views.CancelBookingView.as_view(), name='cancel-booking'),

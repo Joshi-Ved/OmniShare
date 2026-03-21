@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniShare | The Architectural Curator of Sharing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-tint": "#006b5b",
+                        "outline": "#6e7976",
+                        "background": "#f7f9ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9ff",
+                        "tertiary-fixed-dim": "#ffb5a1",
+                        "on-secondary-fixed-variant": "#334b47",
+                        "inverse-primary": "#83d6c2",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f1f4fa",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#061f1c",
+                        "primary-fixed": "#9ff2de",
+                        "surface-container-high": "#e5e8ee",
+                        "primary": "#005144",
+                        "primary-fixed-dim": "#83d6c2",
+                        "tertiary": "#892000",
+                        "primary-container": "#006b5b",
+                        "on-primary-container": "#95e8d4",
+                        "on-tertiary-container": "#ffcec2",
+                        "on-surface": "#181c20",
+                        "on-background": "#181c20",
+                        "inverse-surface": "#2d3135",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#00201a",
+                        "on-primary-fixed-variant": "#005144",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#b1ccc6",
+                        "surface-container-highest": "#dfe3e8",
+                        "surface-container": "#ebeef4",
+                        "surface-dim": "#d7dae0",
+                        "tertiary-fixed": "#ffdbd1",
+                        "on-tertiary-fixed-variant": "#881f00",
+                        "on-secondary-container": "#4e6862",
+                        "surface": "#f7f9ff",
+                        "on-tertiary-fixed": "#3b0800",
+                        "tertiary-container": "#b22d01",
+                        "surface-variant": "#dfe3e8",
+                        "secondary": "#4a635e",
+                        "secondary-fixed": "#cde8e2",
+                        "inverse-on-surface": "#eef1f7",
+                        "secondary-container": "#cae5df",
+                        "outline-variant": "#bec9c4",
+                        "on-surface-variant": "#3e4946"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .brand-logo { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm shadow-emerald-900/5 no-border bg-surface-container-low">
+<div class="flex justify-between items-center w-full px-6 py-3">
+<div class="flex items-center gap-4">
+<button class="text-emerald-900 dark:text-emerald-50 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors p-2 rounded-lg active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="text-xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter">OmniShare</span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-emerald-700 dark:text-emerald-400 font-semibold font-manrope font-bold tracking-tight" href="#">Home</a>
+<a class="text-slate-500 dark:text-slate-400 font-manrope font-bold tracking-tight hover:bg-emerald-50/50 transition-colors p-2 rounded-lg" href="#">Explore</a>
+<a class="text-slate-500 dark:text-slate-400 font-manrope font-bold tracking-tight hover:bg-emerald-50/50 transition-colors p-2 rounded-lg" href="#">Cart</a>
+<a class="text-slate-500 dark:text-slate-400 font-manrope font-bold tracking-tight hover:bg-emerald-50/50 transition-colors p-2 rounded-lg" href="#">Profile</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Close up portrait of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5oihT3R8iGim_rJlWuuKCMkN8EhZXG6zfsjmZU8mhhf8TAC45VbrUtrngoSFVllaQDIN7tT7DcDvif7s8dnbqAQANJJbmroE2Q1sJqL9X-Zf1ySae6hOpwXOUbCbdsGaaYUxnSwLnKh0fQE4Abf0boVG-2sMMmBOY-ULIp9ATxky_AIBNL-NmYSuG_cDLR2YrZCU7IGX3LT-nue5rv2_9-DsNY60mmoqPM8cq0WIs5RWOXNcu--fzqwRPBBJS66TMkZ3xWSoCwAQ"/>
+</div>
+</div>
+</div>
+</header>
+<main class="relative">
+<!-- Hero Section -->
+<section class="relative pt-24 pb-32 px-6 overflow-hidden bg-surface">
+<div class="max-w-7xl mx-auto flex flex-col items-start gap-12 relative z-10">
+<div class="max-w-3xl">
+<h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter text-on-surface leading-[0.9] mb-8">
+                        The art of <span class="text-primary italic">access</span>, not ownership.
+                    </h1>
+<p class="text-xl text-on-surface-variant font-body max-w-xl mb-12">
+                        Find what you need, only when you need it. A curated ecosystem for renting premium tools, gear, and technology.
+                    </p>
+<!-- Search Bar -->
+<div class="w-full max-w-2xl bg-surface-container-lowest rounded-full p-2 flex items-center shadow-[0_8px_32px_rgba(0,81,68,0.06)] border border-outline-variant/20">
+<div class="flex-grow flex items-center px-4">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="w-full border-none focus:ring-0 bg-transparent text-on-surface font-body py-3" placeholder="Search for tools, camping gear, or tech..." type="text"/>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-8 py-4 rounded-full font-bold font-manrope hover:opacity-90 transition-all active:scale-95">
+                            Find Now
+                        </button>
+</div>
+</div>
+</div>
+<!-- Asymmetric Hero Image/Graphic -->
+<div class="absolute top-0 right-0 w-1/3 h-full hidden lg:block bg-surface-container-low rounded-l-[120px] overflow-hidden">
+<img alt="Premium rental equipment" class="w-full h-full object-cover opacity-60 mix-blend-multiply" data-alt="Modern professional camera equipment arranged neatly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgd62R9InbrYlWSfBIXKyjZzyuOw6xcgUGuD1lvhKQn4Sb2AK88EUPcyri73giw3-2w3Bqwjl15jkPtYOLpWNUvCDhTw9nIFSFBLaTrH7ieMpvNoFBhXWRzB8KiER594zyPOvzFJKafyFgR754hZWrZgVK-9e9cej0TR6k6MgWgkjCqlIPT-Fc66-qxqL3hu7O2QS8qKaBPO6Y1ItbvcaykMqslvpDnphe9NIvLzyK3MaCULvNCkOAOL_IBPjVlqBeXCj61zFKmJk"/>
+</div>
+</section>
+<!-- Categories: Tonal Shift Bento Grid -->
+<section class="py-24 px-6 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-16">
+<div>
+<span class="text-[0.6875rem] font-bold tracking-[0.2em] text-primary uppercase mb-4 block">Collections</span>
+<h2 class="text-4xl font-extrabold tracking-tight text-on-surface">Curated Categories</h2>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 group" href="#">
+                        Browse all <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Tools -->
+<div class="md:col-span-2 bg-surface-container-lowest rounded-xl p-8 flex flex-col justify-between h-[300px] group cursor-pointer hover:shadow-xl transition-all border border-transparent hover:border-outline-variant/20">
+<div>
+<span class="material-symbols-outlined text-4xl text-primary mb-4">construction</span>
+<h3 class="text-2xl font-bold mb-2">Tools</h3>
+<p class="text-on-surface-variant max-w-[200px]">Professional grade equipment for any project.</p>
+</div>
+<div class="flex items-center gap-2 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                            View 120+ Items <span class="material-symbols-outlined text-xs">north_east</span>
+</div>
+</div>
+<!-- Tech -->
+<div class="bg-surface-container-highest rounded-xl p-8 flex flex-col justify-between h-[300px] cursor-pointer relative overflow-hidden group">
+<img alt="Tech items" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform" data-alt="Close up of modern sleek electronics" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSFZNaiaNr6daBL_bdZCHuwH394jMQdPBv6xkUsSktS2AzUpNi3frrgtVb1Do6LFuOQFjNgrea2PpRhla8D9-mU3cUHucQ9jzhx7kryNcBo4PAJt3AnN1DkxvhkyY6J232j5kIdQIheBMIgU4lRPKAzjGnsIusS4G5cB9N-qzUcU3naH3LGlgGKqRM5upd7CojFE3Iap0Fbb3dgpNx3LstKYtOoHspUziiGkAvex-A5Z9ODhZMPMnLGOcnmU3luraRz3dFgTHO0_4"/>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-4xl text-primary mb-4">devices</span>
+<h3 class="text-2xl font-bold mb-2">Tech</h3>
+</div>
+</div>
+<!-- Camping -->
+<div class="bg-primary text-white rounded-xl p-8 flex flex-col justify-between h-[300px] cursor-pointer group">
+<div>
+<span class="material-symbols-outlined text-4xl mb-4">camping</span>
+<h3 class="text-2xl font-bold mb-2">Camping</h3>
+<p class="text-white/70">Elevate your wilderness experience.</p>
+</div>
+<span class="material-symbols-outlined self-end group-hover:rotate-45 transition-transform">arrow_forward</span>
+</div>
+<!-- Event Gear -->
+<div class="md:col-span-4 bg-surface-container-lowest rounded-xl p-10 flex flex-col md:flex-row items-center gap-12 cursor-pointer hover:bg-white transition-colors">
+<div class="flex-grow">
+<span class="material-symbols-outlined text-4xl text-tertiary mb-4">celebration</span>
+<h3 class="text-3xl font-bold mb-3">Event Gear</h3>
+<p class="text-on-surface-variant max-w-xl">From sound systems to specialized lighting, make your next gathering unforgettable without the storage hassle.</p>
+</div>
+<button class="bg-surface-container-high px-8 py-4 rounded-lg font-bold hover:bg-surface-container-highest transition-all whitespace-nowrap">Explore Events</button>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works: Vertical Editorial Layout -->
+<section class="py-32 px-6 bg-surface">
+<div class="max-w-5xl mx-auto">
+<div class="text-center mb-24">
+<h2 class="text-5xl font-extrabold tracking-tight mb-6">The Cycle of Utility</h2>
+<p class="text-on-surface-variant text-lg max-w-2xl mx-auto font-body">Our simple three-step process ensures you get premium gear with zero friction.</p>
+</div>
+<div class="space-y-32">
+<!-- Step 1 -->
+<div class="flex flex-col md:flex-row items-center gap-16">
+<div class="flex-1 order-2 md:order-1">
+<span class="text-8xl font-black text-surface-container-highest leading-none block mb-4">01</span>
+<h3 class="text-3xl font-bold mb-4">List &amp; Discover</h3>
+<p class="text-lg text-on-surface-variant font-body">Owners list high-quality items they aren't using. You browse our curated marketplace to find exactly what fits your current need.</p>
+</div>
+<div class="flex-1 order-1 md:order-2">
+<div class="aspect-square bg-surface-container-low rounded-full flex items-center justify-center p-12">
+<img alt="Discovery" class="w-full h-full object-contain mix-blend-multiply opacity-80" data-alt="Minimalist product photo of a white watch" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPK4rzs4e9131GHZxJ3_2LtpCNcJT1ars_J8RTbvj-KMUTeaZGLsAz7qJhzb3e2S5CwWv__GwV3izdOBFqWQXamfM_Ds6TwUqZCcddAAJlqwjA5yYRNnDWb73tbwNzMjmrNAC27o_U8fWTyOL0iJmK1SZXbmx4nPVPyFCZw7R1Q1TCnZxpW1FtS29_-PV1y1Bu5FLxBzqMtRr9jbEpTpLPjcPBeJtb_5Mw-aMVk53j7CfrqK_vageG5HfbayxC1Ahu7leXBE2wH4E"/>
+</div>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col md:flex-row items-center gap-16">
+<div class="flex-1">
+<div class="aspect-video bg-surface-container-high rounded-3xl overflow-hidden shadow-2xl">
+<img alt="Rent" class="w-full h-full object-cover" data-alt="Person camping next to a beautiful lake" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClcC7xne7xaOVQIeMuZ1pngb4bVPRszZK_jHyXhWJyhhPOKBr24s5VgjRReq66g9617TsRoBfDRjAiBY1iEc0fcbTT3AoCDq2U8h3JBCtXRhM7rmY7g35QdMxYERhCMNUCVBhWsXmx0-j9L1vBaSVuw4tA4Uqw1LHQ-JHtYuRxqzfUgPOSXsfwuPdzLXOeTos58DL6tXaZYsvnJ_qUKBYyECK9SexJAAfhxxT9ISh1YEiinGzf2_1CytCDRA6w1MugZspJ4XebBhw"/>
+</div>
+</div>
+<div class="flex-1">
+<span class="text-8xl font-black text-surface-container-highest leading-none block mb-4">02</span>
+<h3 class="text-3xl font-bold mb-4">Rent with Trust</h3>
+<p class="text-lg text-on-surface-variant font-body">Book instantly. Every transaction is covered by OmniShield protection. Pickup locally or choose curated delivery options.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col md:flex-row items-center gap-16">
+<div class="flex-1 order-2 md:order-1">
+<span class="text-8xl font-black text-surface-container-highest leading-none block mb-4">03</span>
+<h3 class="text-3xl font-bold mb-4">Return &amp; Repeat</h3>
+<p class="text-lg text-on-surface-variant font-body">When your project or adventure is done, return the item in original condition. Zero clutter, infinite possibilities.</p>
+</div>
+<div class="flex-1 order-1 md:order-2">
+<div class="relative">
+<div class="w-64 h-64 bg-primary rounded-full absolute -top-8 -right-8 opacity-10"></div>
+<div class="relative bg-surface-container-lowest p-8 rounded-2xl shadow-lg border border-outline-variant/10">
+<span class="material-symbols-outlined text-6xl text-primary">published_with_changes</span>
+<div class="mt-4 font-bold text-xl">Verified Returns</div>
+<p class="text-sm text-on-surface-variant mt-2">10,000+ successful handovers this month.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Products -->
+<section class="py-24 px-6 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16">
+<h2 class="text-4xl font-extrabold tracking-tight text-on-surface mb-4">Available Near You</h2>
+<p class="text-on-surface-variant">Selected items from the OmniShare community.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Product 1 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest rounded-xl mb-4 overflow-hidden relative">
+<img alt="Camera Gear" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="High end DSLR camera on a tripod" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCknURfuIANdQrJJjstjSOC5kyzzNWI9X-BHeP2tocP-MTBJCwDEnUEKpK76yipLhBwml2ZzhMxmKZLwSqSPO290GNvYXsRg7uo0qe41AuySyS1ndtSpXgDwSbDh03LT_GftZNPlU26GY_vni-63FmT3QnPAnrsL1k-w_biYfLyniejuD26aR2nD3ttdXgnhbMmQqnKUFo4GVuVLG9I-Akp3RxHYl96iSVGfwobi4hTDMFLOLcI2Mo4NKw5F2qBSNsvQeT3b1Z30Nc"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Tech</div>
+</div>
+<h4 class="font-manrope font-bold text-lg mb-1">Sony Alpha a7R IV Kit</h4>
+<p class="text-primary font-bold mb-4">$85 <span class="text-xs text-on-surface-variant font-normal">/ day</span></p>
+<button class="w-full py-3 bg-surface-container-high rounded-lg text-sm font-bold group-hover:bg-primary group-hover:text-white transition-all">Quick View</button>
+</div>
+<!-- Product 2 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest rounded-xl mb-4 overflow-hidden relative">
+<img alt="Tools" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Powerful cordless drill and bits" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZuJQbtO9ySTNew7D5zUnOyQBM-BkVsbeqWA2T4-aMpiPBpR0qkUMskCxAJee5qcjvZn3TcQcjo_WYm6ywMtaNEczTjl05Q4Qi-sEg89qtgRrOjRJK-qraXu1ct_W3lSGG_8ljUtDr7NJn317FCc4DL6sXfCNbWZwDwGVuqCDWfHVsBAzrL8FSPWcT5JFL3nitaELyZBQG8CAmhYQbTO_Sh8SpYDN1LBeLUNAPBMT7aiHoh7IUmFWUJ2zsgAP-6yYowF8Zx3Ts-L4"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Tools</div>
+</div>
+<h4 class="font-manrope font-bold text-lg mb-1">Dewalt Power Drill Set</h4>
+<p class="text-primary font-bold mb-4">$22 <span class="text-xs text-on-surface-variant font-normal">/ day</span></p>
+<button class="w-full py-3 bg-surface-container-high rounded-lg text-sm font-bold group-hover:bg-primary group-hover:text-white transition-all">Quick View</button>
+</div>
+<!-- Product 3 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest rounded-xl mb-4 overflow-hidden relative">
+<img alt="Camping" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Two person orange tent in the woods" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhcVD-2QAOiNpHeRGExDxKT6KihXc5E-ueklvQE7tbCJRyfTUYs25xMEYVQHHqvqyrtE_hm-36g_M7cWLf_RN00brr4CkLgICkvEXt424onP2vR8rXsNeqyU-ET7DB92Yd117oPJ3O3vY4YXQySQkYP5_ClzGflRSz-oE_jTRwqIQFy1WoW0Tq3SqXZyVAJMCRv_ScJzgfU8bF79Uz1VdRGfKT05k0pTyUmKGfQ98PeR8siDuFNamV7h6VwpEJblwUoVDngKa9hIY"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Camping</div>
+</div>
+<h4 class="font-manrope font-bold text-lg mb-1">North Face 4-Season Tent</h4>
+<p class="text-primary font-bold mb-4">$45 <span class="text-xs text-on-surface-variant font-normal">/ day</span></p>
+<button class="w-full py-3 bg-surface-container-high rounded-lg text-sm font-bold group-hover:bg-primary group-hover:text-white transition-all">Quick View</button>
+</div>
+<!-- Product 4 -->
+<div class="group">
+<div class="aspect-[4/5] bg-surface-container-lowest rounded-xl mb-4 overflow-hidden relative">
+<img alt="Tech" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Oculus VR headset on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx5_WZIVcGhy44F1krmi2VtMaEDlF3srFYkGS6vaNITauFtR3d9V3uG9TODBlb7CDWGWpYtC1Ji8sTEuX95HqcHapkCf_AVNbKDeDnYHZu3xcTJWxhrPDUkZQURm9KnE-NSte38WDdwzAPxrKzevM8R6Xbv6NtrVKPZTHUTD8aGceYifP4FX1PsxJoX2mi9sY7Q_dwulyDZQ0sNY_Ak8vV-Vn_fPyApGJkyXMEGggyGYsxyVv-yTQ0hoVs9-GrL7kVnKTSVyTHC0g"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Tech</div>
+</div>
+<h4 class="font-manrope font-bold text-lg mb-1">Meta Quest 3 VR Kit</h4>
+<p class="text-primary font-bold mb-4">$35 <span class="text-xs text-on-surface-variant font-normal">/ day</span></p>
+<button class="w-full py-3 bg-surface-container-high rounded-lg text-sm font-bold group-hover:bg-primary group-hover:text-white transition-all">Quick View</button>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-6 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="bg-gradient-to-br from-primary to-primary-container rounded-[40px] p-12 md:p-24 text-center text-white relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 leading-tight">Ready to curate your<br/>experience?</h2>
+<div class="flex flex-col sm:flex-row gap-6 justify-center">
+<button class="bg-white text-primary px-10 py-5 rounded-full font-bold text-lg hover:shadow-2xl transition-all active:scale-95">Start Browsing</button>
+<button class="bg-transparent border border-white/30 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white/10 transition-all active:scale-95">Learn More</button>
+</div>
+</div>
+<!-- Decorative Circle -->
+<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg fixed bottom-0 left-0 w-full z-50 rounded-t-2xl border-t border-emerald-900/5 dark:border-emerald-100/5 shadow-[0_-4px_24px_rgba(0,0,0,0.04)] flex justify-around items-center px-4 pb-6 pt-3">
+<a class="flex flex-col items-center justify-center text-emerald-900 dark:text-emerald-50 bg-emerald-100/50 dark:bg-emerald-800/30 rounded-xl px-3 py-1 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-emerald-600 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-emerald-600 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest mt-1">Cart</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:text-emerald-600 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-inter text-[10px] font-medium uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+<!-- Simple Footer -->
+<footer class="py-12 px-6 bg-surface border-t border-outline-variant/10 text-on-surface-variant">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="text-xl font-black text-emerald-900 tracking-tighter">OmniShare</div>
+<div class="flex gap-8 text-sm font-medium">
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Insurance</a>
+<a class="hover:text-primary transition-colors" href="#">Help</a>
+</div>
+<p class="text-[10px] tracking-widest uppercase">© 2024 OmniShare Enterprise. All Rights Reserved.</p>
+</div>
+</footer>
+</body></html>

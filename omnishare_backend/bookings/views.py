@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from .models import Booking
 from .serializers import (
@@ -294,6 +295,37 @@ class DisputedBookingsView(generics.ListAPIView):
             booking_status='disputed',
             dispute_flag=True
         ).order_by('-dispute_raised_at')
+
+
+class AdminBookingsView(generics.ListAPIView):
+    """Admin view for booking order management with optional filters."""
+    serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def get_queryset(self):
+        status_filter = self.request.query_params.get('status')
+        search = self.request.query_params.get('search')
+        dispute_only = self.request.query_params.get('dispute_only') == 'true'
+
+        queryset = Booking.objects.select_related('listing', 'guest', 'host').order_by('-created_at')
+
+        if status_filter:
+            queryset = queryset.filter(booking_status=status_filter)
+
+        if dispute_only:
+            queryset = queryset.filter(dispute_flag=True)
+
+        if search:
+            search_filter = (
+                Q(listing__title__icontains=search) |
+                Q(guest__username__icontains=search) |
+                Q(host__username__icontains=search)
+            )
+            if str(search).isdigit():
+                search_filter = search_filter | Q(id=int(search))
+            queryset = queryset.filter(search_filter)
+
+        return queryset[:200]
 
 
 @api_view(['GET'])

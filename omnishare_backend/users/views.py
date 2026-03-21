@@ -20,6 +20,18 @@ from .permissions import IsOwnerOrAdmin, IsAdmin
 User = get_user_model()
 
 
+def _build_unique_username(seed):
+    base = (seed or 'user').split('@')[0].strip() or 'user'
+    username = base
+    counter = 1
+
+    while User.objects.filter(username=username).exists():
+        username = f"{base}{counter}"
+        counter += 1
+
+    return username
+
+
 class UserRegistrationView(generics.CreateAPIView):
     """
     User registration endpoint
@@ -207,3 +219,43 @@ def logout_view(request):
     """Invalidate current token"""
     Token.objects.filter(user=request.user).delete()
     return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def clerk_sync_login(request):
+    """Provision or fetch local API token for users authenticated via Clerk."""
+    email = (request.data.get('email') or '').strip().lower()
+    username_seed = (request.data.get('username') or '').strip()
+    first_name = (request.data.get('first_name') or '').strip()
+    last_name = (request.data.get('last_name') or '').strip()
+
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email=email).first()
+    if not user:
+        username = _build_unique_username(username_seed or email)
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=None,
+            first_name=first_name,
+            last_name=last_name,
+        )
+    else:
+        updates = []
+        if first_name and user.first_name != first_name:
+            user.first_name = first_name
+            updates.append('first_name')
+        if last_name and user.last_name != last_name:
+            user.last_name = last_name
+            updates.append('last_name')
+        if updates:
+            user.save(update_fields=updates)
+
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({
+        'access_token': token.key,
+        'user': UserSerializer(user).data,
+    }, status=status.HTTP_200_OK)

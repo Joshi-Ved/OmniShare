@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniShare Admin Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#006b5b",
+              "outline": "#6e7976",
+              "background": "#f7f9ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-bright": "#f7f9ff",
+              "tertiary-fixed-dim": "#ffb5a1",
+              "on-secondary-fixed-variant": "#334b47",
+              "inverse-primary": "#83d6c2",
+              "on-primary": "#ffffff",
+              "surface-container-low": "#f1f4fa",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed": "#061f1c",
+              "primary-fixed": "#9ff2de",
+              "surface-container-high": "#e5e8ee",
+              "primary": "#005144",
+              "primary-fixed-dim": "#83d6c2",
+              "tertiary": "#892000",
+              "primary-container": "#006b5b",
+              "on-primary-container": "#95e8d4",
+              "on-tertiary-container": "#ffcec2",
+              "on-surface": "#181c20",
+              "on-background": "#181c20",
+              "inverse-surface": "#2d3135",
+              "on-error-container": "#93000a",
+              "error": "#ba1a1a",
+              "error-container": "#ffdad6",
+              "on-primary-fixed": "#00201a",
+              "on-primary-fixed-variant": "#005144",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#b1ccc6",
+              "surface-container-highest": "#dfe3e8",
+              "surface-container": "#ebeef4",
+              "surface-dim": "#d7dae0",
+              "tertiary-fixed": "#ffdbd1",
+              "on-tertiary-fixed-variant": "#881f00",
+              "on-secondary-container": "#4e6862",
+              "surface": "#f7f9ff",
+              "on-tertiary-fixed": "#3b0800",
+              "tertiary-container": "#b22d01",
+              "surface-variant": "#dfe3e8",
+              "secondary": "#4a635e",
+              "secondary-fixed": "#cde8e2",
+              "inverse-on-surface": "#eef1f7",
+              "secondary-container": "#cae5df",
+              "outline-variant": "#bec9c4",
+              "on-surface-variant": "#3e4946"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9ff;
+        color: #181c20;
+      }
+      h1, h2, h3 {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen">
+<!-- Sidebar / NavigationDrawer (Desktop Only) -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 h-screen py-8 px-4 gap-2 h-full w-72 border-r border-slate-200 bg-slate-50 z-50">
+<div class="flex items-center gap-3 px-4 mb-8">
+<span class="material-symbols-outlined text-primary text-3xl">hub</span>
+<span class="text-lg font-bold text-emerald-900 tracking-tight">OmniShare</span>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 bg-emerald-600 text-white rounded-lg px-4 py-3 active:opacity-80 transition-all font-inter text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-200/50 hover:translate-x-1 transition-all font-inter text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-200/50 hover:translate-x-1 transition-all font-inter text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span>Orders</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-200/50 hover:translate-x-1 transition-all font-inter text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-200/50 hover:translate-x-1 transition-all font-inter text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Customers</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-200/50 hover:translate-x-1 transition-all font-inter text-sm font-semibold" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto p-4 rounded-xl bg-surface-container-high">
+<div class="flex items-center gap-3">
+<img alt="Admin user profile" class="w-10 h-10 rounded-full" data-alt="Portrait of an administrator user profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoROjklCWBcDNwAwoLyqozf_qMbQuCsmxKBqST6rLwryivqNIhWHb7PQ21DOXwgxn4lwyTtWEN_D84ykLRJ9cFLPndO7UJEne0nIgp6EMEVVyEKMJo67Ys79HVHHZxoLPszPDGlnhd_S4USc8dSzm3UMYZghjwngxOvz_9kQoTk1vLRZGfV7xIEycxjh1vViwDW6dOcYsoh4JziYbC74UCVHz6L_dWGSsqK3wppsmQXmSRx46QGLgjEAE99bxx3aPlLwLhQCidlLU"/>
+<div>
+<p class="text-emerald-900 font-bold text-sm">Admin Central</p>
+<p class="text-slate-500 text-xs">v2.4.0</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Bar -->
+<header class="bg-white/70 backdrop-blur-xl text-emerald-900 docked full-width top-0 sticky z-40 shadow-sm shadow-emerald-900/5 flex justify-between items-center w-full px-6 py-3 lg:pl-80">
+<div class="flex items-center gap-4">
+<button class="lg:hidden p-2 hover:bg-emerald-50/50 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-xl font-black text-emerald-900 tracking-tighter">Dashboard</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-high border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 w-64" placeholder="Global search..." type="text"/>
+</div>
+<button class="p-2 hover:bg-emerald-50/50 transition-colors rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-tertiary rounded-full"></span>
+</button>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full border border-emerald-100" data-alt="Small circular profile avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9xdBIRJ7yo9i6vrzIDlNljLAClu6Ged5e8htqKXXZCCHXpMam2mdTxgpx7ArNBw_M09epSBIci9OBzV895klnXgkB8tA7fW4MxvGUR7yzxRZqLauu5WUXuHLrLJW5UH820YTfpo0CUd79xBWy435U_OPlpIZHNlOrgi5qfXlwq-JaBbPK5HrXp_PCzv_s37pJM6q4WAdS_shdpB42tR0keLkgNxk1u1kuCJWJ1E6HGJcEeqghGHxt2vQnx42GdlhTT1la84l4x3I"/>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="lg:pl-72 pb-24 lg:pb-8 pt-6 px-4 md:px-8 max-w-[1600px]">
+<!-- Bento Grid: Stats & Key Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+<!-- Metric 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-emerald-900/5">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-emerald-100/50 rounded-lg text-emerald-800">
+<span class="material-symbols-outlined">group</span>
+</span>
+<span class="text-xs font-bold text-primary flex items-center gap-1">
+                        +12% <span class="material-symbols-outlined text-[14px]">trending_up</span>
+</span>
+</div>
+<h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Users</h3>
+<p class="text-2xl font-black text-emerald-900 tracking-tight">12,842</p>
+</div>
+<!-- Metric 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-emerald-900/5">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-emerald-100/50 rounded-lg text-emerald-800">
+<span class="material-symbols-outlined">sync_alt</span>
+</span>
+<span class="text-xs font-bold text-primary flex items-center gap-1">
+                        +8% <span class="material-symbols-outlined text-[14px]">trending_up</span>
+</span>
+</div>
+<h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Active Rentals</h3>
+<p class="text-2xl font-black text-emerald-900 tracking-tight">3,120</p>
+</div>
+<!-- Metric 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-emerald-900/5">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-emerald-100/50 rounded-lg text-emerald-800">
+<span class="material-symbols-outlined">payments</span>
+</span>
+<span class="text-xs font-bold text-tertiary flex items-center gap-1">
+                        -2% <span class="material-symbols-outlined text-[14px]">trending_down</span>
+</span>
+</div>
+<h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Revenue</h3>
+<p class="text-2xl font-black text-emerald-900 tracking-tight">$428.5k</p>
+</div>
+<!-- Metric 4 -->
+<div class="bg-primary bg-gradient-to-br from-primary to-primary-container p-6 rounded-xl shadow-lg shadow-emerald-900/20 text-white">
+<div class="flex justify-between items-start mb-4">
+<span class="p-2 bg-white/20 rounded-lg">
+<span class="material-symbols-outlined">support_agent</span>
+</span>
+</div>
+<h3 class="text-emerald-100/80 text-xs font-bold uppercase tracking-widest mb-1">Open Tickets</h3>
+<p class="text-2xl font-black tracking-tight">42</p>
+<p class="text-xs mt-2 text-emerald-100/60">14 marked as high priority</p>
+</div>
+</div>
+<!-- Secondary Content: CRM & ERP Sections -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+<!-- CRM: Feedback & Support (2/3 width) -->
+<div class="lg:col-span-2 space-y-8">
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-extrabold text-emerald-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">forum</span>
+                            User Feedback
+                        </h2>
+<button class="text-xs font-bold text-primary hover:underline">View all</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Feedback Card 1 -->
+<div class="bg-surface-container-low p-5 rounded-xl border border-transparent hover:border-emerald-100 transition-all group">
+<div class="flex gap-4">
+<img alt="User avatar" class="w-10 h-10 rounded-full" data-alt="Profile photo of a customer giving feedback" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCd-nFm79ZSMUuUeEjF5ehEs4XaTfO6wlh01Evwg5j3OI86f2hdB3MepBjpv7A5UnmHSZ2sdFimGXa2kic-HrsW2RntEWnjeJ4ndwTCRD29-K7x1eHaE--t8egvAuetYOaomebMkg6k_-ct2x0Su_ASVK_PZFiOGm60P8_ktc_FUBSYvy7TyDlzRhQUOrAqWjp-b1HbdWDco72dk5Ke9AKZlfOjPnhL5APS7qXJuBIblMNjYYKDMGVSpT5aOa9Trk7CjDjAqMjSgiY"/>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-bold text-emerald-900">Anna Mueller</h4>
+<span class="text-[10px] text-slate-400">2h ago</span>
+</div>
+<div class="flex gap-0.5 my-1">
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-slate-300">star</span>
+</div>
+<p class="text-sm text-slate-600 line-clamp-2">"Great experience renting the camera gear, but the pickup location was a bit hard to find..."</p>
+</div>
+</div>
+</div>
+<!-- Feedback Card 2 -->
+<div class="bg-surface-container-low p-5 rounded-xl border border-transparent hover:border-emerald-100 transition-all group">
+<div class="flex gap-4">
+<img alt="User avatar" class="w-10 h-10 rounded-full" data-alt="Profile photo of a user submitting feedback" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzeRO6jej77lgyAe5SEbs7yZRphxhCtk9bQKFpFOtrzPTCAAwn07J17NL53KUAqczts6Rjmc1O7RZQfGq5HwlW7DVskKd7t8JXYYsnzfhf4SFfNk4sYc_Sc9iFi63aRBF3R_wm-pP_2hqTLdLMU6lXSS76x409BqT7uj5v0io7P6OkqS-ZCFuV5th2yObLuPSTGRhWjc3jtp1mtr0DXA0CGDWLUiWJNzHezztM_HCIhStdfxxAcXgVthYIpYr5bjlIfW3r0Ucjv6U"/>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="text-sm font-bold text-emerald-900">Thomas K.</h4>
+<span class="text-[10px] text-slate-400">5h ago</span>
+</div>
+<div class="flex gap-0.5 my-1">
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-amber-400" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-sm text-slate-600 line-clamp-2">"OmniShare saved my project. The payout system for owners is incredibly smooth!"</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-extrabold text-emerald-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">confirmation_number</span>
+                            Active Support Tickets
+                        </h2>
+</div>
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-emerald-900/5">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-emerald-900/5">
+<tr>
+<th class="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">ID</th>
+<th class="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">User</th>
+<th class="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Issue</th>
+<th class="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Priority</th>
+<th class="px-6 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-emerald-900/5">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs font-medium text-slate-500">#TK-928</td>
+<td class="px-6 py-4 text-sm font-bold text-emerald-900">Marcus Chen</td>
+<td class="px-6 py-4 text-sm text-slate-600">Verification pending &gt; 24h</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold rounded-full uppercase">High</span>
+</td>
+<td class="px-6 py-4">
+<button class="p-2 hover:bg-emerald-50 rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 text-xs font-medium text-slate-500">#TK-841</td>
+<td class="px-6 py-4 text-sm font-bold text-emerald-900">Sarah Jenkins</td>
+<td class="px-6 py-4 text-sm text-slate-600">Damage claim dispute</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase">Medium</span>
+</td>
+<td class="px-6 py-4">
+<button class="p-2 hover:bg-emerald-50 rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+<!-- ERP: Financials & Payouts (1/3 width) -->
+<div class="space-y-8">
+<section class="bg-surface-container-high p-6 rounded-2xl">
+<h2 class="text-lg font-extrabold text-emerald-900 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                        Payout Status
+                    </h2>
+<div class="space-y-4">
+<div class="bg-white p-4 rounded-xl border border-emerald-900/5">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Scheduled Payouts</span>
+<span class="text-emerald-700 font-bold">$12,400</span>
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-emerald-600 h-full w-[85%] rounded-full"></div>
+</div>
+<p class="text-[10px] mt-2 text-slate-500">Processing: 148 transfers</p>
+</div>
+<div class="bg-white p-4 rounded-xl border border-emerald-900/5">
+<div class="flex justify-between items-center mb-1">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Dispute Reserve</span>
+<span class="text-tertiary font-bold">$2,850</span>
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-[30%] rounded-full"></div>
+</div>
+<p class="text-[10px] mt-2 text-slate-500">Held for active claims</p>
+</div>
+<button class="w-full py-3 bg-emerald-900 text-white rounded-lg font-bold text-sm hover:bg-emerald-800 transition-colors mt-2">
+                            Download Financial Report
+                        </button>
+</div>
+</section>
+<section class="bg-surface-container-lowest p-6 rounded-2xl border border-emerald-900/5">
+<h2 class="text-sm font-extrabold text-emerald-900 mb-4 uppercase tracking-tighter">Financial Trends</h2>
+<div class="aspect-video bg-surface-container-low rounded-xl flex items-center justify-center relative overflow-hidden">
+<!-- Abstract Chart Visualization -->
+<div class="absolute inset-x-4 bottom-4 h-24 flex items-end gap-2">
+<div class="w-full bg-emerald-600/10 h-12 rounded-t-sm"></div>
+<div class="w-full bg-emerald-600/20 h-20 rounded-t-sm"></div>
+<div class="w-full bg-emerald-600/30 h-16 rounded-t-sm"></div>
+<div class="w-full bg-emerald-600/40 h-24 rounded-t-sm"></div>
+<div class="w-full bg-emerald-600/60 h-20 rounded-t-sm"></div>
+<div class="w-full bg-emerald-600/80 h-32 rounded-t-sm"></div>
+<div class="w-full bg-emerald-600 h-28 rounded-t-sm"></div>
+</div>
+<span class="text-[10px] font-bold text-emerald-900/40 uppercase absolute top-4 left-4">Revenue Growth</span>
+</div>
+</section>
+</div>
+</div>
+<!-- Large Data Table: User Management -->
+<section>
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+<h2 class="text-xl font-extrabold text-emerald-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">manage_accounts</span>
+                    User Management
+                </h2>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 bg-white rounded-lg border border-emerald-900/5 text-sm font-semibold text-slate-600 hover:bg-emerald-50 transition-colors">Filter</button>
+<button class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors">Add New User</button>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-emerald-900/5 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low border-b border-emerald-900/5">
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">User Profile</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Role</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Total Earned</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-emerald-900/5">
+<tr class="hover:bg-emerald-50/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Jane Doe" class="w-10 h-10 rounded-full bg-emerald-100" data-alt="User profile avatar of Jane Doe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhZwKwyK3OXLtPJW_hbz_l5IMFaBEhYr_RRjIdHLBqre9pxSutR4oS72bAtw7fSDdFyAuldWxV1_5lhQOWr6udstvalmHV6u_d_KZMXgQfuHUJW6u6rpNu9v2gXCjh7FMy_XnN38Je5WyXDMazNeBSkrnAjgF9-MsPkwH1q7ePhSfRZ250VRz4IWoB1mVtTh9kDKtMCeqYqlcz0yxp2DdfgqCbLPdXBRDHOW9XhNSce261FSae2Ff_A4IMidniU0rJlaZJarA2k_o"/>
+<div>
+<p class="text-sm font-bold text-emerald-900">Jane Doe</p>
+<p class="text-xs text-slate-400">jane.doe@example.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm text-slate-600">Owner / Renter</span>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-bold text-emerald-900">$4,280.00</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                                        Verified
+                                    </span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-emerald-50/30 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Robert King" class="w-10 h-10 rounded-full bg-emerald-100" data-alt="User profile avatar of Robert King" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdrRSEIk5ZR7Nh5mIhs3lptu9sRks-eEcAflVjF0Z41lk8gHEt7BBfJyW5-452Dfslu22fO29IfY675lFwuBsCiSU6qD-8HaS7Kh5zyLtRRCcySG29WG_b6yz-BxOMO0LbIs4fqE8r9J93mPflcFl_bIlG8XChicK8_vzImL6tcjoMGyiW79Mh6F_l4Mt5NzuUgIU5yGAxqCWSpvuw_vRRtwsLYnz84RUkRUwhqeNqImIEGyeIURKyA86vnIxUys-IHebtj9OcwI4"/>
+<div>
+<p class="text-sm font-bold text-emerald-900">Robert King</p>
+<p class="text-xs text-slate-400">robert.k@provider.net</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm text-slate-600">Renter</span>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-bold text-emerald-900">$0.00</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        Pending
+                                    </span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-tertiary transition-colors">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 backdrop-blur-lg border-t border-emerald-900/5 shadow-[0_-4px_24px_rgba(0,0,0,0.04)] z-50 rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-emerald-900 bg-emerald-100/50 rounded-xl px-3 py-1 active:scale-90 transition-transform font-inter text-[10px] font-medium uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">home</span>
+<span>Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 active:scale-90 transition-transform font-inter text-[10px] font-medium uppercase tracking-widest hover:text-emerald-600" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span>Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 active:scale-90 transition-transform font-inter text-[10px] font-medium uppercase tracking-widest hover:text-emerald-600" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span>Cart</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 active:scale-90 transition-transform font-inter text-[10px] font-medium uppercase tracking-widest hover:text-emerald-600" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</body></html>
