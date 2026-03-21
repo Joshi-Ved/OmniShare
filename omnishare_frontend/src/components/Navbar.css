@@ -2,9 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(0, 116, 182, 0.18);
+  border-bottom: 1px solid var(--line-color);
   backdrop-filter: blur(14px);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 251, 255, 0.9));
+  background: linear-gradient(180deg, var(--surface-glass), color-mix(in srgb, var(--surface-glass) 82%, transparent));
 }
 
 .navbar-content {
@@ -16,7 +16,7 @@
 
 .navbar .logo {
   font-size: 1.45rem;
-  color: #17304f;
+  color: var(--text-primary);
   font-weight: 700;
   letter-spacing: -0.03em;
 }
@@ -30,23 +30,44 @@
 .nav-link {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
-  color: #244261;
+  color: var(--text-secondary);
   padding: 8px 14px;
   border-radius: 999px;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-link:hover {
-  background: rgba(0, 166, 251, 0.12);
-  color: #17304f;
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  color: var(--text-primary);
+}
+
+.admin-link {
+  color: var(--danger);
+}
+
+.theme-toggle {
+  border: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--elev-shadow-sm);
 }
 
 .nav-user {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(6, 214, 160, 0.35);
-  background: rgba(6, 214, 160, 0.1);
+  border: 1px solid color-mix(in srgb, var(--success) 40%, transparent);
+  background: color-mix(in srgb, var(--success) 16%, transparent);
   border-radius: 999px;
   padding: 6px 12px;
 }
@@ -56,7 +77,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #0c3445;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -65,7 +86,7 @@
   background: transparent;
   border: none;
   font-size: 1.4rem;
-  color: #17304f;
+  color: var(--text-primary);
 }
 
 @media (max-width: 880px) {
@@ -85,15 +106,15 @@
     max-height: 0;
     overflow: hidden;
     border-radius: 18px;
-    border: 1px solid rgba(0, 116, 182, 0.2);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 248, 254, 0.98));
+    border: 1px solid var(--line-color);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 98%, transparent), color-mix(in srgb, var(--surface-soft) 98%, transparent));
     transition: max-height 0.25s ease;
   }
 
   .nav-menu.open {
     max-height: 460px;
     padding: 12px;
-    box-shadow: 0 16px 30px rgba(21, 34, 56, 0.14);
+    box-shadow: var(--elev-shadow-lg);
   }
 
   .nav-link,
@@ -114,7 +135,7 @@
 }
 
 .cart-link:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
 .cart-badge {
@@ -122,7 +143,7 @@
   top: -8px;
   right: -8px;
   background-color: #dc2626;
-  color: white;
+  color: #ffffff;
   border-radius: 50%;
   width: 20px;
   height: 20px;

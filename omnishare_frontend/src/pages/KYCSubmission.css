@@ -7,10 +7,10 @@
 .kyc-card {
   max-width: 900px;
   margin: 0 auto;
-  background: white;
+  background: var(--surface-strong);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elev-shadow-lg);
 }
 
 .kyc-header {
@@ -20,13 +20,13 @@
 
 .kyc-header h1 {
   font-size: 2.5rem;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
 .kyc-header .subtitle {
   font-size: 1.1rem;
-  color: #718096;
+  color: var(--text-muted);
 }
 
 /* KYC Status */
@@ -41,23 +41,23 @@
 }
 
 .kyc-status.status-not_submitted {
-  background: #eff6ff;
-  border-color: #3b82f6;
+  background: color-mix(in srgb, var(--primary) 14%, var(--surface-soft));
+  border-color: var(--primary);
 }
 
 .kyc-status.status-pending {
-  background: #fef3c7;
-  border-color: #f59e0b;
+  background: color-mix(in srgb, var(--warning) 18%, var(--surface-soft));
+  border-color: var(--warning);
 }
 
 .kyc-status.status-verified {
-  background: #d1fae5;
-  border-color: #10b981;
+  background: color-mix(in srgb, var(--success) 18%, var(--surface-soft));
+  border-color: var(--success);
 }
 
 .kyc-status.status-rejected {
-  background: #fee2e2;
-  border-color: #ef4444;
+  background: color-mix(in srgb, var(--danger) 18%, var(--surface-soft));
+  border-color: var(--danger);
 }
 
 .status-icon {
@@ -67,7 +67,7 @@
 
 .status-text h3 {
   font-size: 1.3rem;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 5px;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .status-text p {
-  color: #4a5568;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -92,7 +92,7 @@
 
 .kyc-benefits h3 {
   font-size: 1.5rem;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 20px;
 }
 
@@ -105,14 +105,14 @@
 .benefit-item {
   text-align: center;
   padding: 20px;
-  background: #f7fafc;
+  background: var(--surface-soft);
   border-radius: 8px;
   transition: transform 0.2s;
 }
 
 .benefit-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elev-shadow-sm);
 }
 
 .benefit-icon {
@@ -123,12 +123,12 @@
 
 .benefit-item h4 {
   font-size: 1.1rem;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 5px;
 }
 
 .benefit-item p {
-  color: #718096;
+  color: var(--text-muted);
   font-size: 0.9rem;
   margin: 0;
 }
@@ -140,12 +140,12 @@
 
 .form-section h3 {
   font-size: 1.3rem;
-  color: #2d3748;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
 .help-text {
-  color: #718096;
+  color: var(--text-muted);
   font-size: 0.95rem;
   margin-bottom: 20px;
 }
@@ -164,16 +164,16 @@
   align-items: center;
   gap: 15px;
   padding: 30px;
-  border: 2px dashed #cbd5e0;
+  border: 2px dashed var(--line-strong);
   border-radius: 8px;
-  background: #f7fafc;
+  background: var(--surface-soft);
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .file-label:hover {
-  border-color: #667eea;
-  background: #edf2f7;
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface-soft));
 }
 
 .upload-icon {
@@ -182,16 +182,16 @@
 
 .upload-text {
   font-size: 1rem;
-  color: #4a5568;
+  color: var(--text-secondary);
 }
 
 /* Document Preview */
 .document-preview {
   margin-top: 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--line-color);
   border-radius: 8px;
   padding: 20px;
-  background: #f7fafc;
+  background: var(--surface-soft);
 }
 
 .document-preview img {
@@ -207,7 +207,7 @@
   align-items: center;
   gap: 10px;
   padding: 15px;
-  background: #f7fafc;
+  background: var(--surface-soft);
   border-radius: 8px;
   margin-top: 15px;
 }
@@ -218,26 +218,26 @@
 
 .file-name {
   flex: 1;
-  color: #2d3748;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .file-size {
-  color: #718096;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
 /* Guidelines */
 .kyc-guidelines {
-  background: #fffbeb;
-  border-left: 4px solid #f59e0b;
+  background: color-mix(in srgb, var(--warning) 14%, var(--surface-soft));
+  border-left: 4px solid var(--warning);
   padding: 20px;
   border-radius: 8px;
   margin: 30px 0;
 }
 
 .kyc-guidelines h4 {
-  color: #92400e;
+  color: var(--text-primary);
   margin-bottom: 15px;
   font-size: 1.1rem;
 }
@@ -248,7 +248,7 @@
 }
 
 .kyc-guidelines li {
-  color: #78350f;
+  color: var(--text-secondary);
   margin-bottom: 8px;
   line-height: 1.6;
 }
@@ -272,13 +272,13 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #ffffff;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--elev-shadow-sm);
 }
 
 .btn-primary:disabled {
@@ -287,12 +287,12 @@
 }
 
 .btn-secondary {
-  background: #e2e8f0;
-  color: #2d3748;
+  background: var(--surface-soft);
+  color: var(--text-primary);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #cbd5e0;
+  background: color-mix(in srgb, var(--surface-soft) 70%, var(--line-strong));
 }
 
 /* Messages */
@@ -305,12 +305,12 @@
 .pending-message p,
 .verified-message p {
   font-size: 1.2rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   margin-bottom: 20px;
 }
 
 .verified-message p {
-  color: #059669;
+  color: var(--success);
   font-weight: 500;
 }
 

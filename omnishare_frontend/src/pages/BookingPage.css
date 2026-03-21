@@ -4,7 +4,7 @@
 }
 
 .booking-page h1 {
-  color: #17304f;
+  color: var(--text-primary);
   margin-bottom: 14px;
 }
 
@@ -14,7 +14,7 @@
 
 .booking-page img {
   border-radius: 12px;
-  border: 1px solid #c4d8eb;
+  border: 1px solid var(--line-strong);
 }
 
 .booking-page .bookings-list {
@@ -29,7 +29,7 @@
 .booking-page .booking-header {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #d9e6f1;
+  border-bottom: 1px solid var(--line-dim);
   padding-bottom: 8px;
   margin-bottom: 8px;
 }

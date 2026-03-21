@@ -4,7 +4,7 @@
 }
 
 .dashboard-page h1 {
-  color: #17304f;
+  color: var(--text-primary);
   margin-bottom: 18px;
 }
 
@@ -30,14 +30,14 @@
 }
 
 .stat-card h3 {
-  color: #4c647f;
+  color: var(--text-muted);
   text-transform: uppercase;
   font-size: 0.75rem;
   margin-bottom: 8px;
 }
 
 .stat-number {
-  color: #17304f;
+  color: var(--text-primary);
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.9rem;
   font-weight: 700;
@@ -51,10 +51,10 @@
 }
 
 .dashboard-tabs .tab {
-  border: 1px solid #bfd4e7;
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: #fff;
-  color: #334966;
+  background: var(--surface-strong);
+  color: var(--text-secondary);
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
   padding: 10px 14px;
@@ -73,7 +73,7 @@
 
 .booking-card,
 .listing-card {
-  border: 1px solid rgba(0, 116, 182, 0.14);
+  border: 1px solid var(--line-color);
 }
 
 .booking-header {
@@ -81,12 +81,12 @@
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid #e1ecf6;
+  border-bottom: 1px solid var(--line-dim);
   padding-bottom: 10px;
 }
 
 .booking-header h3 {
-  color: #17304f;
+  color: var(--text-primary);
 }
 
 .listing-actions {

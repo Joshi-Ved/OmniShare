@@ -52,18 +52,67 @@ html {
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 22px;
+
+  --bg-base:
+    radial-gradient(circle at 5% 10%, rgba(0, 166, 251, 0.08), transparent 30%),
+    radial-gradient(circle at 90% 15%, rgba(6, 214, 160, 0.12), transparent 28%),
+    linear-gradient(160deg, #f8fbff 0%, #eef5fd 45%, #f3f8fc 100%);
+  --bg-color: #f8fbff;
+  --text-primary: #152238;
+  --text-secondary: #334966;
+  --text-muted: #4c647f;
+  --surface: rgba(255, 255, 255, 0.96);
+  --surface-soft: rgba(244, 250, 255, 0.95);
+  --surface-strong: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.9);
+  --line-color: rgba(0, 116, 182, 0.14);
+  --line-strong: #bfd4e7;
+  --line-dim: #e1ecf6;
+  --hero-shadow: rgba(8, 20, 40, 0.2);
+  --elev-shadow-sm: 0 10px 20px rgba(21, 34, 56, 0.04);
+  --elev-shadow-md: 0 18px 35px rgba(21, 34, 56, 0.08);
+  --elev-shadow-lg: 0 24px 55px rgba(21, 34, 56, 0.14);
+}
+
+[data-theme='dark'] {
+  --primary: #3bb3ff;
+  --primary-dark: #0088d1;
+  --secondary: #a9c8ff;
+  --success: #37d4a3;
+  --warning: #ffbc48;
+  --danger: #ff6a6a;
+  --info: #56beff;
+
+  --bg-base:
+    radial-gradient(circle at 10% 12%, rgba(59, 179, 255, 0.17), transparent 34%),
+    radial-gradient(circle at 88% 18%, rgba(55, 212, 163, 0.14), transparent 32%),
+    linear-gradient(165deg, #09101d 0%, #0c1628 45%, #0e1b31 100%);
+  --bg-color: #09101d;
+  --text-primary: #e9f1ff;
+  --text-secondary: #bfd2eb;
+  --text-muted: #9fb5cf;
+  --surface: rgba(16, 31, 52, 0.86);
+  --surface-soft: rgba(18, 36, 60, 0.9);
+  --surface-strong: rgba(20, 40, 66, 0.94);
+  --surface-glass: rgba(12, 23, 40, 0.82);
+  --line-color: rgba(80, 130, 190, 0.35);
+  --line-strong: rgba(87, 131, 184, 0.6);
+  --line-dim: rgba(92, 140, 198, 0.35);
+  --hero-shadow: rgba(3, 8, 16, 0.6);
+  --elev-shadow-sm: 0 10px 20px rgba(3, 10, 18, 0.22);
+  --elev-shadow-md: 0 18px 35px rgba(2, 9, 16, 0.3);
+  --elev-shadow-lg: 0 24px 55px rgba(2, 9, 16, 0.38);
 }
 
 body {
   font-family: 'IBM Plex Sans', sans-serif;
-  background:
-    radial-gradient(circle at 5% 10%, rgba(0, 166, 251, 0.08), transparent 30%),
-    radial-gradient(circle at 90% 15%, rgba(6, 214, 160, 0.12), transparent 28%),
-    linear-gradient(160deg, #f8fbff 0%, #eef5fd 45%, #f3f8fc 100%);
-  color: var(--ink-900);
+  background: var(--bg-base);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 0.35s ease, color 0.25s ease;
 }
 
 h1,
@@ -78,7 +127,7 @@ h6 {
 }
 
 p {
-  color: var(--gray-700);
+  color: var(--text-muted);
   line-height: 1.65;
 }
 
@@ -115,15 +164,15 @@ a {
 .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 .card {
-  border: 1px solid rgba(0, 116, 182, 0.12);
+  border: 1px solid var(--line-color);
   border-radius: var(--radius-lg);
-  background: linear-gradient(170deg, rgba(255, 255, 255, 0.97), rgba(244, 250, 255, 0.96));
-  box-shadow: var(--shadow-sm);
+  background: linear-gradient(170deg, var(--surface-strong), var(--surface-soft));
+  box-shadow: var(--elev-shadow-sm);
   padding: 20px;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--elev-shadow-md);
 }
 
 .btn {
@@ -155,8 +204,8 @@ a {
 }
 
 .btn-secondary {
-  background: linear-gradient(130deg, #e0f3ff, #d4ecff);
-  color: #1d3557;
+  background: linear-gradient(130deg, color-mix(in srgb, var(--primary) 14%, #ffffff), color-mix(in srgb, var(--primary) 22%, #eaf3ff));
+  color: var(--text-primary);
 }
 
 .btn-danger {
@@ -183,7 +232,7 @@ a {
 
 label {
   font-size: 0.9rem;
-  color: var(--gray-700);
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
@@ -192,8 +241,9 @@ select,
 textarea {
   width: 100%;
   border-radius: 12px;
-  border: 1px solid #bfd4e7;
-  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text-primary);
   padding: 10px 12px;
   font-size: 0.95rem;
   font-family: inherit;
@@ -242,12 +292,12 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gray-700);
+  color: var(--text-secondary);
 }
 
 .no-results {
   text-align: center;
-  color: var(--gray-600);
+  color: var(--text-muted);
   padding: 28px;
 }
 

@@ -8,21 +8,21 @@
 }
 
 .payment-card {
-  border: 1px solid rgba(0, 116, 182, 0.16);
+  border: 1px solid var(--line-color);
   border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 20px 34px rgba(21, 34, 56, 0.1);
+  background: var(--surface-strong);
+  box-shadow: var(--elev-shadow-md);
   padding: 24px;
 }
 
 .payment-card h1 {
-  color: #17304f;
+  color: var(--text-primary);
   margin-bottom: 14px;
 }
 
 .booking-summary,
 .price-breakdown {
-  border-bottom: 1px solid #d9e6f1;
+  border-bottom: 1px solid var(--line-dim);
   margin-bottom: 16px;
   padding-bottom: 12px;
 }
@@ -36,13 +36,13 @@
 }
 
 .breakdown-total strong {
-  color: #17304f;
+  color: var(--text-primary);
 }
 
 .payment-info {
-  border: 1px solid rgba(0, 166, 251, 0.24);
+  border: 1px solid var(--line-color);
   border-radius: 14px;
-  background: rgba(0, 166, 251, 0.06);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   padding: 14px;
 }
 
@@ -54,10 +54,10 @@
 }
 
 .gateway-chip {
-  border: 1px solid #bfd4e7;
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: #fff;
-  color: #264564;
+  background: var(--surface-strong);
+  color: var(--text-secondary);
   padding: 8px 12px;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
@@ -65,15 +65,15 @@
 
 .gateway-chip.active {
   border-color: transparent;
-  color: #fff;
-  background: linear-gradient(130deg, #00a6fb, #1d3557);
+  color: #ffffff;
+  background: linear-gradient(130deg, var(--primary), var(--primary-dark));
 }
 
 .error-message {
   border: 1px solid rgba(214, 69, 69, 0.24);
   border-radius: 12px;
   background: rgba(214, 69, 69, 0.08);
-  color: #8f2b2b;
+  color: var(--danger);
   padding: 10px 12px;
   display: flex;
   justify-content: space-between;
@@ -94,6 +94,11 @@
   margin-top: 18px;
 }
 
+.payment-note {
+  margin-top: 10px;
+  color: var(--text-muted);
+}
+
 .btn-pay,
 .btn-cancel {
   flex: 1;
@@ -105,19 +110,19 @@
 }
 
 .btn-pay {
-  color: #fff;
-  background: linear-gradient(130deg, #00a6fb, #1d3557);
+  color: #ffffff;
+  background: linear-gradient(130deg, var(--primary), var(--primary-dark));
 }
 
 .btn-cancel {
-  color: #264564;
-  background: #deecf8;
+  color: var(--text-secondary);
+  background: var(--surface-soft);
 }
 
 .payment-help {
-  border: 1px solid rgba(0, 116, 182, 0.16);
+  border: 1px solid var(--line-color);
   border-radius: 18px;
-  background: #fff;
+  background: var(--surface-strong);
   padding: 18px;
   height: fit-content;
 }

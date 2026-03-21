@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Providers
 import { CartProvider } from './context/CartContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 
 // Pages
 import Home from './pages/Home';
@@ -26,13 +27,14 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 
-function App() {
+function AppContent() {
+  const { theme, isDark, toggleTheme } = useTheme();
+
   return (
-    <CartProvider>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <ToastContainer position="top-right" autoClose={3000} />
+    <Router>
+      <div className="App" data-theme={theme}>
+        <Navbar isDark={isDark} onToggleTheme={toggleTheme} />
+        <ToastContainer position="top-right" autoClose={3000} />
         
         <Routes>
           {/* Public Routes */}
@@ -102,7 +104,16 @@ function App() {
         </Routes>
       </div>
     </Router>
-    </CartProvider>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
+    </ThemeProvider>
   );
 }
 

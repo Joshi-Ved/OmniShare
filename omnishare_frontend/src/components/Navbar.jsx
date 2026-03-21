@@ -4,7 +4,7 @@ import { useAuth, useClerk, useUser } from '@clerk/react';
 import { useCart } from '../context/CartContext';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ isDark, onToggleTheme }) => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isSignedIn } = useAuth();
@@ -40,6 +40,16 @@ const Navbar = () => {
 
           <div className={`nav-menu ${mobileOpen ? 'open' : ''}`}>
             <Link to="/" className="nav-link">Explore</Link>
+
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={onToggleTheme}
+              aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+              title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+            >
+              {isDark ? 'Light' : 'Dark'}
+            </button>
             
             <Link to="/cart" className="nav-link cart-link">
               🛒 Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
@@ -58,7 +68,7 @@ const Navbar = () => {
                 )}
                 
                 {(user.role === 'admin' || user.is_staff) && (
-                  <Link to="/admin/dashboard" className="nav-link" style={{color: 'var(--danger)'}}>Admin</Link>
+                  <Link to="/admin/dashboard" className="nav-link admin-link">Admin</Link>
                 )}
                 
                 <div className="nav-user">

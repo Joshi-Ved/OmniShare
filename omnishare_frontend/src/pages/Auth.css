@@ -16,22 +16,22 @@
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: var(--surface);
+  border: 1px solid var(--line-color);
   border-radius: 20px;
-  box-shadow: 0 30px 56px rgba(10, 24, 42, 0.3);
+  box-shadow: var(--elev-shadow-lg);
   padding: 28px;
 }
 
 .auth-card h2 {
-  color: #17304f;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 4px;
 }
 
 .auth-card .subtitle {
   text-align: center;
-  color: #4c647f;
+  color: var(--text-muted);
   margin-bottom: 18px;
 }
 
@@ -44,11 +44,11 @@
 .auth-footer {
   margin-top: 18px;
   padding-top: 14px;
-  border-top: 1px solid #d7e4f0;
+  border-top: 1px solid var(--line-dim);
   text-align: center;
 }
 
 .auth-footer a {
-  color: #0077b6;
+  color: var(--primary);
   font-weight: 700;
 }

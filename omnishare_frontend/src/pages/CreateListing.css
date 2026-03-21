@@ -1,6 +1,6 @@
 .create-listing-page {
   min-height: calc(100vh - 80px);
-  background-color: var(--gray-50);
+  background-color: transparent;
   padding: 40px 0;
 }
 
@@ -12,11 +12,11 @@
 
 .create-listing-card h1 {
   margin: 0 0 10px 0;
-  color: var(--gray-900);
+  color: var(--text-primary);
 }
 
 .create-listing-card .subtitle {
-  color: var(--gray-600);
+  color: var(--text-muted);
   margin-bottom: 30px;
 }
 

@@ -108,7 +108,7 @@ const ShoppingCart = () => {
             </div>
 
             <button className="btn btn-primary btn-checkout">
-              <Link to="/checkout" style={{ color: 'white', textDecoration: 'none' }}>
+              <Link to="/checkout" className="checkout-link">
                 Proceed to Checkout
               </Link>
             </button>

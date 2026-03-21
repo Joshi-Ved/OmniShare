@@ -307,7 +307,7 @@ const PaymentPage = () => {
         </div>
 
         {booking.booking_status !== 'pending' && (
-          <p style={{ marginTop: '10px', color: '#6b7280' }}>
+          <p className="payment-note">
             This booking is no longer in pending state, so checkout is disabled.
           </p>
         )}

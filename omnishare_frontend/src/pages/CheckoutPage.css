@@ -1,6 +1,6 @@
 .checkout-page {
   min-height: calc(100vh - 80px);
-  background-color: #f5f5f5;
+  background-color: transparent;
   padding: 30px 0;
 }
 
@@ -13,12 +13,12 @@
 .checkout-page h1 {
   font-size: 32px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 30px;
 }
 
 .checkout-empty {
-  background: white;
+  background: var(--surface-strong);
   border-radius: 8px;
   padding: 60px 20px;
   text-align: center;
@@ -26,12 +26,12 @@
 
 .checkout-empty h2 {
   font-size: 24px;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
 .checkout-empty p {
-  color: #6b7280;
+  color: var(--text-muted);
   margin-bottom: 20px;
 }
 
@@ -42,22 +42,22 @@
 }
 
 .checkout-section {
-  background: white;
+  background: var(--surface-strong);
   border-radius: 8px;
   padding: 25px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--elev-shadow-sm);
 }
 
 .checkout-section h2 {
   font-size: 18px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 20px;
 }
 
 /* Order Items */
 .order-items {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line-color);
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 15px;
@@ -68,8 +68,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: #f9fafb;
+  border-bottom: 1px solid var(--line-dim);
+  background-color: var(--surface-soft);
 }
 
 .order-item:last-child {
@@ -80,24 +80,24 @@
   margin: 0 0 8px 0;
   font-size: 15px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .order-item-qty {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .order-item-price {
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--primary);
   font-size: 16px;
 }
 
 /* Totals */
 .order-totals {
-  background-color: #f3f4f6;
+  background-color: var(--surface-soft);
   border-radius: 6px;
   padding: 15px;
 }
@@ -107,21 +107,21 @@
   justify-content: space-between;
   padding: 8px 0;
   font-size: 14px;
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 
 .total-row span:last-child {
   font-weight: 500;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .total-row.total-final {
-  border-top: 2px solid #3b82f6;
+  border-top: 2px solid var(--primary);
   padding-top: 12px;
   margin-top: 8px;
   font-size: 16px;
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--primary);
 }
 
 /* Address Form */
@@ -144,7 +144,9 @@
 .address-form input,
 .address-form textarea {
   padding: 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text-primary);
   border-radius: 6px;
   font-size: 14px;
   font-family: inherit;
@@ -154,8 +156,8 @@
 .address-form input:focus,
 .address-form textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 /* Payment Methods */
@@ -170,25 +172,25 @@
   align-items: flex-start;
   gap: 12px;
   padding: 15px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--line-color);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .payment-option:hover {
-  border-color: #3b82f6;
-  background-color: #f0f9ff;
+  border-color: var(--primary);
+  background-color: color-mix(in srgb, var(--primary) 10%, var(--surface-soft));
 }
 
 .payment-option input[type="radio"] {
   margin-top: 4px;
   cursor: pointer;
-  accent-color: #3b82f6;
+  accent-color: var(--primary);
 }
 
 .payment-option input[type="radio"]:checked {
-  accent-color: #3b82f6;
+  accent-color: var(--primary);
 }
 
 .payment-option-content {
@@ -198,18 +200,18 @@
 .payment-option-content strong {
   display: block;
   font-size: 15px;
-  color: #1f2937;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .payment-option-content p {
   margin: 0;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .payment-option input[type="radio"]:checked + .payment-option-content strong {
-  color: #3b82f6;
+  color: var(--primary);
 }
 
 /* Checkout Button */

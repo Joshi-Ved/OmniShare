@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   background: linear-gradient(130deg, #dff3ff, #e8fbf3);
-  color: #47617e;
+  color: var(--text-muted);
 }
 
 .listing-content {
@@ -32,7 +32,7 @@
 }
 
 .listing-info h1 {
-  color: #17304f;
+  color: var(--text-primary);
 }
 
 .host-info,
@@ -50,8 +50,8 @@
 
 .price-breakdown {
   margin: 14px 0;
-  background: rgba(0, 166, 251, 0.06);
-  border: 1px solid rgba(0, 116, 182, 0.16);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  border: 1px solid var(--line-color);
   border-radius: 14px;
   padding: 12px;
 }
@@ -65,11 +65,11 @@
 .price-row.total {
   margin-top: 8px;
   font-weight: 700;
-  color: #17304f;
+  color: var(--text-primary);
 }
 
 .review {
-  border-bottom: 1px dashed #c5d8ea;
+  border-bottom: 1px dashed var(--line-strong);
   padding: 10px 0;
 }
 
