@@ -1,6 +1,6 @@
 .order-confirmation {
   min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary-dark) 65%, #0a213c) 0%, color-mix(in srgb, var(--secondary) 70%, #1e2a41) 100%);
   display: flex;
   align-items: center;
   justify-content: center;

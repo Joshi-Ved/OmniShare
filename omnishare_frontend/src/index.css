@@ -23,30 +23,13 @@ html {
   --paper-100: #eef4fb;
   --line-200: #d7e4f0;
 
-  --primary: var(--sky-500);
-  --primary-dark: var(--sky-700);
+  --primary: #00a6fb;
+  --primary-dark: #0077b6;
   --secondary: #1d3557;
   --success: #06b27f;
   --warning: #ea9b00;
   --danger: #d64545;
   --info: #00a6fb;
-
-  --primary-color: var(--primary);
-  --secondary-color: var(--secondary);
-  --danger-color: var(--danger);
-  --gray-50: var(--paper-0);
-  --gray-100: var(--paper-100);
-  --gray-200: var(--line-200);
-  --gray-300: #b7c8da;
-  --gray-400: #8ea3ba;
-  --gray-500: #6d859f;
-  --gray-600: #4c647f;
-  --gray-700: #334966;
-  --gray-900: var(--ink-900);
-
-  --shadow-sm: 0 10px 20px rgba(21, 34, 56, 0.04);
-  --shadow-md: 0 18px 35px rgba(21, 34, 56, 0.08);
-  --shadow-lg: 0 24px 55px rgba(21, 34, 56, 0.14);
 
   --radius-sm: 10px;
   --radius-md: 12px;
@@ -195,8 +178,8 @@ a {
 }
 
 .btn-primary {
-  background: linear-gradient(130deg, #00a6fb, #1d3557);
-  color: #fff;
+  background: linear-gradient(130deg, var(--primary), var(--primary-dark));
+  color: #ffffff;
 }
 
 .btn-primary:hover {
@@ -209,13 +192,13 @@ a {
 }
 
 .btn-danger {
-  background: linear-gradient(130deg, #e76f51, #d64545);
-  color: #fff;
+  background: linear-gradient(130deg, color-mix(in srgb, var(--danger) 80%, #ff9f9f), var(--danger));
+  color: #ffffff;
 }
 
 .btn-warning {
-  background: linear-gradient(130deg, #ffb703, #fb8500);
-  color: #fff;
+  background: linear-gradient(130deg, color-mix(in srgb, var(--warning) 80%, #ffd88a), var(--warning));
+  color: #ffffff;
 }
 
 .btn:disabled {
@@ -253,8 +236,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #00a6fb;
-  box-shadow: 0 0 0 4px rgba(0, 166, 251, 0.14);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 24%, transparent);
 }
 
 .badge {

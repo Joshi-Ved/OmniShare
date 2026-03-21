@@ -157,14 +157,14 @@ const BookingPage = () => {
         <h1>Booking #{booking.id}</h1>
 
         {location.state?.paymentSuccess && (
-          <div className="card" style={{ marginBottom: '20px', borderLeft: '4px solid #10b981' }}>
+          <div className="card booking-block booking-success">
             <h3>Payment Confirmed</h3>
             <p>Your payment was verified successfully.</p>
             {location.state?.invoiceNumber && <p><strong>Invoice:</strong> {location.state.invoiceNumber}</p>}
           </div>
         )}
 
-        <div className="card" style={{ marginBottom: '20px' }}>
+        <div className="card booking-block">
           <h3>{booking.listing_title}</h3>
           <p><strong>Status:</strong> {booking.booking_status}</p>
           <p><strong>Guest:</strong> {booking.guest_name}</p>
@@ -176,16 +176,16 @@ const BookingPage = () => {
         </div>
 
         {booking.qr_code && (
-          <div className="card" style={{ marginBottom: '20px' }}>
+          <div className="card booking-block">
             <h3>Booking QR</h3>
-            <img src={booking.qr_code} alt="Booking QR" style={{ maxWidth: '220px' }} />
-            <p style={{ marginTop: '10px' }}>Use this QR for handover and return verification.</p>
+            <img src={booking.qr_code} alt="Booking QR" className="booking-qr-image" />
+            <p className="booking-note">Use this QR for handover and return verification.</p>
           </div>
         )}
 
         <div className="card">
           <h3>Actions</h3>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div className="booking-actions-row">
             {isGuest && booking.booking_status === 'pending' && (
               <Link className="btn btn-primary" to={`/payments/${booking.id}`}>
                 Pay Now
@@ -209,7 +209,7 @@ const BookingPage = () => {
                   value={qrToken}
                   onChange={(e) => setQrToken(e.target.value)}
                   placeholder="Enter QR token"
-                  style={{ minWidth: '220px', padding: '10px' }}
+                  className="booking-qr-input"
                 />
                 {isHost && booking.can_handover && (
                   <button
@@ -256,7 +256,7 @@ const BookingPage = () => {
           </div>
         </div>
 
-        <div className="card" style={{ marginTop: '20px' }}>
+        <div className="card booking-top-block">
           <h3>Invoice</h3>
           {billingLoading && <p>Loading billing data...</p>}
 
@@ -270,7 +270,7 @@ const BookingPage = () => {
               <p><strong>Invoice Date:</strong> {invoice.invoice_date}</p>
               <p><strong>Total:</strong> ₹{invoice.total_amount}</p>
               <p><strong>PDF Generated:</strong> {invoice.pdf_generated ? 'Yes' : 'No'}</p>
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '12px' }}>
+              <div className="booking-actions-row booking-actions-top">
                 <button
                   className="btn btn-primary"
                   onClick={() => handleInvoiceDownload(invoice.id, invoice.invoice_number)}
@@ -286,7 +286,7 @@ const BookingPage = () => {
           )}
         </div>
 
-        <div className="card" style={{ marginTop: '20px' }}>
+        <div className="card booking-top-block">
           <h3>Payment Transactions</h3>
           {billingLoading && <p>Loading transaction history...</p>}
 
@@ -297,7 +297,7 @@ const BookingPage = () => {
           {!billingLoading && transactions.length > 0 && (
             <div className="bookings-list">
               {transactions.map((txn) => (
-                <div key={txn.id} className="booking-card card" style={{ marginBottom: '10px' }}>
+                <div key={txn.id} className="booking-card card booking-transaction-card">
                   <div className="booking-header">
                     <h3>{txn.transaction_type.replace('_', ' ')}</h3>
                     <span className={getTxnBadge(txn.status)}>{txn.status}</span>

@@ -33,3 +33,42 @@
   padding-bottom: 8px;
   margin-bottom: 8px;
 }
+
+.booking-block {
+  margin-bottom: 20px;
+}
+
+.booking-success {
+  border-left: 4px solid var(--success);
+}
+
+.booking-top-block {
+  margin-top: 20px;
+}
+
+.booking-qr-image {
+  max-width: 220px;
+}
+
+.booking-note {
+  margin-top: 10px;
+}
+
+.booking-actions-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.booking-actions-top {
+  margin-top: 12px;
+}
+
+.booking-qr-input {
+  min-width: 220px;
+  padding: 10px;
+}
+
+.booking-transaction-card {
+  margin-bottom: 10px;
+}

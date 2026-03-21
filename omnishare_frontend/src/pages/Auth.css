@@ -7,7 +7,7 @@
   background:
     radial-gradient(circle at 12% 14%, rgba(6, 214, 160, 0.3), transparent 26%),
     radial-gradient(circle at 80% 22%, rgba(255, 183, 3, 0.2), transparent 24%),
-    linear-gradient(145deg, #17304f 0%, #0f4c74 45%, #0077b6 100%);
+    linear-gradient(145deg, color-mix(in srgb, var(--primary-dark) 55%, #0b1e36) 0%, color-mix(in srgb, var(--primary-dark) 80%, #123250) 45%, var(--primary-dark) 100%);
 }
 
 .auth-container {

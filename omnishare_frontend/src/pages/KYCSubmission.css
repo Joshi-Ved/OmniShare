@@ -1,6 +1,6 @@
 .kyc-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary-dark) 65%, #0a213c) 0%, color-mix(in srgb, var(--secondary) 70%, #1e2a41) 100%);
   padding: 40px 20px;
 }
 
