@@ -1,0 +1,114 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
+<style>
+  .erp-crm-panel {
+    margin: 0 0 28px;
+    padding: 28px 24px;
+    border: 1.5px solid rgba(0, 119, 182, 0.2);
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.07) 0%, rgba(0, 166, 251, 0.04) 100%);
+    box-shadow: 0 8px 20px rgba(0, 119, 182, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .erp-crm-panel::before {
+    content: '';
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(0, 166, 251, 0.15), transparent);
+    border-radius: 50%;
+  }
+
+  .erp-crm-panel h2 {
+    margin: 0 0 12px;
+    font-size: 1.5rem;
+    color: #0077b6;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+
+  .erp-crm-panel p {
+    margin: 0 0 18px;
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+
+  .erp-crm-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .erp-crm-actions a {
+    display: block;
+    padding: 14px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid transparent;
+    font-size: 0.9rem;
+  }
+
+  .erp-crm-primary {
+    background: linear-gradient(135deg, #0077b6 0%, #00a6fb 100%);
+    color: white;
+    box-shadow: 0 8px 16px rgba(0, 119, 182, 0.25);
+  }
+
+  .erp-crm-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 119, 182, 0.35);
+  }
+
+  .erp-crm-secondary {
+    background: white;
+    color: #0077b6;
+    border: 1.5px solid rgba(0, 119, 182, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .erp-crm-secondary:hover {
+    background: linear-gradient(135deg, rgba(0, 119, 182, 0.08), rgba(0, 166, 251, 0.04));
+    border-color: rgba(0, 119, 182, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 119, 182, 0.12);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="erp-crm-panel">
+    <h2>ERP & CRM Workspace</h2>
+    <p>Use these shortcuts for analytics, customer intelligence, inventory, sales and decision support.</p>
+    <div class="erp-crm-actions">
+      <a class="erp-crm-primary" href="http://127.0.0.1:3000/admin/erp" target="_blank" rel="noopener">Open Admin Frontend ERP/CRM</a>
+      <a class="erp-crm-secondary" href="/api/crm/dashboard/" target="_blank" rel="noopener">CRM Dashboard API</a>
+      <a class="erp-crm-secondary" href="/api/crm/decision-support/" target="_blank" rel="noopener">Decision Support API</a>
+      <a class="erp-crm-secondary" href="/api/crm/inventory-linkage/" target="_blank" rel="noopener">Inventory Linkage API</a>
+    </div>
+  </div>
+
+  {% if app_list %}
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+  {% else %}
+    <p>{% trans 'You don’t have permission to view or edit anything.' %}</p>
+  {% endif %}
+</div>
+{% endblock %}

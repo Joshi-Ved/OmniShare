@@ -22,6 +22,11 @@ const Navbar = ({ isDark, onToggleTheme }) => {
     navigate('/clerk/sign-in');
   };
 
+  const handleNavigate = (path) => {
+    setMobileOpen(false);
+    navigate(path);
+  };
+
   return (
     <nav className="navbar">
       <div className="container-lg">
@@ -39,7 +44,7 @@ const Navbar = ({ isDark, onToggleTheme }) => {
           </button>
 
           <div className={`nav-menu ${mobileOpen ? 'open' : ''}`}>
-            <Link to="/" className="nav-link">Explore</Link>
+            <Link to="/" className="nav-link" onClick={() => setMobileOpen(false)}>Explore</Link>
 
             <button
               type="button"
@@ -51,24 +56,35 @@ const Navbar = ({ isDark, onToggleTheme }) => {
               {isDark ? 'Light' : 'Dark'}
             </button>
             
-            <Link to="/cart" className="nav-link cart-link">
+            <Link to="/cart" className="nav-link cart-link" onClick={() => setMobileOpen(false)}>
               🛒 Cart {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
             </Link>
             
             {isSignedIn ? (
               <>
-                <Link to="/profile" className="nav-link">Profile</Link>
+                <Link to="/profile" className="nav-link" onClick={() => setMobileOpen(false)}>Profile</Link>
+
+                <button
+                  type="button"
+                  className="nav-link nav-link-button"
+                  onClick={() => handleNavigate('/listings/create')}
+                >
+                  Create Listing
+                </button>
 
                 {(user.role === 'host' || user.role === 'both') && (
-                  <Link to="/host/dashboard" className="nav-link">Host</Link>
+                  <Link to="/host/dashboard" className="nav-link" onClick={() => setMobileOpen(false)}>Host</Link>
                 )}
                 
                 {(user.role === 'guest' || user.role === 'both') && (
-                  <Link to="/guest/dashboard" className="nav-link">Bookings</Link>
+                  <Link to="/guest/dashboard" className="nav-link" onClick={() => setMobileOpen(false)}>Bookings</Link>
                 )}
                 
-                {(user.role === 'admin' || user.is_staff) && (
-                  <Link to="/admin/dashboard" className="nav-link admin-link">Admin</Link>
+                {(user.role === 'admin' || user.is_staff || user.is_superuser) && (
+                  <>
+                    <Link to="/admin/dashboard" className="nav-link admin-link" onClick={() => setMobileOpen(false)}>Admin</Link>
+                    <Link to="/admin/erp" className="nav-link admin-link" onClick={() => setMobileOpen(false)}>📊 ERP</Link>
+                  </>
                 )}
                 
                 <div className="nav-user">

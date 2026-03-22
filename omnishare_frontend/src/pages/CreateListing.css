@@ -20,6 +20,48 @@
   margin-bottom: 30px;
 }
 
+.image-help-text {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.location-helper-row {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.coords-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.location-map-wrap {
+  border: 1px solid var(--line-color);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+  background: var(--surface-soft);
+}
+
+.location-map-wrap .leaflet-container {
+  font: inherit;
+}
+
+.listing-image-preview {
+  margin-top: 12px;
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--line-color);
+}
+
 .form-actions {
   display: flex;
   gap: 15px;

@@ -14,6 +14,7 @@ import ClerkAuthPage from './pages/ClerkAuthPage';
 import HostDashboard from './pages/HostDashboard';
 import GuestDashboard from './pages/GuestDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import ERPDashboard from './pages/ERPDashboard';
 import ListingDetails from './pages/ListingDetails';
 import BookingPage from './pages/BookingPage';
 import PaymentPage from './pages/PaymentPage';
@@ -128,6 +129,12 @@ function AppContent() {
           <Route path="/admin/dashboard" element={
             <PrivateRoute adminOnly>
               <AdminDashboard />
+            </PrivateRoute>
+          } />
+          
+          <Route path="/admin/erp" element={
+            <PrivateRoute adminOnly>
+              <ERPDashboard />
             </PrivateRoute>
           } />
           

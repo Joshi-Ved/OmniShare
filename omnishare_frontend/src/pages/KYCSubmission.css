@@ -1,15 +1,16 @@
 .kyc-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 76px);
   background: linear-gradient(135deg, color-mix(in srgb, var(--primary-dark) 65%, #0a213c) 0%, color-mix(in srgb, var(--secondary) 70%, #1e2a41) 100%);
-  padding: 40px 20px;
+  padding: 32px 20px 48px;
 }
 
 .kyc-card {
   max-width: 900px;
   margin: 0 auto;
   background: var(--surface-strong);
-  border-radius: 12px;
-  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid var(--line-color);
+  padding: 36px;
   box-shadow: var(--elev-shadow-lg);
 }
 
@@ -19,7 +20,7 @@
 }
 
 .kyc-header h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
   color: var(--text-primary);
   margin-bottom: 10px;
 }
@@ -35,7 +36,7 @@
   align-items: center;
   gap: 20px;
   padding: 25px;
-  border-radius: 8px;
+  border-radius: 14px;
   margin-bottom: 40px;
   border-left: 4px solid;
 }
@@ -75,9 +76,10 @@
   display: inline-block;
   padding: 4px 12px;
   border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: rgba(0, 0, 0, 0.1);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: color-mix(in srgb, var(--text-primary) 12%, transparent);
 }
 
 .status-text p {
@@ -106,8 +108,9 @@
   text-align: center;
   padding: 20px;
   background: var(--surface-soft);
-  border-radius: 8px;
-  transition: transform 0.2s;
+  border-radius: 14px;
+  border: 1px solid var(--line-color);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .benefit-item:hover {
@@ -165,7 +168,7 @@
   gap: 15px;
   padding: 30px;
   border: 2px dashed var(--line-strong);
-  border-radius: 8px;
+  border-radius: 14px;
   background: var(--surface-soft);
   cursor: pointer;
   transition: all 0.3s;
@@ -189,7 +192,7 @@
 .document-preview {
   margin-top: 20px;
   border: 1px solid var(--line-color);
-  border-radius: 8px;
+  border-radius: 14px;
   padding: 20px;
   background: var(--surface-soft);
 }
@@ -208,7 +211,8 @@
   gap: 10px;
   padding: 15px;
   background: var(--surface-soft);
-  border-radius: 8px;
+  border-radius: 12px;
+  border: 1px solid var(--line-color);
   margin-top: 15px;
 }
 
@@ -232,7 +236,7 @@
   background: color-mix(in srgb, var(--warning) 14%, var(--surface-soft));
   border-left: 4px solid var(--warning);
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 12px;
   margin: 30px 0;
 }
 
@@ -261,37 +265,41 @@
   margin-top: 30px;
 }
 
-.btn {
+.kyc-form .btn,
+.pending-message .btn,
+.verified-message .btn {
   padding: 12px 30px;
-  border: none;
-  border-radius: 6px;
+  border-radius: 999px;
   font-size: 1rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
 }
 
-.btn-primary {
+.kyc-form .btn-primary,
+.verified-message .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #ffffff;
 }
 
-.btn-primary:hover:not(:disabled) {
+.kyc-form .btn-primary:hover:not(:disabled),
+.verified-message .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--elev-shadow-sm);
 }
 
-.btn-primary:disabled {
+.kyc-form .btn-primary:disabled,
+.verified-message .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.btn-secondary {
+.kyc-form .btn-secondary,
+.pending-message .btn-secondary {
   background: var(--surface-soft);
   color: var(--text-primary);
 }
 
-.btn-secondary:hover:not(:disabled) {
+.kyc-form .btn-secondary:hover:not(:disabled),
+.pending-message .btn-secondary:hover:not(:disabled) {
   background: color-mix(in srgb, var(--surface-soft) 70%, var(--line-strong));
 }
 
@@ -318,7 +326,7 @@
   text-align: center;
   padding: 60px;
   font-size: 1.2rem;
-  color: white;
+  color: #ffffff;
 }
 
 /* Responsive */
@@ -344,7 +352,9 @@
     flex-direction: column;
   }
 
-  .btn {
+  .kyc-form .btn,
+  .pending-message .btn,
+  .verified-message .btn {
     width: 100%;
   }
 }

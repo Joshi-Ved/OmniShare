@@ -14,6 +14,37 @@
   border-radius: 18px;
 }
 
+.thumb-row {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.thumb-btn {
+  border: 1px solid var(--line-color);
+  background: var(--surface-strong);
+  border-radius: 12px;
+  padding: 0;
+  cursor: pointer;
+  width: 88px;
+  min-width: 88px;
+  height: 64px;
+  overflow: hidden;
+}
+
+.thumb-btn.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .image-gallery .main-image {
   object-fit: cover;
   border: 1px solid rgba(0, 116, 182, 0.18);
@@ -23,7 +54,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(130deg, #dff3ff, #e8fbf3);
+  background: linear-gradient(
+    130deg,
+    color-mix(in srgb, var(--primary) 14%, var(--surface-soft)),
+    color-mix(in srgb, var(--success) 10%, var(--surface-soft))
+  );
   color: var(--text-muted);
 }
 
@@ -33,6 +68,23 @@
 
 .listing-info h1 {
   color: var(--text-primary);
+}
+
+.listing-quick-tags {
+  margin: 8px 0 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-tag {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 9px;
 }
 
 .host-info,
@@ -46,6 +98,31 @@
   position: sticky;
   top: 92px;
   align-self: start;
+}
+
+.booking-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.booking-top-price {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.booking-price {
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--primary);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.booking-price-unit {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
 }
 
 .price-breakdown {
@@ -71,6 +148,10 @@
 .review {
   border-bottom: 1px dashed var(--line-strong);
   padding: 10px 0;
+}
+
+.review:last-child {
+  border-bottom: none;
 }
 
 @media (max-width: 900px) {

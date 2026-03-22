@@ -99,8 +99,30 @@ const KYCSubmission = () => {
       }, 2000);
     } catch (error) {
       console.error('KYC submission error:', error);
-      const errorMsg = error.response?.data?.error || 'Failed to submit KYC document';
-      toast.error(errorMsg);
+      const statusCode = error.response?.status;
+      const responseData = error.response?.data;
+
+      if (statusCode === 401) {
+        toast.error('Session expired. Please sign in again.');
+      } else if (typeof responseData === 'string') {
+        toast.error(responseData);
+      } else if (responseData?.error) {
+        toast.error(responseData.error);
+      } else if (responseData?.detail) {
+        toast.error(responseData.detail);
+      } else if (responseData && typeof responseData === 'object') {
+        const firstKey = Object.keys(responseData)[0];
+        const firstValue = responseData[firstKey];
+        if (Array.isArray(firstValue) && firstValue.length > 0) {
+          toast.error(`${firstKey}: ${firstValue[0]}`);
+        } else if (typeof firstValue === 'string') {
+          toast.error(`${firstKey}: ${firstValue}`);
+        } else {
+          toast.error('Failed to submit KYC document');
+        }
+      } else {
+        toast.error('Failed to submit KYC document');
+      }
     } finally {
       setLoading(false);
     }

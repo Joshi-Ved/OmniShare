@@ -43,11 +43,12 @@ class UserSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'phone_number', 'profile_image',
             'role', 'kyc_status', 'trust_score', 'total_bookings',
             'successful_bookings', 'gold_host_flag', 'gold_host_since',
+            'is_staff', 'is_superuser',
             'created_at', 'can_create_listing', 'can_book'
         ]
         read_only_fields = [
             'id', 'trust_score', 'total_bookings', 'successful_bookings',
-            'gold_host_flag', 'gold_host_since', 'created_at'
+            'gold_host_flag', 'gold_host_since', 'is_staff', 'is_superuser', 'created_at'
         ]
     
     def get_can_create_listing(self, obj):

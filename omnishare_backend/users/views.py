@@ -94,6 +94,9 @@ class KYCSubmissionView(generics.UpdateAPIView):
             'kyc_status': 'pending'
         }, status=status.HTTP_200_OK)
 
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
 
 class KYCVerificationView(generics.GenericAPIView):
     """

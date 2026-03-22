@@ -40,7 +40,7 @@ export const authAPI = {
   logout: () => api.post('/users/logout/'),
   getProfile: () => api.get('/users/profile/'),
   updateProfile: (data) => api.put('/users/profile/', data),
-  submitKYC: (formData) => api.post('/users/kyc/submit/', formData, {
+  submitKYC: (formData) => api.patch('/users/kyc/submit/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
 };

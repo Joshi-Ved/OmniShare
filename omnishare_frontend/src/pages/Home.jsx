@@ -6,10 +6,100 @@ import { toast } from 'react-toastify';
 import './Home.css';
 
 const demoProducts = [
-  { id: 'p1', name: 'Laptop - Dell XPS 13', price: 120, description: 'High-performance ultrabook for professionals', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300' },
-  { id: 'p2', name: 'Nikon Camera D3500', price: 80, description: 'Perfect for photography enthusiasts', image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=300' },
-  { id: 'p3', name: 'Drone - DJI Mavic Air', price: 150, description: 'Compact 4K drone for aerial filming', image: 'https://images.unsplash.com/photo-1509669996-5340aa0ee0c1?w=300' },
-  { id: 'p4', name: 'PlayStation 5', price: 50, description: 'Latest gaming console with exclusive games', image: 'https://images.unsplash.com/photo-1535721471918-34fefb025b0f?w=300' },
+  {
+    id: 'p1',
+    name: 'Laptop - Dell XPS 13',
+    price: 120,
+    description: 'High-performance ultrabook for professionals',
+    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'p2',
+    name: 'Nikon Camera D3500',
+    price: 80,
+    description: 'Perfect for photography enthusiasts',
+    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'p3',
+    name: 'Drone - DJI Mavic Air',
+    price: 150,
+    description: 'Compact 4K drone for aerial filming',
+    image: 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'p4',
+    name: 'PlayStation 5',
+    price: 50,
+    description: 'Latest gaming console with exclusive games',
+    image: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'p5',
+    name: 'GoPro Hero 12',
+    price: 65,
+    description: 'Action camera for travel, biking, and adventure shoots',
+    image: '/images/image.png',
+  },
+  {
+    id: 'p6',
+    name: 'Road Bike - Giant Escape',
+    price: 95,
+    description: 'Lightweight city bike perfect for daily commutes',
+    image: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'p7',
+    name: 'Portable Projector',
+    price: 70,
+    description: 'Compact HD projector for presentations and movie nights',
+    image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: 'p8',
+    name: 'Camping Tent - 4 Person',
+    price: 110,
+    description: 'Weather-resistant family tent for weekend getaways',
+    image: 'https://images.unsplash.com/photo-1487730116645-74489c95b41b?auto=format&fit=crop&w=1200&q=80',
+  },
+];
+
+const heroSlides = [
+  {
+    id: 's1',
+    image: 'https://images.unsplash.com/photo-1465800872432-80a117de8f9a?auto=format&fit=crop&w=2200&q=80',
+    label: 'City Rentals',
+  },
+  {
+    id: 's2',
+    image: 'https://images.unsplash.com/photo-1498049860654-af1a5c566876?auto=format&fit=crop&w=2200&q=80',
+    label: 'Tech On Demand',
+  },
+  {
+    id: 's3',
+    image: 'https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=2200&q=80',
+    label: 'Event Essentials',
+  },
+  {
+    id: 's4',
+    image: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=2200&q=80',
+    label: 'Weekend Adventure Gear',
+  },
+  {
+    id: 's5',
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=2200&q=80',
+    label: 'Creator Equipment',
+  },
+  {
+    id: 's6',
+    image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2200&q=80',
+    label: 'Workspace Rentals',
+  },
+  {
+    id: 's7',
+    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=2200&q=80',
+    label: 'Home Essentials',
+  },
 ];
 
 const Home = () => {
@@ -24,7 +114,14 @@ const Home = () => {
     min_price: '',
     max_price: '',
   });
+  const [imageModal, setImageModal] = useState({
+    isOpen: false,
+    src: '',
+    title: '',
+  });
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const initializedRef = useRef(false);
+  const promotedCount = listings.filter((item) => item.promoted_flag).length;
 
   const handleAddToCart = (product) => {
     addItem({
@@ -96,13 +193,118 @@ const Home = () => {
     });
   };
 
+  const openImageModal = (src, title) => {
+    setImageModal({
+      isOpen: true,
+      src,
+      title,
+    });
+  };
+
+  const closeImageModal = () => {
+    setImageModal({
+      isOpen: false,
+      src: '',
+      title: '',
+    });
+  };
+
+  useEffect(() => {
+    if (!imageModal.isOpen) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeImageModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [imageModal.isOpen]);
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 7000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const preloadedImages = heroSlides.map((slide) => {
+      const image = new window.Image();
+      image.src = slide.image;
+      return image;
+    });
+
+    return () => {
+      preloadedImages.forEach((image) => {
+        image.src = '';
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleHeroKeyDown = (event) => {
+      if (event.key === 'ArrowRight') {
+        setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length);
+      }
+
+      if (event.key === 'ArrowLeft') {
+        setActiveHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+      }
+    };
+
+    window.addEventListener('keydown', handleHeroKeyDown);
+    return () => window.removeEventListener('keydown', handleHeroKeyDown);
+  }, []);
+
   return (
     <div className="home-page">
       {/* Hero Section */}
       <div className="hero">
+        <div className="hero-bg" aria-hidden="true">
+          {heroSlides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`hero-bg-slide ${index === activeHeroSlide ? 'active' : ''}`}
+              style={{ backgroundImage: `url(${slide.image})` }}
+            />
+          ))}
+        </div>
+        <button
+          type="button"
+          className="hero-nav hero-nav-prev"
+          onClick={() => setActiveHeroSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+          aria-label="Previous hero slide"
+        >
+          ‹
+        </button>
+        <button
+          type="button"
+          className="hero-nav hero-nav-next"
+          onClick={() => setActiveHeroSlide((prev) => (prev + 1) % heroSlides.length)}
+          aria-label="Next hero slide"
+        >
+          ›
+        </button>
+        <div className="hero-slide-caption" aria-live="polite">
+          {heroSlides[activeHeroSlide].label}
+        </div>
+        <div className="hero-slide-dots" aria-label="Hero image slideshow controls">
+          {heroSlides.map((_, index) => (
+            <button
+              key={`hero-dot-${index}`}
+              type="button"
+              className={`hero-dot ${index === activeHeroSlide ? 'active' : ''}`}
+              onClick={() => setActiveHeroSlide(index)}
+              aria-label={`Show slide ${index + 1}`}
+            />
+          ))}
+        </div>
         <div className="hero-content">
-          <h1>Rent Anything, From Anyone, Anywhere</h1>
-          <p>Join India's fastest growing P2P rental marketplace</p>
+          <h1>Find Trusted Rentals Near You</h1>
+          <p>Discover verified hosts, transparent pricing, and hassle-free bookings across India.</p>
           <div className="hero-search">
             <input
               type="text"
@@ -113,8 +315,36 @@ const Home = () => {
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
             <button onClick={handleSearch} className="btn btn-primary">
-              Search
+              Browse Rentals
             </button>
+          </div>
+          <div className="hero-trust-row">
+            <span className="hero-pill">Verified Hosts</span>
+            <span className="hero-pill">Secure Payments</span>
+            <span className="hero-pill">Real Reviews</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="market-stats-wrap">
+        <div className="container">
+          <div className="market-stats grid grid-4">
+            <div className="market-stat card">
+              <h4>Live Listings</h4>
+              <p>{listings.length || '0'}</p>
+            </div>
+            <div className="market-stat card">
+              <h4>Promoted</h4>
+              <p>{promotedCount || '0'}</p>
+            </div>
+            <div className="market-stat card">
+              <h4>Categories</h4>
+              <p>{categories.length || '0'}</p>
+            </div>
+            <div className="market-stat card">
+              <h4>Booking Model</h4>
+              <p>Per Day</p>
+            </div>
           </div>
         </div>
       </div>
@@ -122,12 +352,12 @@ const Home = () => {
       {/* Demo Products Showcase */}
       <div className="products-showcase">
         <div className="container">
-          <h2>✨ Featured Products</h2>
-          <p>Add these items to your cart and test the payment system</p>
+          <h2>Popular Rental Picks</h2>
+          <p>Trending items renters book most for work, travel, and events.</p>
           <div className="products-grid">
             {demoProducts.map((product) => (
               <div key={product.id} className="product-card">
-                <img src={product.image} alt={product.name} className="product-image" />
+                <img src={product.image} alt={product.name} className="product-image" loading="lazy" />
                 <div className="product-content">
                   <h3>{product.name}</h3>
                   <p>{product.description}</p>
@@ -137,7 +367,7 @@ const Home = () => {
                       className="btn btn-sm btn-primary"
                       onClick={() => handleAddToCart(product)}
                     >
-                      Add to Cart 🛒
+                      Add to Cart
                     </button>
                   </div>
                 </div>
@@ -146,7 +376,7 @@ const Home = () => {
           </div>
           <div className="products-cta">
             <Link to="/cart" className="btn btn-primary">
-              View Shopping Cart
+              View Cart
             </Link>
           </div>
         </div>
@@ -155,6 +385,12 @@ const Home = () => {
       {/* Filters */}
       <div className="container">
         <div className="filters">
+          <div className="filters-head">
+            <h3>Refine Results</h3>
+            <button onClick={handleClearFilters} className="btn btn-sm btn-secondary" type="button">
+              Reset
+            </button>
+          </div>
           <div className="filters-grid">
             <div className="form-group">
               <label>Category</label>
@@ -202,7 +438,7 @@ const Home = () => {
             </div>
 
             <button onClick={handleSearch} className="btn btn-primary">
-              Search
+              Apply Filters
             </button>
           </div>
         </div>
@@ -224,7 +460,7 @@ const Home = () => {
           ) : listings.length > 0 ? (
             <>
               <div className="listings-header">
-                <h2>Found {listings.length} items</h2>
+                <h2>{listings.length} rentals available</h2>
               </div>
               <div className="listings-grid grid grid-3">
                 {listings.map((listing) => (
@@ -252,6 +488,11 @@ const Home = () => {
                       <p className="listing-description">
                         {listing.description?.substring(0, 60)}...
                       </p>
+
+                      <div className="listing-signal-row">
+                        <span className="signal-chip">⚡ Fast Booking</span>
+                        <span className="signal-chip">🛡️ Secure</span>
+                      </div>
                       
                       <div className="listing-footer">
                         <div className="listing-price">
@@ -263,6 +504,25 @@ const Home = () => {
                         <div className="host-info">
                           <small>{listing.total_reviews} reviews</small>
                         </div>
+                      </div>
+
+                      <div className="listing-actions">
+                        <span className="view-hint">Tap card for full details</span>
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-secondary"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (listing.primary_image) {
+                              openImageModal(listing.primary_image, listing.title);
+                            } else {
+                              toast.info('No image available for this listing');
+                            }
+                          }}
+                        >
+                          View Image
+                        </button>
                       </div>
                     </div>
                   </Link>
@@ -281,6 +541,20 @@ const Home = () => {
           )}
         </div>
       </div>
+
+      {imageModal.isOpen && (
+        <div className="image-modal-backdrop" onClick={closeImageModal}>
+          <div className="image-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="image-modal-header">
+              <h3>{imageModal.title}</h3>
+              <button type="button" className="image-modal-close" onClick={closeImageModal}>
+                ✕
+              </button>
+            </div>
+            <img src={imageModal.src} alt={imageModal.title || 'Listing image'} className="image-modal-img" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

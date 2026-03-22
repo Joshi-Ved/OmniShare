@@ -6,6 +6,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
+from django.shortcuts import redirect
 
 
 def api_root(_request):
@@ -22,7 +23,12 @@ def api_root(_request):
         }
     })
 
+
+def root_redirect(_request):
+    return redirect('/admin/')
+
 urlpatterns = [
+    path('', root_redirect),
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api-root'),
     path('api/users/', include('users.urls')),

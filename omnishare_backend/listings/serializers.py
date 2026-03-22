@@ -19,10 +19,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ListingImageSerializer(serializers.ModelSerializer):
     """Serializer for listing images"""
+    image = serializers.SerializerMethodField()
+    
     class Meta:
         model = ListingImage
         fields = ['id', 'image', 'caption', 'is_primary', 'uploaded_at']
         read_only_fields = ['id', 'uploaded_at']
+    
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image.url if obj.image else None
 
 
 class HostSerializer(serializers.ModelSerializer):

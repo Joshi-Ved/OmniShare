@@ -301,7 +301,7 @@ def inventory_linkage_report(request):
     start_date = _parse_date(request.query_params.get('start_date'), end_date - timedelta(days=30))
 
     listings = Listing.objects.select_related('host', 'category').annotate(
-        total_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date)),
+        period_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date)),
         completed_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='completed')),
         cancelled_bookings=Count('bookings', filter=Q(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date, bookings__booking_status='cancelled')),
         active_bookings=Count('bookings', filter=Q(bookings__booking_status__in=['confirmed', 'in_use'])),
@@ -311,8 +311,8 @@ def inventory_linkage_report(request):
     data = []
     for listing in listings:
         utilization = 0.0
-        if listing.total_bookings:
-            utilization = round((listing.completed_bookings / listing.total_bookings) * 100, 2)
+        if listing.period_bookings:
+            utilization = round((listing.completed_bookings / listing.period_bookings) * 100, 2)
 
         inventory_risk = 'high' if (not listing.is_available or listing.verification_status != 'approved') else 'normal'
         if listing.cancelled_bookings >= 3:
@@ -325,7 +325,7 @@ def inventory_linkage_report(request):
             'category': listing.category.name if listing.category else None,
             'verification_status': listing.verification_status,
             'is_available': listing.is_available,
-            'total_bookings': listing.total_bookings,
+            'period_bookings': listing.period_bookings,
             'completed_bookings': listing.completed_bookings,
             'cancelled_bookings': listing.cancelled_bookings,
             'active_bookings': listing.active_bookings,

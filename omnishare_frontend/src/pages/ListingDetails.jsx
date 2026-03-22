@@ -15,11 +15,16 @@ const ListingDetails = () => {
     end_date: '',
   });
   const [priceBreakdown, setPriceBreakdown] = useState(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
     fetchListing();
     fetchReviews();
   }, [id]);
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [listing?.id]);
 
   const fetchListing = async () => {
     setLoading(true);
@@ -124,13 +129,30 @@ const ListingDetails = () => {
   if (loading) return <div className="loading">Loading...</div>;
   if (!listing) return null;
 
+  const listingImages = listing.images || [];
+  const activeImage = listingImages[activeImageIndex]?.image;
+
   return (
     <div className="listing-details-page">
       <div className="container">
         <div className="listing-images">
-          {listing.images && listing.images.length > 0 ? (
+          {listingImages.length > 0 ? (
             <div className="image-gallery">
-              <img src={listing.images[0].image} alt={listing.title} className="main-image" />
+              <img src={activeImage} alt={listing.title} className="main-image" />
+              {listingImages.length > 1 && (
+                <div className="thumb-row">
+                  {listingImages.map((imageItem, index) => (
+                    <button
+                      key={imageItem.id || index}
+                      type="button"
+                      className={`thumb-btn ${activeImageIndex === index ? 'active' : ''}`}
+                      onClick={() => setActiveImageIndex(index)}
+                    >
+                      <img src={imageItem.image} alt={`${listing.title} ${index + 1}`} className="thumb-img" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
             <div className="no-image-large">No Image Available</div>
@@ -141,6 +163,11 @@ const ListingDetails = () => {
           <div className="listing-info">
             <h1>{listing.title}</h1>
             <p className="location">📍 {listing.location}</p>
+            <div className="listing-quick-tags">
+              <span className="quick-tag">✅ Verified Listing</span>
+              <span className="quick-tag">🔒 Secure Payment</span>
+              <span className="quick-tag">⏱️ Daily Rental</span>
+            </div>
             
             <div className="host-info card">
               <h3>Hosted by {listing.host.username}</h3>
@@ -187,6 +214,12 @@ const ListingDetails = () => {
           <div className="booking-widget">
             <div className="card">
               <h2>Book This Item</h2>
+              <p className="booking-subtitle">Choose your dates to see the exact rental total.</p>
+
+              <div className="booking-top-price">
+                <span className="booking-price">₹{listing.daily_price}</span>
+                <span className="booking-price-unit">per day</span>
+              </div>
               
               <div className="form-group">
                 <label>Start Date</label>
@@ -246,7 +279,7 @@ const ListingDetails = () => {
                 className="btn btn-primary"
                 disabled={!priceBreakdown}
               >
-                Proceed to Book
+                Continue to Booking
               </button>
             </div>
           </div>

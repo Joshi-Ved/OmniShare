@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { adminAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './Dashboard.css';
@@ -148,7 +149,16 @@ const AdminDashboard = () => {
   return (
     <div className="dashboard-page">
       <div className="container">
-        <h1>Admin Dashboard</h1>
+        <div className="admin-hero card">
+          <div>
+            <h1>Admin Control Center</h1>
+            <p>Operations, ERP insights, CRM intelligence, and governance in one place.</p>
+          </div>
+          <div className="admin-hero-actions">
+            <Link to="/admin/erp" className="btn btn-secondary">Open ERP + CRM Workspace</Link>
+            <button onClick={fetchDashboardData} className="btn btn-primary">Refresh Data</button>
+          </div>
+        </div>
 
         <div className="dashboard-tabs" style={{ flexWrap: 'wrap' }}>
           {[

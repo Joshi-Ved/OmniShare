@@ -11,6 +11,11 @@ const HostDashboard = () => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('listings');
+  const [imageModal, setImageModal] = useState({
+    isOpen: false,
+    src: '',
+    title: '',
+  });
 
   useEffect(() => {
     fetchData();
@@ -84,6 +89,35 @@ const HostDashboard = () => {
     };
     return `badge ${statusMap[status] || 'badge-info'}`;
   };
+
+  const openImageModal = (src, title) => {
+    setImageModal({
+      isOpen: true,
+      src,
+      title,
+    });
+  };
+
+  const closeImageModal = () => {
+    setImageModal({
+      isOpen: false,
+      src: '',
+      title: '',
+    });
+  };
+
+  useEffect(() => {
+    if (!imageModal.isOpen) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeImageModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [imageModal.isOpen]);
 
   if (loading) return <div className="loading">Loading...</div>;
 
@@ -174,9 +208,24 @@ const HostDashboard = () => {
                     </span>
                     <span>⭐ {listing.rating} ({listing.total_reviews})</span>
                   </div>
-                  <Link to={`/listings/${listing.id}`} className="btn btn-primary">
-                    View Details
-                  </Link>
+                  <div className="listing-actions">
+                    <Link to={`/listings/${listing.id}`} className="btn btn-primary">
+                      View Details
+                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        if (listing.primary_image) {
+                          openImageModal(listing.primary_image, listing.title);
+                        } else {
+                          toast.info('No image available for this listing');
+                        }
+                      }}
+                    >
+                      View Image
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -253,6 +302,24 @@ const HostDashboard = () => {
                 </div>
               ))}
               {invoices.length === 0 && <div className="no-results"><p>No invoices found.</p></div>}
+            </div>
+          </div>
+        )}
+
+        {imageModal.isOpen && (
+          <div className="dashboard-image-modal-backdrop" onClick={closeImageModal}>
+            <div className="dashboard-image-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="dashboard-image-modal-header">
+                <h3>{imageModal.title}</h3>
+                <button type="button" className="dashboard-image-modal-close" onClick={closeImageModal}>
+                  ✕
+                </button>
+              </div>
+              <img
+                src={imageModal.src}
+                alt={imageModal.title || 'Listing image'}
+                className="dashboard-image-modal-img"
+              />
             </div>
           </div>
         )}

@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -92,10 +94,21 @@ body {
   background: var(--bg-base);
   background-color: var(--bg-color);
   color: var(--text-primary);
+  line-height: 1.5;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background 0.35s ease, color 0.25s ease;
+}
+
+#root,
+.App {
+  min-height: 100vh;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 28%, transparent);
+  color: var(--text-primary);
 }
 
 h1,
@@ -116,6 +129,11 @@ p {
 
 a {
   text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font: inherit;
   color: inherit;
 }
 
@@ -170,6 +188,7 @@ a {
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 600;
   font-size: 0.95rem;
+  line-height: 1;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
@@ -204,6 +223,11 @@ a {
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 0.82rem;
 }
 
 .form-group {
