@@ -5,23 +5,11 @@ import './ERPDashboard.css';
 
 const ERPDashboard = () => {
   const [activeModule, setActiveModule] = useState('overview');
-  const [data, setData] = useState({
-    overview: null,
-    inventory: null,
-    crm: null,
-    sales: null,
-    scm: null,
-  });
+  const [data, setData] = useState({ overview: null, inventory: null, crm: null, sales: null, scm: null });
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({
-    dateRange: '30',
-    category: 'all',
-    status: 'all',
-  });
+  const [dateRange, setDateRange] = useState('30');
 
-  useEffect(() => {
-    fetchERPData();
-  }, []);
+  useEffect(() => { fetchERPData(); }, []);
 
   const fetchERPData = async () => {
     setLoading(true);
@@ -33,75 +21,58 @@ const ERPDashboard = () => {
         adminAPI.getSalesReport({ group_by: 'week' }).catch(() => ({ data: {} })),
         adminAPI.getSCMDashboard({}).catch(() => ({ data: {} })),
       ]);
-
-      setData({
-        overview: overview.data,
-        inventory: inventory.data,
-        crm: crm.data?.results || [],
-        sales: sales.data,
-        scm: scm.data,
-      });
-    } catch (error) {
-      toast.error('Failed to load ERP data');
-    } finally {
-      setLoading(false);
-    }
+      setData({ overview: overview.data, inventory: inventory.data, crm: crm.data?.results || [], sales: sales.data, scm: scm.data });
+    } catch { toast.error('Failed to load ERP data'); }
+    finally { setLoading(false); }
   };
 
+  const modules = [
+    { key: 'overview', label: 'Overview', icon: 'dashboard' },
+    { key: 'inventory', label: 'Inventory', icon: 'inventory_2' },
+    { key: 'crm', label: 'CRM', icon: 'group' },
+    { key: 'sales', label: 'Sales', icon: 'analytics' },
+    { key: 'scm', label: 'Supply Chain', icon: 'local_shipping' },
+  ];
+
   return (
-    <div className="erp-dashboard">
-      <div className="erp-header">
-        <div className="erp-header-content">
-          <h1>Enterprise Resource Planning</h1>
-          <p>Integrated ERP & CRM Management System</p>
+    <div className="erp-root">
+      {/* Header */}
+      <header className="erp-header">
+        <div className="erp-header-left">
+          <div className="erp-header-icon">
+            <span className="material-symbols-outlined">corporate_fare</span>
+          </div>
+          <div>
+            <h1 className="erp-header-title">Enterprise Resource Planning</h1>
+            <p className="erp-header-sub">Integrated ERP &amp; CRM Management System</p>
+          </div>
         </div>
-        <div className="erp-filters">
-          <select value={filters.dateRange} onChange={(e) => setFilters({ ...filters, dateRange: e.target.value })}>
+        <div className="erp-header-right">
+          <select className="erp-select" value={dateRange} onChange={(e) => setDateRange(e.target.value)}>
             <option value="7">Last 7 Days</option>
             <option value="30">Last 30 Days</option>
             <option value="90">Last 90 Days</option>
             <option value="365">Last Year</option>
           </select>
-          <button className="refresh-btn" onClick={fetchERPData} disabled={loading}>
-            {loading ? '🔄 Syncing...' : '🔄 Refresh'}
+          <button className="erp-btn erp-btn-ghost" onClick={fetchERPData} disabled={loading}>
+            <span className="material-symbols-outlined">{loading ? 'sync' : 'refresh'}</span>
+            {loading ? 'Syncing...' : 'Refresh'}
           </button>
         </div>
-      </div>
+      </header>
 
-      <div className="erp-nav">
-        <button
-          className={`erp-nav-item ${activeModule === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveModule('overview')}
-        >
-          📊 Overview
-        </button>
-        <button
-          className={`erp-nav-item ${activeModule === 'inventory' ? 'active' : ''}`}
-          onClick={() => setActiveModule('inventory')}
-        >
-          📦 Inventory
-        </button>
-        <button
-          className={`erp-nav-item ${activeModule === 'crm' ? 'active' : ''}`}
-          onClick={() => setActiveModule('crm')}
-        >
-          👥 CRM
-        </button>
-        <button
-          className={`erp-nav-item ${activeModule === 'sales' ? 'active' : ''}`}
-          onClick={() => setActiveModule('sales')}
-        >
-          💰 Sales
-        </button>
-        <button
-          className={`erp-nav-item ${activeModule === 'scm' ? 'active' : ''}`}
-          onClick={() => setActiveModule('scm')}
-        >
-          🚚 Supply Chain
-        </button>
-      </div>
+      {/* Module Nav */}
+      <nav className="erp-nav">
+        {modules.map((m) => (
+          <button key={m.key} className={`erp-nav-btn ${activeModule === m.key ? 'active' : ''}`} onClick={() => setActiveModule(m.key)}>
+            <span className="material-symbols-outlined">{m.icon}</span>
+            {m.label}
+          </button>
+        ))}
+      </nav>
 
-      <div className="erp-content">
+      {/* Content */}
+      <div className="erp-body">
         {activeModule === 'overview' && <OverviewModule data={data.overview} />}
         {activeModule === 'inventory' && <InventoryModule data={data.inventory} />}
         {activeModule === 'crm' && <CRMModule data={data.crm} />}
@@ -112,195 +83,151 @@ const ERPDashboard = () => {
   );
 };
 
-// Overview Module - High-level KPIs
-const OverviewModule = ({ data }) => {
-  if (!data) return <div className="module-loading">Loading Overview...</div>;
+/* ── Helpers ── */
+const fmtINR = (n) => {
+  const num = Number(n) || 0;
+  if (num >= 10000000) return `₹${(num/10000000).toFixed(1)}Cr`;
+  if (num >= 100000) return `₹${(num/100000).toFixed(1)}L`;
+  if (num >= 1000) return `₹${(num/1000).toFixed(1)}k`;
+  return `₹${num.toFixed(0)}`;
+};
+const fmtNum = (n) => Number(n || 0).toLocaleString('en-IN');
 
+/* ── Shared primitives ── */
+const ERPStatCard = ({ icon, label, value, trend, trendUp, accent, sub }) => (
+  <div className={`erp-stat ${accent ? 'erp-stat--accent' : ''}`}>
+    <div className="erp-stat-top">
+      <span className={`erp-stat-icon ${accent ? 'erp-stat-icon--white' : ''}`}>
+        <span className="material-symbols-outlined">{icon}</span>
+      </span>
+      {trend && (
+        <span className={`erp-stat-trend ${trendUp ? 'up' : 'down'}`}>
+          <span className="material-symbols-outlined">{trendUp ? 'trending_up' : 'trending_down'}</span>
+          {trend}
+        </span>
+      )}
+    </div>
+    <p className="erp-stat-label">{label}</p>
+    <p className="erp-stat-value">{value}</p>
+    {sub && <p className="erp-stat-sub">{sub}</p>}
+  </div>
+);
+
+const ERPSectionTitle = ({ icon, title }) => (
+  <h2 className="erp-section-title">
+    <span className="material-symbols-outlined">{icon}</span>{title}
+  </h2>
+);
+
+const ERPBadge = ({ status }) => {
+  const map = { available: 'success', active: 'success', optimal: 'success', maintenance: 'warn', monitor: 'warn', inactive: 'danger', high: 'danger' };
+  const cls = map[(status || '').toLowerCase()] || 'info';
+  return <span className={`erp-badge erp-badge--${cls}`}>{status}</span>;
+};
+
+/* ── Overview ── */
+const OverviewModule = ({ data }) => {
+  if (!data) return <ERPLoader />;
   const kpis = [
-    {
-      title: 'Total Revenue',
-      value: `$${(data.total_revenue || 0).toLocaleString()}`,
-      trend: '+12.5%',
-      icon: '💵',
-      color: 'green',
-    },
-    {
-      title: 'Active Listings',
-      value: data.active_listings || 0,
-      trend: '+8 this month',
-      icon: '📋',
-      color: 'blue',
-    },
-    {
-      title: 'Verified Users',
-      value: data.verified_users || 0,
-      trend: '+15 this week',
-      icon: '✅',
-      color: 'purple',
-    },
-    {
-      title: 'Pending Approvals',
-      value: data.pending_listings || 0,
-      trend: 'Requires action',
-      icon: '⏳',
-      color: 'orange',
-    },
-    {
-      title: 'Active Bookings',
-      value: data.active_bookings || 0,
-      trend: '+5 today',
-      icon: '🎯',
-      color: 'teal',
-    },
-    {
-      title: 'Platform Commission',
-      value: `$${(data.total_commission || 0).toLocaleString()}`,
-      trend: '+5.2% vs last month',
-      icon: '📈',
-      color: 'gold',
-    },
+    { icon: 'payments', label: 'Total Revenue', value: fmtINR(data.total_revenue), trend: '+12.5%', trendUp: true, sub: 'Platform commission' },
+    { icon: 'list_alt', label: 'Active Listings', value: fmtNum(data.active_listings), trend: '+8 this month', trendUp: true },
+    { icon: 'verified_user', label: 'Verified Users', value: fmtNum(data.verified_users), trend: '+15 this week', trendUp: true },
+    { icon: 'pending_actions', label: 'Pending Approvals', value: data.pending_listings || 0, accent: true, sub: 'Requires action' },
+    { icon: 'sync_alt', label: 'Active Bookings', value: fmtNum(data.active_bookings), trend: '+5 today', trendUp: true },
+    { icon: 'account_balance_wallet', label: 'Platform Commission', value: fmtINR(data.total_commission), trend: '+5.2%', trendUp: true },
+  ];
+
+  const health = [
+    { label: 'Data Integrity', pct: 98 },
+    { label: 'Uptime', pct: 99.9 },
+    { label: 'API Response', pct: 97, suffix: 'ms' },
+    { label: 'User Satisfaction', pct: 94, suffix: '/5', display: '4.7' },
   ];
 
   return (
-    <div className="overview-module">
-      <div className="kpi-grid">
-        {kpis.map((kpi, idx) => (
-          <div key={idx} className={`kpi-card kpi-${kpi.color}`}>
-            <div className="kpi-icon">{kpi.icon}</div>
-            <div className="kpi-content">
-              <h3>{kpi.title}</h3>
-              <div className="kpi-value">{kpi.value}</div>
-              <div className="kpi-trend">{kpi.trend}</div>
-            </div>
-          </div>
-        ))}
+    <div className="erp-module">
+      <div className="erp-stats-grid">
+        {kpis.map((k, i) => <ERPStatCard key={i} {...k} />)}
       </div>
 
-      <div className="overview-section">
-        <h2>System Health</h2>
-        <div className="health-grid">
-          <div className="health-item">
-            <div className="health-label">Data Integrity</div>
-            <div className="health-bar">
-              <div className="health-fill" style={{ width: '98%' }}></div>
+      <div className="erp-card">
+        <ERPSectionTitle icon="monitor_heart" title="System Health" />
+        <div className="erp-health-grid">
+          {health.map((h) => (
+            <div key={h.label} className="erp-health-item">
+              <div className="erp-health-top">
+                <span className="erp-health-label">{h.label}</span>
+                <span className="erp-health-val">{h.display || h.pct}{h.suffix || '%'}</span>
+              </div>
+              <div className="erp-health-bar">
+                <div className="erp-health-fill" style={{ width: `${Math.min(h.pct, 100)}%` }}></div>
+              </div>
             </div>
-            <span className="health-percent">98%</span>
-          </div>
-          <div className="health-item">
-            <div className="health-label">Uptime</div>
-            <div className="health-bar">
-              <div className="health-fill" style={{ width: '99.9%' }}></div>
-            </div>
-            <span className="health-percent">99.9%</span>
-          </div>
-          <div className="health-item">
-            <div className="health-label">API Response</div>
-            <div className="health-bar">
-              <div className="health-fill" style={{ width: '97%' }}></div>
-            </div>
-            <span className="health-percent">97ms</span>
-          </div>
-          <div className="health-item">
-            <div className="health-label">User Satisfaction</div>
-            <div className="health-bar">
-              <div className="health-fill" style={{ width: '94%' }}></div>
-            </div>
-            <span className="health-percent">4.7/5</span>
-          </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-// Inventory Module - Stock & Product Management
+/* ── Inventory ── */
 const InventoryModule = ({ data }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  if (!data) return <ERPLoader />;
 
-  if (!data) return <div className="module-loading">Loading Inventory...</div>;
-
-  const items = (data.inventory_linkage || []).slice(0, 20);
+  const items = (data.inventory_linkage || []).slice(0, 20).filter((item) => {
+    const matchSearch = !search || String(item.listing_id).includes(search) || (item.category || '').toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter === 'all' || (statusFilter === 'available' ? item.is_available : !item.is_available);
+    return matchSearch && matchStatus;
+  });
 
   return (
-    <div className="inventory-module">
-      <div className="module-header">
-        <h2>Inventory Management</h2>
-        <div className="inventory-controls">
-          <input
-            type="text"
-            placeholder="Search items..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+    <div className="erp-module">
+      <div className="erp-module-toolbar">
+        <ERPSectionTitle icon="inventory_2" title="Inventory Management" />
+        <div className="erp-toolbar-right">
+          <input className="erp-input" placeholder="Search items..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          <select className="erp-select" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="all">All Status</option>
             <option value="available">Available</option>
             <option value="maintenance">Maintenance</option>
-            <option value="low">Low Stock</option>
           </select>
-          <button className="btn-add">+ Add Item</button>
+          <button className="erp-btn erp-btn-primary">
+            <span className="material-symbols-outlined">add</span> Add Item
+          </button>
         </div>
       </div>
 
-      <div className="inventory-stats">
-        <div className="stat-box">
-          <div className="stat-label">Total Items</div>
-          <div className="stat-value">{items.length}</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-label">Available</div>
-          <div className="stat-value">{items.filter((i) => i.is_available).length}</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-label">Utilization Rate</div>
-          <div className="stat-value">{Math.round((data.avg_utilization || 0) * 100)}%</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-label">Stock Value</div>
-          <div className="stat-value">${(data.total_value || 0).toLocaleString()}</div>
-        </div>
+      <div className="erp-stats-grid erp-stats-grid--4">
+        <ERPStatCard icon="inventory_2" label="Total Items" value={items.length} />
+        <ERPStatCard icon="check_circle" label="Available" value={items.filter(i => i.is_available).length} />
+        <ERPStatCard icon="percent" label="Utilization" value={`${Math.round((data.avg_utilization || 0) * 100)}%`} />
+        <ERPStatCard icon="payments" label="Stock Value" value={`₹${(data.total_value || 0).toLocaleString()}`} accent />
       </div>
 
-      <div className="inventory-table">
-        <table>
+      <div className="erp-table-wrap">
+        <table className="erp-table">
           <thead>
-            <tr>
-              <th>SKU</th>
-              <th>Item Name</th>
-              <th>Category</th>
-              <th>Stock Level</th>
-              <th>Utilization</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
+            <tr><th>SKU</th><th>Category</th><th>Utilization</th><th>Status</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {items.map((item, idx) => (
-              <tr key={idx}>
-                <td><code>SKU-{item.listing_id}</code></td>
-                <td>Item {item.listing_id}</td>
+            {items.map((item, i) => (
+              <tr key={i}>
+                <td><span className="erp-mono">SKU-{item.listing_id}</span></td>
                 <td>{item.category || 'Electronics'}</td>
                 <td>
-                  <span className="stock-level">
-                    {Math.max(1, Math.round((item.utilization_percent || 0) / 10))} units
-                  </span>
-                </td>
-                <td>
-                  <div className="utilization-bar">
-                    <div className="utilization-fill" style={{ width: `${item.utilization_percent || 0}%` }}></div>
+                  <div className="erp-util-wrap">
+                    <div className="erp-util-bar"><div className="erp-util-fill" style={{ width: `${item.utilization_percent || 0}%` }}></div></div>
+                    <span className="erp-util-pct">{((item.utilization_percent || 0)).toFixed(0)}%</span>
                   </div>
-                  {((item.utilization_percent || 0) * 100).toFixed(0)}%
                 </td>
+                <td><ERPBadge status={item.is_available ? 'Available' : 'Maintenance'} /></td>
                 <td>
-                  <span className={`status-badge status-${item.is_available ? 'active' : 'inactive'}`}>
-                    {item.is_available ? '✓ Available' : '⏸ Maintenance'}
-                  </span>
-                </td>
-                <td>
-                  <button className="btn-small">Edit</button>
-                  <button className="btn-small btn-danger">Archive</button>
+                  <div className="erp-row-actions">
+                    <button className="erp-btn erp-btn-ghost erp-btn-sm"><span className="material-symbols-outlined">edit</span></button>
+                    <button className="erp-btn erp-btn-danger erp-btn-sm"><span className="material-symbols-outlined">archive</span></button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -311,237 +238,157 @@ const InventoryModule = ({ data }) => {
   );
 };
 
-// CRM Module - Customer Relationship Management
+/* ── CRM ── */
 const CRMModule = ({ data }) => {
   const [activeTab, setActiveTab] = useState('customers');
-
   const customers = Array.isArray(data) ? data : [];
+  const segments = [
+    { icon: 'star', label: 'Premium Customers', count: 234, desc: 'High-value customers with repeat purchases' },
+    { icon: 'fiber_new', label: 'New Customers', count: 89, desc: 'First-time renters in last 30 days' },
+    { icon: 'bedtime', label: 'Inactive Customers', count: 156, desc: 'No activity in last 90 days' },
+    { icon: 'storefront', label: 'Engaged Hosts', count: 412, desc: 'Active hosts with listings' },
+  ];
 
   return (
-    <div className="crm-module">
-      <div className="module-header">
-        <h2>Customer Relationship Management</h2>
-        <button className="btn-add">+ New Customer</button>
+    <div className="erp-module">
+      <div className="erp-module-toolbar">
+        <ERPSectionTitle icon="group" title="Customer Relationship Management" />
+        <button className="erp-btn erp-btn-primary"><span className="material-symbols-outlined">person_add</span> New Customer</button>
       </div>
 
-      <div className="crm-tabs">
-        <button className={`tab ${activeTab === 'customers' ? 'active' : ''}`} onClick={() => setActiveTab('customers')}>
-          👥 All Customers ({customers.length})
-        </button>
-        <button
-          className={`tab ${activeTab === 'segments' ? 'active' : ''}`}
-          onClick={() => setActiveTab('segments')}
-        >
-          📊 Segments
-        </button>
-        <button className={`tab ${activeTab === 'interactions' ? 'active' : ''}`} onClick={() => setActiveTab('interactions')}>
-          💬 Interactions
-        </button>
-        <button className={`tab ${activeTab === 'lifecycle' ? 'active' : ''}`} onClick={() => setActiveTab('lifecycle')}>
-          🔄 Lifecycle
-        </button>
+      <div className="erp-crm-tabs">
+        {[['customers', 'group', `Customers (${customers.length})`], ['segments', 'pie_chart', 'Segments'], ['interactions', 'forum', 'Interactions']].map(([k, icon, label]) => (
+          <button key={k} className={`erp-crm-tab ${activeTab === k ? 'active' : ''}`} onClick={() => setActiveTab(k)}>
+            <span className="material-symbols-outlined">{icon}</span>{label}
+          </button>
+        ))}
       </div>
 
       {activeTab === 'customers' && (
-        <div className="crm-content">
-          <div className="customers-grid">
-            {customers.slice(0, 12).map((customer, idx) => (
-              <div key={idx} className="customer-card">
-                <div className="customer-avatar">{customer.full_name?.[0]?.toUpperCase() || 'U'}</div>
-                <div className="customer-details">
-                  <h4>{customer.full_name || 'Customer'}</h4>
-                  <p className="customer-email">{customer.email}</p>
-                  <div className="customer-stats">
-                    <span className="stat">Orders: 5</span>
-                    <span className="stat">Value: $450</span>
-                  </div>
-                  <div className="customer-segment">
-                    {customer.gold_host_flag ? '⭐ Gold' : '📝 Regular'}
-                  </div>
+        <div className="erp-customers-grid">
+          {customers.slice(0, 12).map((c, i) => (
+            <div key={i} className="erp-customer-card">
+              <div className="erp-customer-avatar">{c.full_name?.[0]?.toUpperCase() || 'U'}</div>
+              <div className="erp-customer-info">
+                <h4 className="erp-customer-name">{c.full_name || 'Customer'}</h4>
+                <p className="erp-customer-email">{c.email}</p>
+                <div className="erp-customer-meta">
+                  <span>5 orders</span><span>₹450 value</span>
                 </div>
+                <span className={`erp-badge ${c.gold_host_flag ? 'erp-badge--accent' : 'erp-badge--info'}`}>
+                  {c.gold_host_flag ? 'Gold Host' : 'Regular'}
+                </span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       )}
 
       {activeTab === 'segments' && (
-        <div className="crm-content">
-          <div className="segments-grid">
-            <div className="segment-card">
-              <div className="segment-icon">⭐</div>
-              <h4>Premium Customers</h4>
-              <div className="segment-count">234</div>
-              <p>High-value customers with repeat purchases</p>
+        <div className="erp-segments-grid">
+          {segments.map((s, i) => (
+            <div key={i} className="erp-segment-card">
+              <div className="erp-segment-icon"><span className="material-symbols-outlined">{s.icon}</span></div>
+              <h4 className="erp-segment-name">{s.label}</h4>
+              <p className="erp-segment-count">{s.count}</p>
+              <p className="erp-segment-desc">{s.desc}</p>
             </div>
-            <div className="segment-card">
-              <div className="segment-icon">🆕</div>
-              <h4>New Customers</h4>
-              <div className="segment-count">89</div>
-              <p>First-time renters in last 30 days</p>
-            </div>
-            <div className="segment-card">
-              <div className="segment-icon">😴</div>
-              <h4>Inactive Customers</h4>
-              <div className="segment-count">156</div>
-              <p>No activity in last 90 days</p>
-            </div>
-            <div className="segment-card">
-              <div className="segment-icon">🎯</div>
-              <h4>Engaged Hosts</h4>
-              <div className="segment-count">412</div>
-              <p>Active hosts with listings</p>
-            </div>
-          </div>
+          ))}
         </div>
+      )}
+
+      {activeTab === 'interactions' && (
+        <div className="erp-empty"><span className="material-symbols-outlined">forum</span><p>Interaction history coming soon</p></div>
       )}
     </div>
   );
 };
 
-// Sales Module - Revenue & Analytics
+/* ── Sales ── */
 const SalesModule = ({ data }) => {
+  const metrics = [
+    { icon: 'payments', label: 'Total Revenue', value: fmtINR(125450), trend: '+12.5%', trendUp: true },
+    { icon: 'shopping_cart', label: 'Avg Order Value', value: fmtINR(285), trend: '+2.3%', trendUp: true },
+    { icon: 'receipt_long', label: 'Total Orders', value: '439', trend: '+8.7%', trendUp: true },
+    { icon: 'percent', label: 'Conversion Rate', value: '3.8%', trend: '+0.5%', trendUp: true, accent: true },
+  ];
+  const categories = [
+    { name: 'Electronics', pct: 45, value: '₹56,453' },
+    { name: 'Sports & Outdoor', pct: 28, value: '₹35,126' },
+    { name: 'Lifestyle', pct: 18, value: '₹22,671' },
+    { name: 'Others', pct: 9, value: '₹11,200' },
+  ];
+
   return (
-    <div className="sales-module">
-      <div className="module-header">
-        <h2>Sales Analytics & Revenue</h2>
+    <div className="erp-module">
+      <ERPSectionTitle icon="analytics" title="Sales Analytics & Revenue" />
+      <div className="erp-stats-grid">
+        {metrics.map((m, i) => <ERPStatCard key={i} {...m} />)}
       </div>
-
-      <div className="sales-metrics">
-        <div className="metric-card">
-          <h3>Total Revenue</h3>
-          <div className="metric-value">$125,450</div>
-          <div className="metric-change positive">↑ 12.5% vs last month</div>
-        </div>
-        <div className="metric-card">
-          <h3>Average Order Value</h3>
-          <div className="metric-value">$285</div>
-          <div className="metric-change neutral">→ 2.3% vs last month</div>
-        </div>
-        <div className="metric-card">
-          <h3>Total Orders</h3>
-          <div className="metric-value">439</div>
-          <div className="metric-change positive">↑ 8.7% vs last month</div>
-        </div>
-        <div className="metric-card">
-          <h3>Conversion Rate</h3>
-          <div className="metric-value">3.8%</div>
-          <div className="metric-change positive">↑ 0.5% vs last month</div>
-        </div>
-      </div>
-
-      <div className="sales-breakdown">
-        <div className="breakdown-section">
-          <h3>Revenue by Category</h3>
-          <div className="category-list">
-            <div className="category-item">
-              <span className="category-name">Electronics</span>
-              <div className="category-bar">
-                <div className="category-fill" style={{ width: '45%' }}></div>
+      <div className="erp-card">
+        <ERPSectionTitle icon="bar_chart" title="Revenue by Category" />
+        <div className="erp-category-list">
+          {categories.map((c, i) => (
+            <div key={i} className="erp-category-row">
+              <span className="erp-category-name">{c.name}</span>
+              <div className="erp-category-bar-wrap">
+                <div className="erp-category-bar"><div className="erp-category-fill" style={{ width: `${c.pct}%` }}></div></div>
+                <span className="erp-category-pct">{c.pct}%</span>
               </div>
-              <span className="category-value">$56,453</span>
+              <span className="erp-category-val">{c.value}</span>
             </div>
-            <div className="category-item">
-              <span className="category-name">Sports & Outdoor</span>
-              <div className="category-bar">
-                <div className="category-fill" style={{ width: '28%' }}></div>
-              </div>
-              <span className="category-value">$35,126</span>
-            </div>
-            <div className="category-item">
-              <span className="category-name">Lifestyle</span>
-              <div className="category-bar">
-                <div className="category-fill" style={{ width: '18%' }}></div>
-              </div>
-              <span className="category-value">$22,671</span>
-            </div>
-            <div className="category-item">
-              <span className="category-name">Others</span>
-              <div className="category-bar">
-                <div className="category-fill" style={{ width: '9%' }}></div>
-              </div>
-              <span className="category-value">$11,200</span>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-// Supply Chain Module
+/* ── SCM ── */
 const SCMModule = ({ data }) => {
+  const stages = [
+    { icon: 'upload', label: 'Listings Posted', value: 156, sub: 'This week' },
+    { icon: 'verified', label: 'Verified Items', value: 148, sub: '95% approval' },
+    { icon: 'inventory_2', label: 'Available Stock', value: '1,247', sub: 'Ready to rent' },
+    { icon: 'local_shipping', label: 'In Transit', value: 34, sub: 'Delivery pending' },
+  ];
+  const routes = [
+    { name: 'Downtown Hub', items: 45, pickups: 12, rate: '98.5%', status: 'Optimal' },
+    { name: 'North District', items: 32, pickups: 8, rate: '96.2%', status: 'Optimal' },
+    { name: 'South Zone', items: 28, pickups: 5, rate: '94.1%', status: 'Monitor' },
+  ];
+
   return (
-    <div className="scm-module">
-      <div className="module-header">
-        <h2>Supply Chain Management</h2>
+    <div className="erp-module">
+      <ERPSectionTitle icon="local_shipping" title="Supply Chain Management" />
+      <div className="erp-pipeline">
+        {stages.map((s, i) => (
+          <React.Fragment key={i}>
+            <div className="erp-pipeline-stage">
+              <div className="erp-pipeline-icon"><span className="material-symbols-outlined">{s.icon}</span></div>
+              <h4 className="erp-pipeline-label">{s.label}</h4>
+              <p className="erp-pipeline-value">{s.value}</p>
+              <p className="erp-pipeline-sub">{s.sub}</p>
+            </div>
+            {i < stages.length - 1 && <div className="erp-pipeline-arrow"><span className="material-symbols-outlined">arrow_forward</span></div>}
+          </React.Fragment>
+        ))}
       </div>
-
-      <div className="scm-pipeline">
-        <div className="pipeline-stage">
-          <div className="stage-icon">📤</div>
-          <h4>Listings Posted</h4>
-          <div className="stage-value">156</div>
-          <p className="stage-subtitle">This week</p>
-        </div>
-        <div className="pipeline-arrow">→</div>
-        <div className="pipeline-stage">
-          <div className="stage-icon">✅</div>
-          <h4>Verified Items</h4>
-          <div className="stage-value">148</div>
-          <p className="stage-subtitle">95% approval</p>
-        </div>
-        <div className="pipeline-arrow">→</div>
-        <div className="pipeline-stage">
-          <div className="stage-icon">📦</div>
-          <h4>Available Stock</h4>
-          <div className="stage-value">1,247</div>
-          <p className="stage-subtitle">Ready to rent</p>
-        </div>
-        <div className="pipeline-arrow">→</div>
-        <div className="pipeline-stage">
-          <div className="stage-icon">🚚</div>
-          <h4>In Transit</h4>
-          <div className="stage-value">34</div>
-          <p className="stage-subtitle">Delivery pending</p>
-        </div>
-      </div>
-
-      <div className="scm-details">
-        <h3>Logistics Overview</h3>
-        <div className="logistics-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Route</th>
-                <th>Items</th>
-                <th>Pickup Requests</th>
-                <th>Delivery Rate</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+      <div className="erp-card">
+        <ERPSectionTitle icon="route" title="Logistics Overview" />
+        <div className="erp-table-wrap">
+          <table className="erp-table">
+            <thead><tr><th>Route</th><th>Items</th><th>Pickup Requests</th><th>Delivery Rate</th><th>Status</th></tr></thead>
             <tbody>
-              <tr>
-                <td>Downtown Hub</td>
-                <td>45</td>
-                <td>12</td>
-                <td>98.5%</td>
-                <td><span className="badge-success">✓ Optimal</span></td>
-              </tr>
-              <tr>
-                <td>North District</td>
-                <td>32</td>
-                <td>8</td>
-                <td>96.2%</td>
-                <td><span className="badge-success">✓ Optimal</span></td>
-              </tr>
-              <tr>
-                <td>South Zone</td>
-                <td>28</td>
-                <td>5</td>
-                <td>94.1%</td>
-                <td><span className="badge-warning">⚠ Monitor</span></td>
-              </tr>
+              {routes.map((r, i) => (
+                <tr key={i}>
+                  <td><strong>{r.name}</strong></td>
+                  <td>{r.items}</td>
+                  <td>{r.pickups}</td>
+                  <td><strong>{r.rate}</strong></td>
+                  <td><ERPBadge status={r.status} /></td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -549,5 +396,12 @@ const SCMModule = ({ data }) => {
     </div>
   );
 };
+
+const ERPLoader = () => (
+  <div className="erp-loader">
+    <div className="erp-loader-spinner"></div>
+    <p>Loading data...</p>
+  </div>
+);
 
 export default ERPDashboard;

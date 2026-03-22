@@ -27,8 +27,13 @@ def api_root(_request):
 def root_redirect(_request):
     return redirect('/admin/')
 
+
+def admin_erp_redirect(_request):
+    return redirect('/admin/#omni-kpis')
+
 urlpatterns = [
     path('', root_redirect),
+    path('admin/erp/', admin_erp_redirect, name='admin-erp'),
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api-root'),
     path('api/users/', include('users.urls')),

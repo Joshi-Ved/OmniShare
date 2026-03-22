@@ -281,7 +281,7 @@ def sales_report(request):
     top_categories = Listing.objects.filter(bookings__created_at__gte=start_date, bookings__created_at__lte=end_date).values(
         'category__name'
     ).annotate(
-        bookings=Count('bookings'),
+        booking_count=Count('bookings'),
         gmv=Sum('bookings__rental_amount', filter=Q(bookings__booking_status='completed')),
     ).order_by('-gmv')[:10]
 
@@ -536,7 +536,7 @@ def scm_dashboard(request):
             filter=Q(host_bookings__created_at__gte=start_date, host_bookings__created_at__lte=end_date, host_bookings__booking_status='completed'),
             distinct=True,
         ),
-        total_bookings=Count(
+        window_total_bookings=Count(
             'host_bookings',
             filter=Q(host_bookings__created_at__gte=start_date, host_bookings__created_at__lte=end_date),
             distinct=True,
@@ -554,7 +554,7 @@ def scm_dashboard(request):
 
     supplier_performance = []
     for host in supplier_rows:
-        fill_rate = round((host.completed_bookings / host.total_bookings) * 100, 2) if host.total_bookings else 0
+        fill_rate = round((host.completed_bookings / host.window_total_bookings) * 100, 2) if host.window_total_bookings else 0
         supplier_performance.append({
             'host_id': host.id,
             'username': host.username,
