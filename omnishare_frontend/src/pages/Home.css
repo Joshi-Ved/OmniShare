@@ -618,6 +618,71 @@
   text-align: center;
 }
 
+.lead-capture-wrap {
+  margin: 22px 0 10px;
+}
+
+.lead-capture-card {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  padding: 22px;
+  border: 1px solid var(--line-color);
+  border-radius: 20px;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--primary) 11%, var(--surface)) 0%,
+    color-mix(in srgb, var(--secondary) 9%, var(--surface-soft)) 100%
+  );
+  box-shadow: var(--elev-shadow-md);
+}
+
+.lead-copy h2 {
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.lead-copy p {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.engagement-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-secondary);
+  display: grid;
+  gap: 8px;
+}
+
+.lead-form {
+  display: grid;
+  gap: 10px;
+}
+
+.lead-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.lead-form textarea {
+  resize: vertical;
+}
+
+.lead-security-row {
+  display: grid;
+  gap: 10px;
+}
+
+.lead-security-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 @media (max-width: 1024px) {
   .market-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -643,6 +708,10 @@
   
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lead-capture-card {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -678,6 +747,10 @@
   }
 
   .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lead-grid {
     grid-template-columns: 1fr;
   }
 }

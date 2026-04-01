@@ -1,9 +1,57 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { listingsAPI } from '../services/api';
+import { listingsAPI, marketingAPI } from '../services/api';
 import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 import './Home.css';
+
+const textEncoder = new TextEncoder();
+
+const bytesToBase64 = (bytes) => {
+  let binary = '';
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return window.btoa(binary);
+};
+
+const encryptMessageClientSide = async (plainText, passphrase) => {
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const salt = window.crypto.getRandomValues(new Uint8Array(16));
+
+  const baseKey = await window.crypto.subtle.importKey(
+    'raw',
+    textEncoder.encode(passphrase),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveKey']
+  );
+
+  const aesKey = await window.crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: 120000,
+      hash: 'SHA-256',
+    },
+    baseKey,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt']
+  );
+
+  const encrypted = await window.crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    aesKey,
+    textEncoder.encode(plainText)
+  );
+
+  return {
+    encryptedMessage: bytesToBase64(new Uint8Array(encrypted)),
+    iv: bytesToBase64(iv),
+    salt: bytesToBase64(salt),
+  };
+};
 
 const demoProducts = [
   {
@@ -120,8 +168,43 @@ const Home = () => {
     title: '',
   });
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [leadForm, setLeadForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    interested_in: 'guest',
+    message: '',
+    e2e_enabled: true,
+    passphrase: '',
+  });
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
   const initializedRef = useRef(false);
   const promotedCount = listings.filter((item) => item.promoted_flag).length;
+
+  useEffect(() => {
+    document.title = 'OmniShare Rentals | Trusted P2P Rentals Near You';
+
+    const setMeta = (name, content, isProperty = false) => {
+      const selector = isProperty ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      let meta = document.head.querySelector(selector);
+      if (!meta) {
+        meta = document.createElement('meta');
+        if (isProperty) {
+          meta.setAttribute('property', name);
+        } else {
+          meta.setAttribute('name', name);
+        }
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+
+    setMeta('description', 'Rent verified products from trusted hosts with secure payments and transparent pricing on OmniShare.');
+    setMeta('keywords', 'rental marketplace, p2p rentals, camera rental, laptop rental, secure booking');
+    setMeta('og:title', 'OmniShare Rentals', true);
+    setMeta('og:description', 'Book rentals from verified hosts with secure checkout and real-time availability.', true);
+    setMeta('og:type', 'website', true);
+  }, []);
 
   const handleAddToCart = (product) => {
     addItem({
@@ -191,6 +274,69 @@ const Home = () => {
       min_price: '',
       max_price: '',
     });
+  };
+
+  const handleLeadInputChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setLeadForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const submitLeadForm = async (event) => {
+    event.preventDefault();
+
+    if (!leadForm.email.trim()) {
+      toast.error('Email is required');
+      return;
+    }
+
+    if (leadForm.e2e_enabled && (!leadForm.passphrase || leadForm.passphrase.length < 8)) {
+      toast.error('Use a passphrase of at least 8 characters for encrypted messages');
+      return;
+    }
+
+    try {
+      setLeadSubmitting(true);
+
+      const payload = {
+        name: leadForm.name,
+        email: leadForm.email,
+        phone: leadForm.phone,
+        interested_in: leadForm.interested_in,
+        source: 'landing_page',
+        e2e_enabled: leadForm.e2e_enabled,
+      };
+
+      if (leadForm.message.trim()) {
+        if (leadForm.e2e_enabled) {
+          const encryptedData = await encryptMessageClientSide(leadForm.message.trim(), leadForm.passphrase);
+          payload.encrypted_message = encryptedData.encryptedMessage;
+          payload.encryption_iv = encryptedData.iv;
+          payload.encryption_salt = encryptedData.salt;
+          payload.message = '';
+        } else {
+          payload.message = leadForm.message.trim();
+        }
+      }
+
+      const response = await marketingAPI.captureLead(payload);
+      toast.success(response.data?.message || 'Thanks for your interest!');
+      setLeadForm((prev) => ({
+        ...prev,
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        passphrase: '',
+      }));
+    } catch (error) {
+      const message = error.response?.data?.detail || error.response?.data?.error || 'Unable to submit lead form right now';
+      toast.error(message);
+    } finally {
+      setLeadSubmitting(false);
+    }
   };
 
   const openImageModal = (src, title) => {
@@ -378,6 +524,91 @@ const Home = () => {
             <Link to="/cart" className="btn btn-primary">
               View Cart
             </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="lead-capture-wrap">
+        <div className="container">
+          <div className="lead-capture-card">
+            <div className="lead-copy">
+              <h2>Stay Updated on New Rentals</h2>
+              <p>
+                Join our early access list for pricing drops, host onboarding updates, and launch campaigns.
+                Messages can be submitted with optional end-to-end encryption.
+              </p>
+              <ul className="engagement-list">
+                <li>Weekly trending rental picks</li>
+                <li>Host growth and referral offers</li>
+                <li>Security-first communication options</li>
+              </ul>
+            </div>
+            <form className="lead-form" onSubmit={submitLeadForm}>
+              <div className="lead-grid">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your name"
+                  value={leadForm.name}
+                  onChange={handleLeadInputChange}
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email address"
+                  value={leadForm.email}
+                  onChange={handleLeadInputChange}
+                  required
+                />
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone (optional)"
+                  value={leadForm.phone}
+                  onChange={handleLeadInputChange}
+                />
+                <select
+                  name="interested_in"
+                  value={leadForm.interested_in}
+                  onChange={handleLeadInputChange}
+                >
+                  <option value="guest">I want to rent</option>
+                  <option value="host">I want to host</option>
+                  <option value="both">I want both</option>
+                </select>
+              </div>
+              <textarea
+                name="message"
+                placeholder="Tell us what you are looking for"
+                value={leadForm.message}
+                onChange={handleLeadInputChange}
+                rows={4}
+              />
+              <div className="lead-security-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="e2e_enabled"
+                    checked={leadForm.e2e_enabled}
+                    onChange={handleLeadInputChange}
+                  />
+                  Enable end-to-end encryption for this message
+                </label>
+                {leadForm.e2e_enabled && (
+                  <input
+                    type="password"
+                    name="passphrase"
+                    placeholder="Encryption passphrase (min 8 chars)"
+                    value={leadForm.passphrase}
+                    onChange={handleLeadInputChange}
+                    minLength={8}
+                  />
+                )}
+              </div>
+              <button type="submit" className="btn btn-primary" disabled={leadSubmitting}>
+                {leadSubmitting ? 'Submitting...' : 'Join Early Access'}
+              </button>
+            </form>
           </div>
         </div>
       </div>

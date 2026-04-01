@@ -12,6 +12,12 @@ class Lead(models.Model):
         choices=[('host', 'Hosting'), ('guest', 'Renting'), ('both', 'Both')],
         default='guest'
     )
+    message = models.TextField(blank=True)
+    encrypted_message = models.TextField(blank=True)
+    encryption_iv = models.CharField(max_length=120, blank=True)
+    encryption_salt = models.CharField(max_length=120, blank=True)
+    encryption_algorithm = models.CharField(max_length=30, default='AES-256-GCM')
+    e2e_enabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:

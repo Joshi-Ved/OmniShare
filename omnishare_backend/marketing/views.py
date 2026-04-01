@@ -1,32 +1,37 @@
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import throttle_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Lead, ReferralCode, Referral
+from .serializers import LeadCaptureSerializer
+from .throttles import LeadCaptureThrottle
 
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@throttle_classes([LeadCaptureThrottle])
 def capture_lead(request):
     """Capture lead from landing page"""
-    email = request.data.get('email')
-    name = request.data.get('name', '')
-    phone = request.data.get('phone', '')
-    source = request.data.get('source', 'landing_page')
-    interested_in = request.data.get('interested_in', 'guest')
-    
-    if not email:
-        return Response({
-            'error': 'Email is required'
-        }, status=status.HTTP_400_BAD_REQUEST)
+    serializer = LeadCaptureSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    payload = serializer.validated_data
+    email = payload['email']
     
     lead, created = Lead.objects.get_or_create(
         email=email,
         defaults={
-            'name': name,
-            'phone': phone,
-            'source': source,
-            'interested_in': interested_in
+            'name': payload.get('name', ''),
+            'phone': payload.get('phone', ''),
+            'source': payload.get('source', 'landing_page'),
+            'interested_in': payload.get('interested_in', 'guest'),
+            'message': payload.get('message', ''),
+            'encrypted_message': payload.get('encrypted_message', ''),
+            'encryption_iv': payload.get('encryption_iv', ''),
+            'encryption_salt': payload.get('encryption_salt', ''),
+            'e2e_enabled': payload.get('e2e_enabled', False),
         }
     )
     

@@ -31,8 +31,13 @@ def root_redirect(_request):
 def admin_erp_redirect(_request):
     return redirect('/admin/#omni-kpis')
 
+
+def healthcheck(_request):
+    return JsonResponse({'status': 'ok'})
+
 urlpatterns = [
     path('', root_redirect),
+    path('healthz/', healthcheck, name='healthcheck'),
     path('admin/erp/', admin_erp_redirect, name='admin-erp'),
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api-root'),

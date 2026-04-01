@@ -7,13 +7,18 @@ from datetime import timedelta
 from urllib.parse import parse_qs, urlparse
 from decouple import config
 
+
+def _get_list_from_csv(name, default=''):
+    raw = config(name, default=default)
+    return [item.strip() for item in raw.split(',') if item.strip()]
+
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-change-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = _get_list_from_csv('ALLOWED_HOSTS', default='localhost,127.0.0.1')
 
 # Application definition
 INSTALLED_APPS = [
@@ -40,6 +45,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'omnishare.middleware.SecurityHeadersMiddleware',
+    'omnishare.middleware.SecurityAuditMiddleware',
+    'omnishare.middleware.RateLimitHeadersMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,6 +107,24 @@ if DATABASE_URL:
         'OPTIONS': db_options,
     }
 
+# ===================================
+# MongoDB Configuration
+# Use this for analytics, logs, or non-relational data
+# ===================================
+MONGODB_URL = config('MONGODB_URL', default='').strip()
+if MONGODB_URL:
+    from pymongo import MongoClient
+    try:
+        MONGO_CLIENT = MongoClient(MONGODB_URL)
+        MONGO_DB = MONGO_CLIENT.get_database()
+    except Exception as e:
+        MONGO_DB = None
+        if not DEBUG:
+            raise Exception(f"MongoDB connection failed: {str(e)}")
+else:
+    MONGO_CLIENT = None
+    MONGO_DB = None
+
 # For PostgreSQL (uncomment for production):
 # DATABASES = {
 #     'default': {
@@ -147,7 +173,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST Framework settings
+# REST Framework settings with OWASP Rate Limiting
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
@@ -162,16 +188,29 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'omnishare.throttles.UserThrottle',
+        'omnishare.throttles.AnonThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '2000/hour',           # Authenticated users
+        'anon': '200/hour',             # Anonymous users
+        'search': '50/hour',            # Search queries
+        'payment': '20/hour',           # Payment operations
+        'login': '10/hour',             # Login attempts
+        'booking': '100/hour',          # Booking operations
+        'lead_capture': '30/hour',      # Lead capture forms
+    },
+    'EXCEPTION_HANDLER': 'omnishare.exception_handler.custom_exception_handler',
 }
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:3001',
-    'http://127.0.0.1:3001',
-]
+CORS_ALLOWED_ORIGINS = _get_list_from_csv(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001'
+)
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = _get_list_from_csv('CSRF_TRUSTED_ORIGINS', default='')
 
 # Razorpay Settings
 RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='')
@@ -188,24 +227,31 @@ FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='http://localhost:3000')
 CLERK_SECRET_KEY = config('CLERK_SECRET_KEY', default='')
 CLERK_PUBLISHABLE_KEY = config('CLERK_PUBLISHABLE_KEY', default='')
 
-# AWS S3 Settings (for production)
-USE_S3 = config('USE_S3', default=False, cast=bool)
-if USE_S3:
-    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-    AWS_S3_REGION_NAME = 'ap-south-1'
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_DEFAULT_ACL = None
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Railway-first deployment: keep local media storage by default.
+# For production, mount a Railway volume or plug an external object store.
 
 # Security Settings
 if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    CSRF_COOKIE_SAMESITE = 'Lax'
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'", 'https://checkout.razorpay.com')
+    CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+    CSP_IMG_SRC = ("'self'", 'data:', 'https:')
+    CSP_CONNECT_SRC = ("'self'", 'https:')
     X_FRAME_OPTIONS = 'DENY'
 
 # Email Settings (for production)
