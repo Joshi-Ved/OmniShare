@@ -33,7 +33,7 @@ RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 USER appuser
 
-# Expose port (Railway will override this)
+# Expose port (host platform may override this)
 EXPOSE 8000
 
 # Health check
