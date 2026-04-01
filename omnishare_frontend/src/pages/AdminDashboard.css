@@ -314,6 +314,21 @@
 }
 .adm-select:focus { outline: none; box-shadow: 0 0 0 2px rgba(0,81,68,0.2); }
 
+.adm-inline-link {
+  color: var(--adm-primary);
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.adm-inline-link:hover {
+  text-decoration: underline;
+}
+
 /* ── Mini stats ── */
 .adm-mini-stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .adm-mini-stat {

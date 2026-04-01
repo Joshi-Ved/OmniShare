@@ -163,7 +163,7 @@ const AdminDashboard = () => {
 
         {/* Content */}
         <main className="adm-content">
-          {activeTab === 'overview' && <OverviewTab stats={stats} pendingListings={pendingListings} pendingKYC={pendingKYC} disputes={disputes} />}
+          {activeTab === 'overview' && <OverviewTab stats={stats} pendingListings={pendingListings} pendingKYC={pendingKYC} disputes={disputes} onNavigateTab={setActiveTab} />}
           {activeTab === 'listings' && <ListingsTab listings={pendingListings} onVerify={handleVerifyListing} />}
           {activeTab === 'kyc' && <KYCTab users={pendingKYC} onVerify={handleVerifyKYC} />}
           {activeTab === 'disputes' && <DisputesTab disputes={disputes} onResolve={handleResolveDispute} />}
@@ -236,7 +236,7 @@ const Badge = ({ status }) => {
   return <span className={`adm-badge ${map[status] || 'adm-badge--info'}`}>{status}</span>;
 };
 
-const OverviewTab = ({ stats, pendingListings, pendingKYC, disputes }) => {
+const OverviewTab = ({ stats, pendingListings, pendingKYC, disputes, onNavigateTab }) => {
   const cats = (stats?.category_performance || []).slice(0, 6);
   const maxCatBookings = Math.max(...cats.map(c => c.total_bookings || 0), 1);
   const topHosts = (stats?.top_hosts || []).slice(0, 5);
@@ -271,9 +271,24 @@ const OverviewTab = ({ stats, pendingListings, pendingKYC, disputes }) => {
         <div className="adm-card">
           <SectionHeader icon="pending_actions" title="Action Required" />
           <div className="adm-kv-list">
-            <div className="adm-kv-row"><span>Pending Listings</span><strong className="adm-text-warn">{pendingListings.length}</strong></div>
-            <div className="adm-kv-row"><span>Pending KYC</span><strong className="adm-text-warn">{pendingKYC.length}</strong></div>
-            <div className="adm-kv-row"><span>Open Disputes</span><strong className="adm-text-danger">{disputes.length}</strong></div>
+            <div className="adm-kv-row">
+              <span>Pending Listings</span>
+              <strong className="adm-text-warn">
+                <button type="button" className="adm-inline-link" onClick={() => onNavigateTab('listings')}>{pendingListings.length}</button>
+              </strong>
+            </div>
+            <div className="adm-kv-row">
+              <span>Pending KYC</span>
+              <strong className="adm-text-warn">
+                <button type="button" className="adm-inline-link" onClick={() => onNavigateTab('kyc')}>{pendingKYC.length}</button>
+              </strong>
+            </div>
+            <div className="adm-kv-row">
+              <span>Open Disputes</span>
+              <strong className="adm-text-danger">
+                <button type="button" className="adm-inline-link" onClick={() => onNavigateTab('disputes')}>{disputes.length}</button>
+              </strong>
+            </div>
           </div>
         </div>
       </div>
@@ -328,6 +343,9 @@ const ListingsTab = ({ listings, onVerify }) => (
               <p className="adm-item-meta"><span className="material-symbols-outlined">payments</span> ₹{l.daily_price}/day</p>
             </div>
             <div className="adm-item-actions">
+              <Link className="adm-btn adm-btn-ghost" to={`/listings/${l.id}`}>
+                <span className="material-symbols-outlined">open_in_new</span> Open
+              </Link>
               <button className="adm-btn adm-btn-success" onClick={() => onVerify(l.id, 'approved')}>
                 <span className="material-symbols-outlined">check</span> Approve
               </button>
@@ -380,7 +398,15 @@ const DisputesTab = ({ disputes, onResolve }) => (
           <tbody>
             {disputes.map((d) => (
               <tr key={d.id}>
-                <td><span className="adm-mono">#{d.id}</span><br /><span className="adm-text-muted adm-text-sm">{d.listing_title}</span></td>
+                <td>
+                  <Link to={`/bookings/${d.id}`} className="adm-inline-link adm-mono">#{d.id}</Link>
+                  <br />
+                  {d.listing_id ? (
+                    <Link to={`/listings/${d.listing_id}`} className="adm-inline-link adm-text-sm">{d.listing_title}</Link>
+                  ) : (
+                    <span className="adm-text-muted adm-text-sm">{d.listing_title}</span>
+                  )}
+                </td>
                 <td>{d.guest_name}</td>
                 <td>{d.host_name}</td>
                 <td className="adm-text-muted">{d.dispute_reason}</td>
@@ -423,8 +449,14 @@ const OrdersTab = ({ orders, orderSearch, setOrderSearch, orderStatusFilter, set
         <tbody>
           {orders.slice(0, 80).map((o) => (
             <tr key={o.id}>
-              <td><span className="adm-mono">#{o.id}</span></td>
-              <td>{o.listing_title || '—'}</td>
+              <td><Link to={`/bookings/${o.id}`} className="adm-inline-link adm-mono">#{o.id}</Link></td>
+              <td>
+                {o.listing_id ? (
+                  <Link to={`/listings/${o.listing_id}`} className="adm-inline-link">{o.listing_title || 'Listing'}</Link>
+                ) : (
+                  (o.listing_title || '—')
+                )}
+              </td>
               <td>{o.guest_name || '—'}</td>
               <td>{o.host_name || '—'}</td>
               <td><Badge status={o.booking_status} /></td>
@@ -466,7 +498,7 @@ const BasicInventoryTab = ({ inventory, inventoryQuery, setInventoryQuery, inven
           {inventory.slice(0, 120).map((item) => (
             <tr key={item.listing_id}>
               <td><span className="adm-mono">{item.sku}</span></td>
-              <td>{item.title}</td>
+              <td><Link to={`/listings/${item.listing_id}`} className="adm-inline-link">{item.title}</Link></td>
               <td className="adm-text-muted">{item.host}</td>
               <td>
                 <div className="adm-stepper">
@@ -478,6 +510,7 @@ const BasicInventoryTab = ({ inventory, inventoryQuery, setInventoryQuery, inven
               <td><Badge status={item.status} /></td>
               <td>
                 <div className="adm-row-actions">
+                  <Link className="adm-btn adm-btn-ghost adm-btn-sm" to={`/listings/${item.listing_id}`}>Open</Link>
                   <button className="adm-btn adm-btn-success adm-btn-sm" onClick={() => onUpdate(item.listing_id, { status: 'available' })}>Available</button>
                   <button className="adm-btn adm-btn-warn adm-btn-sm" onClick={() => onUpdate(item.listing_id, { status: 'maintenance' })}>Maintenance</button>
                   <button className="adm-btn adm-btn-ghost adm-btn-sm" onClick={() => onUpdate(item.listing_id, { status: 'rented' })}>Rented</button>
