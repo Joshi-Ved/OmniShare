@@ -53,9 +53,11 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+npm-install.log
 build/
 .pnp/
 .pnp.js
+omnishare_frontend/omnishare_frontend/
 
 # Testing
 .coverage

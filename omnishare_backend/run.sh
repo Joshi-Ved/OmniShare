@@ -1,5 +1,5 @@
 #!/bin/bash
-# Railway Startup Script
+# Startup Script
 # Handles database migrations, static file collection, and server startup
 
 set -e

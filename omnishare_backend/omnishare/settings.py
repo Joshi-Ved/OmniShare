@@ -227,8 +227,8 @@ FRONTEND_BASE_URL = config('FRONTEND_BASE_URL', default='http://localhost:3000')
 CLERK_SECRET_KEY = config('CLERK_SECRET_KEY', default='')
 CLERK_PUBLISHABLE_KEY = config('CLERK_PUBLISHABLE_KEY', default='')
 
-# Railway-first deployment: keep local media storage by default.
-# For production, mount a Railway volume or plug an external object store.
+# Cloud-first deployment: keep local media storage by default.
+# For production, mount persistent storage or plug an external object store.
 
 # Security Settings
 if not DEBUG:

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth, useUser } from '@clerk/react';
 import { authAPI, bookingsAPI, listingsAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
+  const { isLoaded, isSignedIn } = useAuth();
+  const { user: clerkUser } = useUser();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState(null);
@@ -17,10 +20,44 @@ const ProfilePage = () => {
     phone_number: '',
   });
 
+  const ensureBackendSession = useCallback(async () => {
+    const existingToken = localStorage.getItem('access_token');
+    if (existingToken) return true;
+
+    if (!isLoaded || !isSignedIn || !clerkUser) return false;
+
+    const email =
+      clerkUser.primaryEmailAddress?.emailAddress ||
+      clerkUser.emailAddresses?.[0]?.emailAddress ||
+      '';
+
+    if (!email) return false;
+
+    try {
+      const response = await authAPI.clerkSyncLogin({
+        email,
+        username: clerkUser.username || clerkUser.id || email,
+        first_name: clerkUser.firstName || '',
+        last_name: clerkUser.lastName || '',
+      });
+
+      if (response?.data?.access_token) {
+        localStorage.setItem('access_token', response.data.access_token);
+      }
+      if (response?.data?.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }
+      return !!response?.data?.access_token;
+    } catch {
+      return false;
+    }
+  }, [isLoaded, isSignedIn, clerkUser]);
+
   useEffect(() => {
     const loadProfile = async () => {
       setLoading(true);
       try {
+        await ensureBackendSession();
         const [profileResponse, rentalsResponse, listingsResponse] = await Promise.all([
           authAPI.getProfile(),
           bookingsAPI.getMyBookings('guest').catch(() => ({ data: [] })),
@@ -44,14 +81,35 @@ const ProfilePage = () => {
           phone_number: data.phone_number || '',
         });
       } catch (error) {
-        toast.error(error.response?.data?.error || 'Failed to load profile');
+        const isUnauthorized = error?.response?.status === 401;
+        if (isUnauthorized) {
+          const synced = await ensureBackendSession();
+          if (synced) {
+            try {
+              const retryResponse = await authAPI.getProfile();
+              const data = retryResponse.data;
+              setProfile(data);
+              setForm({
+                first_name: data.first_name || '',
+                last_name: data.last_name || '',
+                phone_number: data.phone_number || '',
+              });
+              return;
+            } catch {
+              // Fall through to user-facing error message below.
+            }
+          }
+        }
+        toast.error(error.response?.data?.error || 'Failed to load profile. Please sign in again.');
       } finally {
         setLoading(false);
       }
     };
 
-    loadProfile();
-  }, []);
+    if (isLoaded) {
+      loadProfile();
+    }
+  }, [isLoaded, ensureBackendSession]);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
