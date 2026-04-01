@@ -1,19 +1,8 @@
 # Railway Configuration
 [build]
 builder = "dockerfile"
-# buildCommand = "pip install -r requirements.txt"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "cd omnishare_backend && python manage.py collectstatic --no-input && python manage.py migrate && gunicorn omnishare.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120"
 restartPolicyType = "always"
 restartPolicyMaxRetries = 5
-
-[[services]]
-name = "omnishare-backend"
-dockerfile = "./omnishare_backend/Dockerfile"
-rootDirectory = "omnishare_backend"
-
-[services.healthCheck]
-path = "/api/health/"
-interval = 10000
-timeout = 5000
