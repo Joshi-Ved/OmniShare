@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth, useUser } from '@clerk/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,6 +30,53 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import Navbar from './components/Navbar';
 import PrivateRoute from './components/PrivateRoute';
 import { authAPI } from './services/api';
+
+const PageWrapper = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 15 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, scale: 0.98 }}
+    transition={{ duration: 0.35, ease: [0.2, 0.8, 0.2, 1] }}
+  >
+    {children}
+  </motion.div>
+);
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes */}
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/login" element={<Navigate to="/clerk/sign-in" replace />} />
+        <Route path="/register" element={<Navigate to="/clerk/sign-up" replace />} />
+        <Route path="/clerk/sign-in" element={<PageWrapper><ClerkAuthPage mode="signin" /></PageWrapper>} />
+        <Route path="/clerk/sign-up" element={<PageWrapper><ClerkAuthPage mode="signup" /></PageWrapper>} />
+        <Route path="/listings/:id" element={<PageWrapper><ListingDetails /></PageWrapper>} />
+
+        {/* Protected Routes */}
+        <Route path="/host/dashboard" element={<PrivateRoute><PageWrapper><HostDashboard /></PageWrapper></PrivateRoute>} />
+        <Route path="/guest/dashboard" element={<PrivateRoute><PageWrapper><GuestDashboard /></PageWrapper></PrivateRoute>} />
+        <Route path="/admin/dashboard" element={<PrivateRoute adminOnly><PageWrapper><AdminDashboard /></PageWrapper></PrivateRoute>} />
+        <Route path="/admin/erp" element={<PrivateRoute adminOnly><PageWrapper><ERPDashboard /></PageWrapper></PrivateRoute>} />
+        <Route path="/listings/create" element={<PrivateRoute><PageWrapper><CreateListing /></PageWrapper></PrivateRoute>} />
+        <Route path="/kyc/submit" element={<PrivateRoute><PageWrapper><KYCSubmission /></PageWrapper></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><PageWrapper><ProfilePage /></PageWrapper></PrivateRoute>} />
+        <Route path="/bookings/:id" element={<PrivateRoute><PageWrapper><BookingPage /></PageWrapper></PrivateRoute>} />
+        <Route path="/payments/:bookingId" element={<PrivateRoute><PageWrapper><PaymentPage /></PageWrapper></PrivateRoute>} />
+
+        {/* Shopping Cart Routes */}
+        <Route path="/cart" element={<PageWrapper><ShoppingCart /></PageWrapper>} />
+        <Route path="/checkout" element={<PageWrapper><CheckoutPage /></PageWrapper>} />
+        <Route path="/order-confirmation" element={<PageWrapper><OrderConfirmation /></PageWrapper>} />
+
+        {/* 404 */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 function AppContent() {
   const { theme, isDark, toggleTheme } = useTheme();
@@ -103,79 +151,8 @@ function AppContent() {
       <div className="App" data-theme={theme}>
         <Navbar isDark={isDark} onToggleTheme={toggleTheme} />
         <ToastContainer position="top-right" autoClose={3000} />
-        
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Navigate to="/clerk/sign-in" replace />} />
-          <Route path="/register" element={<Navigate to="/clerk/sign-up" replace />} />
-          <Route path="/clerk/sign-in" element={<ClerkAuthPage mode="signin" />} />
-          <Route path="/clerk/sign-up" element={<ClerkAuthPage mode="signup" />} />
-          <Route path="/listings/:id" element={<ListingDetails />} />
-          
-          {/* Protected Routes */}
-          <Route path="/host/dashboard" element={
-            <PrivateRoute>
-              <HostDashboard />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/guest/dashboard" element={
-            <PrivateRoute>
-              <GuestDashboard />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/admin/dashboard" element={
-            <PrivateRoute adminOnly>
-              <AdminDashboard />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/admin/erp" element={
-            <PrivateRoute adminOnly>
-              <ERPDashboard />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/listings/create" element={
-            <PrivateRoute>
-              <CreateListing />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/kyc/submit" element={
-            <PrivateRoute>
-              <KYCSubmission />
-            </PrivateRoute>
-          } />
 
-          <Route path="/profile" element={
-            <PrivateRoute>
-              <ProfilePage />
-            </PrivateRoute>
-          } />
-          
-          <Route path="/bookings/:id" element={
-            <PrivateRoute>
-              <BookingPage />
-            </PrivateRoute>
-          } />
-
-          <Route path="/payments/:bookingId" element={
-            <PrivateRoute>
-              <PaymentPage />
-            </PrivateRoute>
-          } />
-
-          {/* Shopping Cart Routes */}
-          <Route path="/cart" element={<ShoppingCart />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-confirmation" element={<OrderConfirmation />} />
-          
-          {/* 404 */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <AnimatedRoutes />
       </div>
     </Router>
   );

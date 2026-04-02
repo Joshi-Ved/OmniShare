@@ -7,58 +7,54 @@
   margin-bottom: 18px;
 }
 
-.image-gallery .main-image,
-.no-image-large {
-  width: 100%;
-  height: 430px;
-  border-radius: 18px;
+.masonry-gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  height: 480px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--elev-shadow-md);
 }
 
-.thumb-row {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
-
-.thumb-btn {
-  border: 1px solid var(--line-color);
-  background: var(--surface-strong);
-  border-radius: 12px;
-  padding: 0;
-  cursor: pointer;
-  width: 88px;
-  min-width: 88px;
-  height: 64px;
+.masonry-main {
+  height: 100%;
   overflow: hidden;
 }
 
-.thumb-btn.active {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 22%, transparent);
+.masonry-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  height: 100%;
 }
 
-.thumb-img {
+.masonry-item {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.masonry-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+  cursor: pointer;
 }
 
-.image-gallery .main-image {
-  object-fit: cover;
-  border: 1px solid rgba(0, 116, 182, 0.18);
+.masonry-img:hover {
+  transform: scale(1.06);
+  filter: brightness(1.1);
 }
 
 .no-image-large {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    130deg,
-    color-mix(in srgb, var(--primary) 14%, var(--surface-soft)),
-    color-mix(in srgb, var(--success) 10%, var(--surface-soft))
-  );
+  background: linear-gradient(130deg,
+      color-mix(in srgb, var(--primary) 14%, var(--surface-soft)),
+      color-mix(in srgb, var(--success) 10%, var(--surface-soft)));
   color: var(--text-muted);
 }
 
@@ -159,8 +155,12 @@
     position: static;
   }
 
-  .image-gallery .main-image,
-  .no-image-large {
-    height: 300px;
+  .masonry-gallery {
+    grid-template-columns: 1fr;
+    height: 320px;
+  }
+
+  .masonry-side {
+    display: none;
   }
 }

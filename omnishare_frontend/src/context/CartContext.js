@@ -113,6 +113,7 @@ export const CartProvider = ({ children }) => {
     removeItem,
     updateQuantity,
     clearCart,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [state]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDropzone } from 'react-dropzone';
 import { authAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './KYCSubmission.css';
@@ -20,13 +21,14 @@ const KYCSubmission = () => {
 
   useEffect(() => {
     fetchUserProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchUserProfile = async () => {
     try {
       const response = await authAPI.getProfile();
       setUser(response.data);
-      
+
       // Check if already verified
       if (response.data.kyc_status === 'verified') {
         toast.info('Your KYC is already verified!');
@@ -38,36 +40,37 @@ const KYCSubmission = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+  const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+    if (rejectedFiles && rejectedFiles.length > 0) {
+      toast.error('Invalid file type or size. Please provide a JPG, PNG, or PDF under 5MB.');
+      return;
+    }
+    const file = acceptedFiles[0];
     if (file) {
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
-      if (!validTypes.includes(file.type)) {
-        toast.error('Please upload a valid document (JPG, PNG, or PDF)');
-        return;
-      }
-
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error('File size must be less than 5MB');
         return;
       }
-
       setKycDocument(file);
-
-      // Create preview for images
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview(reader.result);
-        };
+        reader.onloadend = () => setPreview(reader.result);
         reader.readAsDataURL(file);
       } else {
         setPreview(null);
       }
     }
-  };
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'image/jpeg': ['.jpeg', '.jpg'],
+      'image/png': ['.png'],
+      'application/pdf': ['.pdf']
+    },
+    maxFiles: 1
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,14 +88,14 @@ const KYCSubmission = () => {
 
       const response = await authAPI.submitKYC(formData);
       toast.success(response.data.message || 'KYC submitted successfully!');
-      
+
       // Update user data
       fetchUserProfile();
-      
+
       // Clear form
       setKycDocument(null);
       setPreview(null);
-      
+
       // Redirect after success
       setTimeout(() => {
         navigate(getDashboardRoute(user));
@@ -206,20 +209,31 @@ const KYCSubmission = () => {
                   Accepted documents: Aadhaar Card, PAN Card, Driving License, Passport (JPG, PNG, or PDF, max 5MB)
                 </p>
 
-                <div className="file-upload-container">
-                  <input
-                    type="file"
-                    id="kyc-document"
-                    accept="image/jpeg,image/jpg,image/png,application/pdf"
-                    onChange={handleFileChange}
-                    className="file-input"
-                  />
-                  <label htmlFor="kyc-document" className="file-label">
-                    <span className="upload-icon">📎</span>
-                    <span className="upload-text">
-                      {kycDocument ? kycDocument.name : 'Click to upload document'}
+                <div
+                  {...getRootProps()}
+                  className={`file-upload-container ${isDragActive ? 'drag-active' : ''}`}
+                  style={{
+                    border: isDragActive ? '2px dashed var(--primary)' : '2px dashed var(--line-strong)',
+                    background: isDragActive ? 'var(--primary-glow)' : 'var(--surface-strong)',
+                    padding: '40px 20px',
+                    textAlign: 'center',
+                    borderRadius: '16px',
+                    cursor: 'pointer',
+                    transition: 'var(--transition-smooth)',
+                    marginBottom: '16px'
+                  }}
+                >
+                  <input {...getInputProps()} id="kyc-document" />
+                  <div className="upload-label-content">
+                    <span className="upload-icon" style={{ fontSize: '2.5rem', display: 'block', marginBottom: '12px' }}>
+                      {isDragActive ? '🚀' : '📥'}
                     </span>
-                  </label>
+                    <span className="upload-text" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '1.1rem' }}>
+                      {isDragActive
+                        ? 'Drop your document here...'
+                        : (kycDocument ? kycDocument.name : 'Drag & drop a file here, or click to browse')}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Preview */}
@@ -228,7 +242,7 @@ const KYCSubmission = () => {
                     <img src={preview} alt="Document preview" />
                   </div>
                 )}
-                
+
                 {kycDocument && !preview && (
                   <div className="file-info">
                     <span className="file-icon">📄</span>

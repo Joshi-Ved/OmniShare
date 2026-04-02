@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { listingsAPI, bookingsAPI, paymentsAPI } from '../services/api';
 import { toast } from 'react-toastify';
 import './Dashboard.css';
@@ -119,6 +120,23 @@ const HostDashboard = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [imageModal.isOpen]);
 
+  const chartData = useMemo(() => {
+    const dataMap = {};
+    bookings
+      .filter(b => b.booking_status === 'completed')
+      .forEach(b => {
+        const dateString = b.created_at || b.start_date;
+        const date = dateString ? new Date(dateString).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'Unknown';
+        const amt = parseFloat(b.host_payout || 0);
+        dataMap[date] = (dataMap[date] || 0) + amt;
+      });
+
+    return Object.keys(dataMap).map(k => ({
+      date: k,
+      earnings: dataMap[k]
+    })).slice(-10); // Last 10 data points
+  }, [bookings]);
+
   if (loading) return <div className="loading">Loading...</div>;
 
   return (
@@ -155,6 +173,27 @@ const HostDashboard = () => {
             <p className="stat-number">{settlements.length}</p>
           </div>
         </div>
+
+        {chartData.length > 0 && (
+          <div className="dashboard-chart-section card" style={{ margin: '24px 0', padding: '24px' }}>
+            <h2 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>Earnings Trend</h2>
+            <div style={{ width: '100%', height: 320 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--line-strong)" vertical={false} />
+                  <XAxis dataKey="date" stroke="var(--text-secondary)" tickMargin={10} axisLine={false} tickLine={false} />
+                  <YAxis stroke="var(--text-secondary)" axisLine={false} tickLine={false} tickFormatter={(value) => `₹${value}`} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: 'var(--surface-strong)', borderRadius: '12px', borderColor: 'var(--glass-border)', backdropFilter: 'blur(16px)' }}
+                    itemStyle={{ color: 'var(--primary)', fontWeight: 'bold' }}
+                    labelStyle={{ color: 'var(--text-primary)' }}
+                  />
+                  <Line type="monotone" dataKey="earnings" stroke="var(--primary)" strokeWidth={4} dot={{ r: 4, strokeWidth: 2, fill: 'var(--surface-strong)' }} activeDot={{ r: 8, stroke: 'var(--primary-glow)', strokeWidth: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
 
         <div className="dashboard-tabs">
           <button
@@ -199,11 +238,10 @@ const HostDashboard = () => {
                   <p>₹{listing.daily_price}/day</p>
                   <p className="location">📍 {listing.location}</p>
                   <div className="listing-stats">
-                    <span className={`badge ${
-                      listing.verification_status === 'approved' ? 'badge-success' :
-                      listing.verification_status === 'pending' ? 'badge-warning' :
-                      'badge-danger'
-                    }`}>
+                    <span className={`badge ${listing.verification_status === 'approved' ? 'badge-success' :
+                        listing.verification_status === 'pending' ? 'badge-warning' :
+                          'badge-danger'
+                      }`}>
                       {listing.verification_status}
                     </span>
                     <span>⭐ {listing.rating} ({listing.total_reviews})</span>

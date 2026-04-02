@@ -20,6 +20,7 @@ const ListingDetails = () => {
   useEffect(() => {
     fetchListing();
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const ListingDetails = () => {
         end_date: bookingDates.end_date,
         insurance_fee: priceBreakdown?.insurance_fee || 0,
       });
-      
+
       toast.success('Booking created! Proceeding to payment...');
       navigate(`/bookings/${response.data.booking.id}`);
     } catch (error) {
@@ -137,22 +138,17 @@ const ListingDetails = () => {
       <div className="container">
         <div className="listing-images">
           {listingImages.length > 0 ? (
-            <div className="image-gallery">
-              <img src={activeImage} alt={listing.title} className="main-image" />
-              {listingImages.length > 1 && (
-                <div className="thumb-row">
-                  {listingImages.map((imageItem, index) => (
-                    <button
-                      key={imageItem.id || index}
-                      type="button"
-                      className={`thumb-btn ${activeImageIndex === index ? 'active' : ''}`}
-                      onClick={() => setActiveImageIndex(index)}
-                    >
-                      <img src={imageItem.image} alt={`${listing.title} ${index + 1}`} className="thumb-img" />
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="masonry-gallery">
+              <div className="masonry-main">
+                <img src={listingImages[0].image} alt={listing.title} className="masonry-img" />
+              </div>
+              <div className="masonry-side">
+                {listingImages.slice(1, 5).map((imageItem, index) => (
+                  <div className="masonry-item" key={imageItem.id || index}>
+                    <img src={imageItem.image} alt={`${listing.title} ${index + 1}`} className="masonry-img" />
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
             <div className="no-image-large">No Image Available</div>
@@ -168,7 +164,7 @@ const ListingDetails = () => {
               <span className="quick-tag">🔒 Secure Payment</span>
               <span className="quick-tag">⏱️ Daily Rental</span>
             </div>
-            
+
             <div className="host-info card">
               <h3>Hosted by {listing.host.username}</h3>
               <p>Trust Score: ⭐ {listing.host.trust_score}/5</p>
@@ -220,7 +216,7 @@ const ListingDetails = () => {
                 <span className="booking-price">₹{listing.daily_price}</span>
                 <span className="booking-price-unit">per day</span>
               </div>
-              
+
               <div className="form-group">
                 <label>Start Date</label>
                 <input
