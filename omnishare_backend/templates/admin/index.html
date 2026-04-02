@@ -4,259 +4,678 @@
 {% block extrastyle %}
 {{ block.super }}
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link
+  href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap"
+  rel="stylesheet">
 <style>
-:root {
-  --p: #10b981; --p2: #059669; --pl: #6ee7b7;
-  --s: #0f172a; --sc: #1e293b; --sl: #263347; --sh: #334155;
-  --t: #f87171; --tb: rgba(248,113,113,.15);
-  --w: #fbbf24; --wb: rgba(251,191,36,.15);
-  --g: #34d399; --gb: rgba(52,211,153,.15);
-  --on: #f1f5f9; --muted: #94a3b8;
-  --r: 12px; --shd: 0 2px 12px rgba(0,0,0,.3);
-}
-.omni-wrap { font-family: 'Inter', sans-serif; color: var(--on); margin-bottom: 32px; background: var(--s); }
+  :root {
+    --p: #10b981;
+    --p2: #059669;
+    --pl: #6ee7b7;
+    --s: #0f172a;
+    --sc: #1e293b;
+    --sl: #263347;
+    --sh: #334155;
+    --t: #f87171;
+    --tb: rgba(248, 113, 113, .15);
+    --w: #fbbf24;
+    --wb: rgba(251, 191, 36, .15);
+    --g: #34d399;
+    --gb: rgba(52, 211, 153, .15);
+    --on: #f1f5f9;
+    --muted: #94a3b8;
+    --r: 12px;
+    --shd: 0 2px 12px rgba(0, 0, 0, .3);
+  }
 
-/* ── Hero ── */
-.omni-hero {
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 16px;
-  padding: 20px 0 20px; margin-bottom: 24px;
-  border-bottom: 1px solid rgba(255,255,255,.07);
-}
-.omni-hero-left { display:flex; flex-direction:column; gap:3px; }
-.omni-hero-eyebrow {
-  font-size:.68rem; font-weight:700; letter-spacing:.12em;
-  text-transform:uppercase; color:var(--p); margin:0;
-}
-.omni-hero h2 {
-  font-family:'Manrope',sans-serif; font-size:1.35rem; font-weight:800;
-  color:var(--on); margin:0; letter-spacing:-.01em;
-}
-.omni-hero p { color:var(--muted); margin:0; font-size:.82rem; }
-.omni-hero-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-.omni-btn {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:8px 14px; border-radius:6px; font-family:'Inter',sans-serif;
-  font-size:.78rem; font-weight:600; text-decoration:none; cursor:pointer;
-  transition:all .15s ease; border:none; letter-spacing:.01em;
-}
-.omni-btn-primary {
-  background:var(--sc); color:var(--on);
-  border:1px solid rgba(255,255,255,.1);
-}
-.omni-btn-primary:hover { background:var(--sl); color:var(--p); border-color:var(--p); }
-.omni-btn-ghost {
-  background:transparent; color:var(--muted);
-  border:1px solid rgba(255,255,255,.08);
-}
-.omni-btn-ghost:hover { background:var(--sl); color:var(--on); }
+  [data-theme="light"] {
+    --s: #f8fafc;
+    --sc: #ffffff;
+    --sl: #f1f5f9;
+    --sh: #e2e8f0;
+    --on: #0f172a;
+    --muted: #64748b;
+    --shd: 0 2px 12px rgba(0, 0, 0, .08);
+  }
 
-/* ── KPI Grid ── */
-.omni-kpi-grid {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:14px; margin-bottom:24px;
-}
-.omni-kpi {
-  background:var(--sc); border-radius:var(--r); padding:20px;
-  box-shadow:var(--shd); transition:box-shadow .2s,transform .2s;
-}
-.omni-kpi:hover { box-shadow:0 8px 24px rgba(0,81,68,.12); transform:translateY(-2px); }
-.omni-kpi--accent { background:linear-gradient(135deg,var(--p),var(--p2)); }
-.omni-kpi-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
-.omni-kpi-icon {
-  width:38px; height:38px; border-radius:10px;
-  background:rgba(0,81,68,.08); display:flex; align-items:center; justify-content:center;
-  font-size:18px;
-}
-.omni-kpi--accent .omni-kpi-icon { background:rgba(255,255,255,.2); }
-.omni-kpi-trend { font-size:.72rem; font-weight:700; }
-.omni-kpi-trend.up { color:#059669; }
-.omni-kpi-trend.down { color:var(--t); }
-.omni-kpi--accent .omni-kpi-trend { color:rgba(255,255,255,.8); }
-.omni-kpi-label { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 5px; }
-.omni-kpi--accent .omni-kpi-label { color:rgba(255,255,255,.7); }
-.omni-kpi-value { font-family:'Manrope',sans-serif; font-size:1.6rem; font-weight:800; color:var(--on); margin:0; }
-.omni-kpi--accent .omni-kpi-value { color:#fff; }
-.omni-kpi-sub { font-size:.75rem; color:var(--muted); margin:4px 0 0; }
-.omni-kpi--accent .omni-kpi-sub { color:rgba(255,255,255,.6); }
+  .omni-wrap {
+    font-family: 'Inter', sans-serif;
+    color: var(--on);
+    margin-bottom: 32px;
+    background: var(--s);
+  }
 
-/* ── Two-col layout ── */
-.omni-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
-@media(max-width:900px){ .omni-grid-2 { grid-template-columns:1fr; } }
+  /* ── Hero ── */
+  .omni-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px 0 20px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, .07);
+  }
 
-/* ── Card ── */
-.omni-card { background:var(--sc); border-radius:var(--r); padding:22px; box-shadow:var(--shd); }
-.omni-card-title {
-  font-family:'Manrope',sans-serif; font-size:1rem; font-weight:800;
-  color:var(--on); margin:0 0 16px; display:flex; align-items:center; gap:8px;
-}
-.omni-card-title span { color:var(--p); font-size:18px; }
+  .omni-hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
 
-/* ── Table ── */
-.omni-table-wrap { overflow-x:auto; border-radius:8px; }
-.omni-table { width:100%; border-collapse:collapse; font-size:.82rem; }
-.omni-table thead tr { background:var(--sl); }
-.omni-table th { padding:10px 12px; text-align:left; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
-.omni-table td { padding:11px 12px; color:var(--on); border-top:1px solid rgba(190,201,196,.2); }
-.omni-table tbody tr:hover { background:var(--sl); }
+  .omni-hero-eyebrow {
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--p);
+    margin: 0;
+  }
 
-/* ── Badge ── */
-.omni-badge { display:inline-flex; align-items:center; padding:2px 9px; border-radius:999px; font-size:.7rem; font-weight:700; text-transform:capitalize; }
-.omni-badge-g { background:var(--gb); color:var(--g); }
-.omni-badge-r { background:var(--tb); color:var(--t); }
-.omni-badge-w { background:var(--wb); color:var(--w); }
-.omni-badge-b { background:#dbeafe; color:#1e40af; }
+  .omni-hero h2 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--on);
+    margin: 0;
+    letter-spacing: -.01em;
+  }
 
-/* ── Bar chart ── */
-.omni-bar-chart { display:flex; align-items:flex-end; gap:6px; height:80px; margin-top:8px; }
-.omni-bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
-.omni-bar { width:100%; border-radius:4px 4px 0 0; background:linear-gradient(180deg,var(--p2),var(--p)); min-height:4px; transition:height .4s ease; }
-.omni-bar-label { font-size:.6rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center; }
+  .omni-hero p {
+    color: var(--muted);
+    margin: 0;
+    font-size: .82rem;
+  }
 
-/* ── Health bars ── */
-.omni-health { display:flex; flex-direction:column; gap:12px; }
-.omni-health-row { display:flex; flex-direction:column; gap:5px; }
-.omni-health-top { display:flex; justify-content:space-between; font-size:.82rem; }
-.omni-health-name { font-weight:600; color:var(--on); }
-.omni-health-val { font-weight:700; color:var(--p); }
-.omni-health-bar { height:6px; background:var(--sh); border-radius:999px; overflow:hidden; }
-.omni-health-fill { height:100%; background:linear-gradient(90deg,var(--p),var(--p2)); border-radius:999px; }
+  .omni-hero-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 
-/* ── API links ── */
-.omni-api-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px; margin-top:16px; }
-.omni-api-link {
-  display:flex; align-items:center; gap:10px;
-  padding:12px 14px; background:var(--sl); border-radius:8px;
-  text-decoration:none; color:var(--on); font-size:.82rem; font-weight:500;
-  transition:all .18s ease;
-}
-.omni-api-link:hover { background:var(--sh); color:var(--p); transform:translateX(2px); }
-.omni-api-link-icon { font-size:16px; color:var(--p); flex-shrink:0; }
-.omni-api-link-method { font-size:.65rem; font-weight:700; background:var(--gb); color:var(--g); padding:1px 6px; border-radius:4px; }
+  .omni-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: .78rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all .15s ease;
+    border: none;
+    letter-spacing: .01em;
+  }
 
-/* ── Loading ── */
-.omni-loading { text-align:center; padding:40px; color:var(--muted); font-size:.9rem; }
-.omni-spinner { width:28px; height:28px; border:3px solid var(--sh); border-top-color:var(--p); border-radius:50%; animation:spin .7s linear infinite; display:inline-block; margin-bottom:8px; }
-@keyframes spin { to { transform:rotate(360deg); } }
+  .omni-btn-primary {
+    background: var(--sc);
+    color: var(--on);
+    border: 1px solid rgba(255, 255, 255, .1);
+  }
 
-/* ── Separator ── */
-.omni-section-sep { margin:28px 0 20px; display:flex; align-items:center; gap:12px; }
-.omni-section-sep h3 { font-family:'Manrope',sans-serif; font-size:1rem; font-weight:800; color:var(--on); margin:0; white-space:nowrap; }
-.omni-section-sep-line { flex:1; height:1px; background:rgba(190,201,196,.3); }
+  .omni-btn-primary:hover {
+    background: var(--sl);
+    color: var(--p);
+    border-color: var(--p);
+  }
+
+  .omni-btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255, 255, 255, .08);
+  }
+
+  .omni-btn-ghost:hover {
+    background: var(--sl);
+    color: var(--on);
+  }
+
+  /* ── KPI Grid ── */
+  .omni-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .omni-kpi {
+    background: var(--sc);
+    border-radius: var(--r);
+    padding: 20px;
+    box-shadow: var(--shd);
+    transition: box-shadow .2s, transform .2s;
+  }
+
+  .omni-kpi:hover {
+    box-shadow: 0 8px 24px rgba(0, 81, 68, .12);
+    transform: translateY(-2px);
+  }
+
+  .omni-kpi--accent {
+    background: linear-gradient(135deg, var(--p), var(--p2));
+  }
+
+  .omni-kpi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+
+  .omni-kpi-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(0, 81, 68, .08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .omni-kpi--accent .omni-kpi-icon {
+    background: rgba(255, 255, 255, .2);
+  }
+
+  .omni-kpi-trend {
+    font-size: .72rem;
+    font-weight: 700;
+  }
+
+  .omni-kpi-trend.up {
+    color: #059669;
+  }
+
+  .omni-kpi-trend.down {
+    color: var(--t);
+  }
+
+  .omni-kpi--accent .omni-kpi-trend {
+    color: rgba(255, 255, 255, .8);
+  }
+
+  .omni-kpi-label {
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin: 0 0 5px;
+  }
+
+  .omni-kpi--accent .omni-kpi-label {
+    color: rgba(255, 255, 255, .7);
+  }
+
+  .omni-kpi-value {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--on);
+    margin: 0;
+  }
+
+  .omni-kpi--accent .omni-kpi-value {
+    color: #fff;
+  }
+
+  .omni-kpi-sub {
+    font-size: .75rem;
+    color: var(--muted);
+    margin: 4px 0 0;
+  }
+
+  .omni-kpi--accent .omni-kpi-sub {
+    color: rgba(255, 255, 255, .6);
+  }
+
+  /* ── Two-col layout ── */
+  .omni-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  @media(max-width:900px) {
+    .omni-grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Card ── */
+  .omni-card {
+    background: var(--sc);
+    border-radius: var(--r);
+    padding: 22px;
+    box-shadow: var(--shd);
+  }
+
+  .omni-card-title {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--on);
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .omni-card-title span {
+    color: var(--p);
+    font-size: 18px;
+  }
+
+  /* ── Table ── */
+  .omni-table-wrap {
+    overflow-x: auto;
+    border-radius: 8px;
+  }
+
+  .omni-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .82rem;
+  }
+
+  .omni-table thead tr {
+    background: var(--sl);
+  }
+
+  .omni-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--muted);
+  }
+
+  .omni-table td {
+    padding: 11px 12px;
+    color: var(--on);
+    border-top: 1px solid rgba(190, 201, 196, .2);
+  }
+
+  .omni-table tbody tr:hover {
+    background: var(--sl);
+  }
+
+  /* ── Badge ── */
+  .omni-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  .omni-badge-g {
+    background: var(--gb);
+    color: var(--g);
+  }
+
+  .omni-badge-r {
+    background: var(--tb);
+    color: var(--t);
+  }
+
+  .omni-badge-w {
+    background: var(--wb);
+    color: var(--w);
+  }
+
+  .omni-badge-b {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  /* ── Bar chart ── */
+  .omni-bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 80px;
+    margin-top: 8px;
+  }
+
+  .omni-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .omni-bar {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    background: linear-gradient(180deg, var(--p2), var(--p));
+    min-height: 4px;
+    transition: height .4s ease;
+  }
+
+  .omni-bar-label {
+    font-size: .6rem;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  /* ── Health bars ── */
+  .omni-health {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .omni-health-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .omni-health-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: .82rem;
+  }
+
+  .omni-health-name {
+    font-weight: 600;
+    color: var(--on);
+  }
+
+  .omni-health-val {
+    font-weight: 700;
+    color: var(--p);
+  }
+
+  .omni-health-bar {
+    height: 6px;
+    background: var(--sh);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .omni-health-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--p), var(--p2));
+    border-radius: 999px;
+  }
+
+  /* ── API links ── */
+  .omni-api-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .omni-api-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--sl);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--on);
+    font-size: .82rem;
+    font-weight: 500;
+    transition: all .18s ease;
+  }
+
+  .omni-api-link:hover {
+    background: var(--sh);
+    color: var(--p);
+    transform: translateX(2px);
+  }
+
+  .omni-api-link-icon {
+    font-size: 16px;
+    color: var(--p);
+    flex-shrink: 0;
+  }
+
+  .omni-api-link-method {
+    font-size: .65rem;
+    font-weight: 700;
+    background: var(--gb);
+    color: var(--g);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* ── Loading ── */
+  .omni-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+
+  .omni-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--sh);
+    border-top-color: var(--p);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ── Separator ── */
+  .omni-section-sep {
+    margin: 28px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .omni-section-sep h3 {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--on);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .omni-section-sep-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(190, 201, 196, .3);
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 <div id="content-main">
-<div class="omni-wrap">
+  <div class="omni-wrap">
 
-  <!-- Hero -->
-  <div class="omni-hero">
-    <div class="omni-hero-left">
-      <p class="omni-hero-eyebrow">OmniShare Platform</p>
-      <h2>Control Center</h2>
-      <p>ERP · CRM · Operations · Analytics</p>
-    </div>
-    <div class="omni-hero-actions">
-      <a class="omni-btn omni-btn-primary" href="/admin/erp/">ERP Dashboard</a>
-      <button class="omni-btn omni-btn-ghost" onclick="loadDashboard()">Refresh</button>
-    </div>
-  </div>
-
-  <!-- KPI Cards -->
-  <div id="omni-kpis" class="omni-kpi-grid">
-    <div class="omni-loading"><div class="omni-spinner"></div><br>Loading metrics...</div>
-  </div>
-
-  <!-- Charts + Health -->
-  <div class="omni-grid-2">
-    <div class="omni-card">
-      <div class="omni-card-title">Category Performance</div>
-      <div id="omni-cat-chart" class="omni-loading"><div class="omni-spinner"></div></div>
-    </div>
-    <div class="omni-card">
-      <div class="omni-card-title">System Health</div>
-      <div class="omni-health">
-        <div class="omni-health-row"><div class="omni-health-top"><span class="omni-health-name">Data Integrity</span><span class="omni-health-val">98%</span></div><div class="omni-health-bar"><div class="omni-health-fill" style="width:98%"></div></div></div>
-        <div class="omni-health-row"><div class="omni-health-top"><span class="omni-health-name">Uptime</span><span class="omni-health-val">99.9%</span></div><div class="omni-health-bar"><div class="omni-health-fill" style="width:99.9%"></div></div></div>
-        <div class="omni-health-row"><div class="omni-health-top"><span class="omni-health-name">API Response</span><span class="omni-health-val">97ms</span></div><div class="omni-health-bar"><div class="omni-health-fill" style="width:97%"></div></div></div>
-        <div class="omni-health-row"><div class="omni-health-top"><span class="omni-health-name">User Satisfaction</span><span class="omni-health-val">4.7/5</span></div><div class="omni-health-bar"><div class="omni-health-fill" style="width:94%"></div></div></div>
+    <!-- Hero -->
+    <div class="omni-hero">
+      <div class="omni-hero-left">
+        <p class="omni-hero-eyebrow">OmniShare Platform</p>
+        <h2>Control Center</h2>
+        <p>ERP · CRM · Operations · Analytics</p>
+      </div>
+      <div class="omni-hero-actions">
+        <a class="omni-btn omni-btn-primary" href="/admin/erp/">ERP Dashboard</a>
+        <button class="omni-btn omni-btn-ghost" onclick="loadDashboard()">Refresh</button>
       </div>
     </div>
+
+    <!-- KPI Cards -->
+    <div id="omni-kpis" class="omni-kpi-grid">
+      <div class="omni-loading">
+        <div class="omni-spinner"></div><br>Loading metrics...
+      </div>
+    </div>
+
+    <!-- Charts + Health -->
+    <div class="omni-grid-2">
+      <div class="omni-card">
+        <div class="omni-card-title">Category Performance</div>
+        <div id="omni-cat-chart" class="omni-loading">
+          <div class="omni-spinner"></div>
+        </div>
+      </div>
+      <div class="omni-card">
+        <div class="omni-card-title">System Health</div>
+        <div class="omni-health">
+          <div class="omni-health-row">
+            <div class="omni-health-top"><span class="omni-health-name">Data Integrity</span><span
+                class="omni-health-val">98%</span></div>
+            <div class="omni-health-bar">
+              <div class="omni-health-fill" style="width:98%"></div>
+            </div>
+          </div>
+          <div class="omni-health-row">
+            <div class="omni-health-top"><span class="omni-health-name">Uptime</span><span
+                class="omni-health-val">99.9%</span></div>
+            <div class="omni-health-bar">
+              <div class="omni-health-fill" style="width:99.9%"></div>
+            </div>
+          </div>
+          <div class="omni-health-row">
+            <div class="omni-health-top"><span class="omni-health-name">API Response</span><span
+                class="omni-health-val">97ms</span></div>
+            <div class="omni-health-bar">
+              <div class="omni-health-fill" style="width:97%"></div>
+            </div>
+          </div>
+          <div class="omni-health-row">
+            <div class="omni-health-top"><span class="omni-health-name">User Satisfaction</span><span
+                class="omni-health-val">4.7/5</span></div>
+            <div class="omni-health-bar">
+              <div class="omni-health-fill" style="width:94%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Hosts -->
+    <div class="omni-card" style="margin-bottom:24px">
+      <div class="omni-card-title">Top Hosts by Earnings</div>
+      <div id="omni-hosts" class="omni-loading">
+        <div class="omni-spinner"></div>
+      </div>
+    </div>
+
+    <!-- API Explorer -->
+    <div class="omni-section-sep">
+      <h3>API Explorer</h3>
+      <div class="omni-section-sep-line"></div>
+    </div>
+    <div class="omni-api-grid">
+      <a class="omni-api-link" href="/admin/crm-dashboard/" target="_blank"
+        style="background:var(--sc);border:1px solid var(--p)"><span class="omni-api-link-icon">📊</span><span
+          class="omni-api-link-method" style="background:var(--p);color:#fff">GUI</span> Graphical CRM</a>
+      <a class="omni-api-link" href="/admin/scm-dashboard/" target="_blank"
+        style="background:var(--sc);border:1px solid var(--p)"><span class="omni-api-link-icon">🚚</span><span
+          class="omni-api-link-method" style="background:var(--p);color:#fff">GUI</span> Graphical SCM</a>
+      <a class="omni-api-link" href="/api/crm/dashboard/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> CRM Dash API</a>
+      <a class="omni-api-link" href="/api/crm/scm-dashboard/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> SCM Dash API</a>
+      <a class="omni-api-link" href="/admin/customers-gui/" target="_blank"
+        style="background:var(--sc);border:1px solid var(--p)"><span class="omni-api-link-icon">👥</span><span
+          class="omni-api-link-method" style="background:var(--p);color:#fff">GUI</span> Graphical Customers</a>
+      <a class="omni-api-link" href="/admin/sales-gui/" target="_blank"
+        style="background:var(--sc);border:1px solid var(--p)"><span class="omni-api-link-icon">💰</span><span
+          class="omni-api-link-method" style="background:var(--p);color:#fff">GUI</span> Graphical Sales</a>
+      <a class="omni-api-link" href="/admin/decision-gui/" target="_blank"
+        style="background:var(--sc);border:1px solid var(--p)"><span class="omni-api-link-icon">🧠</span><span
+          class="omni-api-link-method" style="background:var(--p);color:#fff">GUI</span> Decision Support</a>
+      <a class="omni-api-link" href="/admin/moderation-gui/" target="_blank"
+        style="background:var(--sc);border:1px solid var(--t)"><span class="omni-api-link-icon"
+          style="color:var(--t)">⚖️</span><span class="omni-api-link-method"
+          style="background:var(--t);color:#fff">GUI</span> Moderation Queue</a>
+
+      <!-- Legacy Raw JSON Fallbacks -->
+      <a class="omni-api-link" href="/api/crm/customers/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> Customers API</a>
+      <a class="omni-api-link" href="/api/crm/sales-report/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> Sales API</a>
+      <a class="omni-api-link" href="/api/crm/decision-support/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> Decision API</a>
+      <a class="omni-api-link" href="/api/users/kyc/pending/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> KYC API</a>
+      <a class="omni-api-link" href="/api/listings/" target="_blank"><span class="omni-api-link-icon">🤖</span><span
+          class="omni-api-link-method">JSON</span> Listings API</a>
+      <a class="omni-api-link" href="/api/bookings/admin/orders/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> Orders API</a>
+      <a class="omni-api-link" href="/api/payments/payments/transactions/" target="_blank"><span
+          class="omni-api-link-icon">🤖</span><span class="omni-api-link-method">JSON</span> TXN API</a>
+    </div>
+
   </div>
 
-  <!-- Top Hosts -->
-  <div class="omni-card" style="margin-bottom:24px">
-    <div class="omni-card-title">Top Hosts by Earnings</div>
-    <div id="omni-hosts" class="omni-loading"><div class="omni-spinner"></div></div>
-  </div>
-
-  <!-- API Explorer -->
-  <div class="omni-section-sep">
-    <h3>API Explorer</h3><div class="omni-section-sep-line"></div>
-  </div>
-  <div class="omni-api-grid">
-    <a class="omni-api-link" href="/api/crm/dashboard/" target="_blank"><span class="omni-api-link-icon">📊</span><span class="omni-api-link-method">GET</span> CRM Dashboard</a>
-    <a class="omni-api-link" href="/api/crm/customers/" target="_blank"><span class="omni-api-link-icon">👥</span><span class="omni-api-link-method">GET</span> Customers</a>
-    <a class="omni-api-link" href="/api/crm/sales-report/" target="_blank"><span class="omni-api-link-icon">💰</span><span class="omni-api-link-method">GET</span> Sales Report</a>
-    <a class="omni-api-link" href="/api/crm/inventory-linkage/" target="_blank"><span class="omni-api-link-icon">📦</span><span class="omni-api-link-method">GET</span> Inventory Linkage</a>
-    <a class="omni-api-link" href="/api/crm/scm-dashboard/" target="_blank"><span class="omni-api-link-icon">🚚</span><span class="omni-api-link-method">GET</span> SCM Dashboard</a>
-    <a class="omni-api-link" href="/api/crm/decision-support/" target="_blank"><span class="omni-api-link-icon">🧠</span><span class="omni-api-link-method">GET</span> Decision Support</a>
-    <a class="omni-api-link" href="/api/listings/" target="_blank"><span class="omni-api-link-icon">🏷️</span><span class="omni-api-link-method">GET</span> Listings</a>
-    <a class="omni-api-link" href="/api/listings/pending/" target="_blank"><span class="omni-api-link-icon">⏳</span><span class="omni-api-link-method">GET</span> Pending Listings</a>
-    <a class="omni-api-link" href="/api/bookings/admin/orders/" target="_blank"><span class="omni-api-link-icon">📋</span><span class="omni-api-link-method">GET</span> All Orders</a>
-    <a class="omni-api-link" href="/api/bookings/disputed/" target="_blank"><span class="omni-api-link-icon">⚠️</span><span class="omni-api-link-method">GET</span> Disputed Bookings</a>
-    <a class="omni-api-link" href="/api/users/kyc/pending/" target="_blank"><span class="omni-api-link-icon">🪪</span><span class="omni-api-link-method">GET</span> Pending KYC</a>
-    <a class="omni-api-link" href="/api/payments/payments/transactions/" target="_blank"><span class="omni-api-link-icon">💳</span><span class="omni-api-link-method">GET</span> Transactions</a>
-  </div>
-
-</div>
-
-{% if app_list %}
+  {% if app_list %}
   <div class="omni-section-sep" style="margin-top:32px">
-    <h3>Model Administration</h3><div class="omni-section-sep-line"></div>
+    <h3>Model Administration</h3>
+    <div class="omni-section-sep-line"></div>
   </div>
   {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
-{% endif %}
+  {% endif %}
 </div>
 
 <script>
-function fmt(n) {
-  if (n === null || n === undefined) return '—';
-  if (typeof n === 'number') {
-    if (n >= 100000) return '₹' + (n/100000).toFixed(1) + 'L';
-    if (n >= 1000) return '₹' + (n/1000).toFixed(1) + 'k';
-    return n.toLocaleString();
+  function fmt(n) {
+    if (n === null || n === undefined) return '—';
+    if (typeof n === 'number') {
+      if (n >= 100000) return '₹' + (n / 100000).toFixed(1) + 'L';
+      if (n >= 1000) return '₹' + (n / 1000).toFixed(1) + 'k';
+      return n.toLocaleString();
+    }
+    return n;
   }
-  return n;
-}
-function badge(status) {
-  const map = { verified:'g', approved:'g', available:'g', normal:'g', pending:'w', maintenance:'w', disputed:'r', rejected:'r', high:'r', cancelled:'r' };
-  const cls = map[(status||'').toLowerCase()] || 'b';
-  return `<span class="omni-badge omni-badge-${cls}">${status||'—'}</span>`;
-}
+  function badge(status) {
+    const map = { verified: 'g', approved: 'g', available: 'g', normal: 'g', pending: 'w', maintenance: 'w', disputed: 'r', rejected: 'r', high: 'r', cancelled: 'r' };
+    const cls = map[(status || '').toLowerCase()] || 'b';
+    return `<span class="omni-badge omni-badge-${cls}">${status || '—'}</span>`;
+  }
 
-async function loadDashboard() {
-  try {
-    const res = await fetch('/api/crm/dashboard/', { credentials: 'include' });
-    if (!res.ok) { showError(); return; }
-    const d = await res.json();
+  async function loadDashboard() {
+    try {
+      const res = await fetch('/api/crm/dashboard/', { credentials: 'include' });
+      if (!res.ok) { showError(); return; }
+      const d = await res.json();
 
-    // KPIs
-    const kpis = [
-      { icon:'👥', label:'Total Users', value: d.users?.total || 0, sub:`${d.users?.verified||0} verified`, trend:'+12%', up:true },
-      { icon:'📋', label:'Active Listings', value: d.listings?.active || 0, sub:`${d.listings?.total||0} total`, trend:'+8%', up:true },
-      { icon:'📦', label:'Total Bookings', value: d.bookings?.total || 0, sub:`${d.bookings?.completed||0} completed`, trend:'+5%', up:true },
-      { icon:'⚠️', label:'Disputed', value: d.bookings?.disputed || 0, sub:'Requires action', trend: d.bookings?.disputed > 0 ? 'Action needed' : 'All clear', up: false },
-      { icon:'💰', label:'Platform Revenue', value: fmt(d.revenue?.total_platform_revenue||0), sub:'All time commission', accent:true },
-      { icon:'📈', label:'Monthly GMV', value: fmt(d.revenue?.monthly_gmv||0), sub:'Last 30 days', trend:'+5.2%', up:true },
-    ];
-    document.getElementById('omni-kpis').innerHTML = kpis.map(k => `
-      <div class="omni-kpi ${k.accent?'omni-kpi--accent':''}">
+      // KPIs
+      const kpis = [
+        { icon: '👥', label: 'Total Users', value: d.users?.total || 0, sub: `${d.users?.verified || 0} verified`, trend: '+12%', up: true },
+        { icon: '📋', label: 'Active Listings', value: d.listings?.active || 0, sub: `${d.listings?.total || 0} total`, trend: '+8%', up: true },
+        { icon: '📦', label: 'Total Bookings', value: d.bookings?.total || 0, sub: `${d.bookings?.completed || 0} completed`, trend: '+5%', up: true },
+        { icon: '⚠️', label: 'Disputed', value: d.bookings?.disputed || 0, sub: 'Requires action', trend: d.bookings?.disputed > 0 ? 'Action needed' : 'All clear', up: false },
+        { icon: '💰', label: 'Platform Revenue', value: fmt(d.revenue?.total_platform_revenue || 0), sub: 'All time commission', accent: true },
+        { icon: '📈', label: 'Monthly GMV', value: fmt(d.revenue?.monthly_gmv || 0), sub: 'Last 30 days', trend: '+5.2%', up: true },
+      ];
+      document.getElementById('omni-kpis').innerHTML = kpis.map(k => `
+      <div class="omni-kpi ${k.accent ? 'omni-kpi--accent' : ''}">
         <div class="omni-kpi-top">
           <div class="omni-kpi-icon">${k.icon}</div>
-          ${k.trend ? `<span class="omni-kpi-trend ${k.up?'up':'down'}">${k.up?'↑':'↓'} ${k.trend}</span>` : ''}
+          ${k.trend ? `<span class="omni-kpi-trend ${k.up ? 'up' : 'down'}">${k.up ? '↑' : '↓'} ${k.trend}</span>` : ''}
         </div>
         <p class="omni-kpi-label">${k.label}</p>
         <p class="omni-kpi-value">${k.value}</p>
@@ -264,43 +683,43 @@ async function loadDashboard() {
       </div>
     `).join('');
 
-    // Category chart
-    const cats = (d.category_performance || []).slice(0, 7);
-    if (cats.length) {
-      const max = Math.max(...cats.map(c => c.total_bookings || 1), 1);
-      document.getElementById('omni-cat-chart').innerHTML = `
+      // Category chart
+      const cats = (d.category_performance || []).slice(0, 7);
+      if (cats.length) {
+        const max = Math.max(...cats.map(c => c.total_bookings || 1), 1);
+        document.getElementById('omni-cat-chart').innerHTML = `
         <div class="omni-bar-chart">
           ${cats.map(c => `
             <div class="omni-bar-col">
-              <div class="omni-bar" style="height:${Math.max(8, Math.round(((c.total_bookings||0)/max)*72))}px" title="${c.category__name}: ${c.total_bookings} bookings"></div>
-              <span class="omni-bar-label">${(c.category__name||'Other').substring(0,8)}</span>
+              <div class="omni-bar" style="height:${Math.max(8, Math.round(((c.total_bookings || 0) / max) * 72))}px" title="${c.category__name}: ${c.total_bookings} bookings"></div>
+              <span class="omni-bar-label">${(c.category__name || 'Other').substring(0, 8)}</span>
             </div>
           `).join('')}
         </div>
         <p style="font-size:.72rem;color:var(--muted);margin:8px 0 0;text-align:center">Bookings by category</p>
       `;
-    } else {
-      document.getElementById('omni-cat-chart').innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0">No category data yet</p>';
-    }
+      } else {
+        document.getElementById('omni-cat-chart').innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0">No category data yet</p>';
+      }
 
-    // Top hosts table
-    const hosts = (d.top_hosts || []).slice(0, 8);
-    if (hosts.length) {
-      document.getElementById('omni-hosts').innerHTML = `
+      // Top hosts table
+      const hosts = (d.top_hosts || []).slice(0, 8);
+      if (hosts.length) {
+        document.getElementById('omni-hosts').innerHTML = `
         <div class="omni-table-wrap">
           <table class="omni-table" style="background:#1e293b">
             <thead><tr style="background:#0f172a"><th style="color:#94a3b8">#</th><th style="color:#94a3b8">Host</th><th style="color:#94a3b8">Completed Bookings</th><th style="color:#94a3b8">Total Earnings</th><th style="color:#94a3b8">Trust Score</th><th style="color:#94a3b8">Status</th></tr></thead>
             <tbody>
-              ${hosts.map((h,i) => `
+              ${hosts.map((h, i) => `
                 <tr>
-                  <td style="color:#9ca3af">${i+1}</td>
+                  <td style="color:#9ca3af">${i + 1}</td>
                   <td><strong style="color:#f1f5f9">${h.username}</strong></td>
                   <td style="color:#e2e8f0">${h.completed_bookings}</td>
                   <td><strong style="color:#34d399;font-size:1rem">${fmt(h.total_earnings)}</strong></td>
                   <td>
                     <div style="display:flex;align-items:center;gap:6px">
                       <div style="flex:1;height:4px;background:#334155;border-radius:999px;overflow:hidden;min-width:50px">
-                        <div style="height:100%;width:${Math.min(100,(h.trust_score/5)*100)}%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:999px"></div>
+                        <div style="height:100%;width:${Math.min(100, (h.trust_score / 5) * 100)}%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:999px"></div>
                       </div>
                       <span style="font-size:.78rem;font-weight:700;color:#34d399">${h.trust_score.toFixed(1)}</span>
                     </div>
@@ -312,21 +731,21 @@ async function loadDashboard() {
           </table>
         </div>
       `;
-    } else {
-      document.getElementById('omni-hosts').innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0">No host data yet</p>';
-    }
+      } else {
+        document.getElementById('omni-hosts').innerHTML = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0">No host data yet</p>';
+      }
 
-  } catch(e) { showError(); }
-}
+    } catch (e) { showError(); }
+  }
 
-function showError() {
-  const msg = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0">⚠️ Could not load live data. <a href="/api/crm/dashboard/" style="color:var(--p)">Check API</a></p>';
-  ['omni-kpis','omni-cat-chart','omni-hosts'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = msg;
-  });
-}
+  function showError() {
+    const msg = '<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:20px 0">⚠️ Could not load live data. <a href="/api/crm/dashboard/" style="color:var(--p)">Check API</a></p>';
+    ['omni-kpis', 'omni-cat-chart', 'omni-hosts'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = msg;
+    });
+  }
 
-document.addEventListener('DOMContentLoaded', loadDashboard);
+  document.addEventListener('DOMContentLoaded', loadDashboard);
 </script>
 {% endblock %}

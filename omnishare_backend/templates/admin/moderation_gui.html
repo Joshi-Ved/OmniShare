@@ -1,0 +1,109 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Moderation Queue{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    #content {
+        padding: 0 !important
+    }
+</style>
+<script>
+  tailwind.config = { darkMode: ['class', '[data-theme="dark"]'] }
+</script>
+{% endblock %}
+{% block content %}
+<div class="bg-slate-50 dark:bg-[#0f1218] min-h-screen p-8 text-slate-900 dark:text-white font-sans">
+    <div class="max-w-7xl mx-auto flex flex-col h-[calc(100vh-100px)]">
+        <div class="flex justify-between items-center mb-6 shrink-0">
+            <div>
+                <h1
+                    class="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-rose-400 to-orange-400">
+                    Platform Moderation Hub</h1>
+                <p class="text-slate-600 dark:text-slate-400 mt-1 text-sm font-bold tracking-wide">Review queued applications, listings, and
+                    tickets.</p>
+            </div>
+            <button onclick="loadQueues()"
+                class="px-5 py-2 bg-rose-100 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-black border border-rose-500/30 rounded focus:ring-2 ring-rose-500/50 hover:bg-rose-200 dark:hover:bg-rose-900/40 transition shadow-[0_0_15px_rgba(225,29,72,0.15)] uppercase text-sm tracking-wider">Poll
+                Queues</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 min-h-0">
+            <!-- KYC Queue -->
+            <div class="bg-white shadow dark:bg-[#151822] dark:shadow-none rounded-xl border border-slate-300 dark:border-slate-800 flex flex-col shadow-2xl">
+                <div
+                    class="p-4 border-b border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-[#11141c] shrink-0 sticky top-0 shadow-sm z-10 rounded-t-xl">
+                    <h3 class="text-md font-bold text-slate-800 dark:text-slate-200 tracking-wide flex items-center gap-2">🪪 Pending KYC
+                        Applications</h3>
+                </div>
+                <div class="p-4 overflow-y-auto flex-1 space-y-3" id="kyc-q">
+                    <div class="animate-pulse h-20 bg-slate-100 shadow-sm dark:bg-[#1c202e] dark:shadow-none rounded-lg border border-slate-300 dark:border-slate-800"></div>
+                </div>
+            </div>
+            <!-- Listings Queue -->
+            <div class="bg-white shadow dark:bg-[#151822] dark:shadow-none rounded-xl border border-slate-300 dark:border-slate-800 flex flex-col shadow-2xl">
+                <div
+                    class="p-4 border-b border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-[#11141c] shrink-0 sticky top-0 shadow-sm z-10 rounded-t-xl">
+                    <h3 class="text-md font-bold text-slate-800 dark:text-slate-200 tracking-wide flex items-center gap-2">🏷️ Pending
+                        Listings</h3>
+                </div>
+                <div class="p-4 overflow-y-auto flex-1 space-y-3" id="lists-q">
+                    <div class="animate-pulse h-20 bg-slate-100 shadow-sm dark:bg-[#1c202e] dark:shadow-none rounded-lg border border-slate-300 dark:border-slate-800"></div>
+                </div>
+            </div>
+            <!-- Disputes -->
+            <div
+                class="bg-red-50 dark:bg-[#181116] rounded-xl border border-rose-200 dark:border-rose-900/50 flex flex-col shadow-[0_0_20px_rgba(225,29,72,0.08)]">
+                <div
+                    class="p-4 border-b border-rose-200 dark:border-rose-900/50 bg-red-100 dark:bg-[#160d12] shrink-0 sticky top-0 shadow-sm z-10 rounded-t-xl">
+                    <h3 class="text-md font-bold text-rose-600 dark:text-rose-400 tracking-wide flex items-center gap-2">⚠️ Disputed
+                        Bookings</h3>
+                </div>
+                <div class="p-4 overflow-y-auto flex-1 space-y-3" id="disp-q">
+                    <div class="animate-pulse h-20 bg-red-50 dark:bg-[#21151a] rounded-lg border border-rose-900/30"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    async function loadQueues() {
+        try {
+            const [kRes, lRes, dRes] = await Promise.all([
+                fetch('/api/users/kyc/pending/', { credentials: 'include' }).catch(() => null),
+                fetch('/api/listings/pending/', { credentials: 'include' }).catch(() => null),
+                fetch('/api/bookings/disputed/', { credentials: 'include' }).catch(() => null)
+            ]);
+
+            const kData = kRes ? await kRes.json() : [];
+            const lData = lRes ? await lRes.json() : [];
+            const dData = dRes ? await dRes.json() : [];
+
+            const drawCard = (title, sub, meta, url, bg = 'bg-slate-100 shadow-sm dark:bg-[#1c202e] dark:shadow-none', border = 'border-slate-300 dark:border-slate-700/50', hoverBorder = 'hover:border-slate-500', txt = 'text-slate-800 dark:text-slate-200') => `
+      <div class="p-4 rounded-xl border ${border} overflow-hidden ${bg} ${hoverBorder} transition-all cursor-pointer shadow-lg" onclick="window.open('${url}','_blank')">
+        <div class="font-black text-sm ${txt} truncate tracking-wide">${title}</div>
+        <div class="flex justify-between items-center mt-3">
+          <span class="text-xs font-mono text-slate-600 dark:text-slate-400 font-bold tracking-tight">${sub}</span>
+          <span class="text-[0.65rem] font-bold text-slate-900 dark:text-white bg-blue-600/80 hover:bg-blue-500 px-3 py-1.5 rounded uppercase tracking-wider transition">${meta}</span>
+        </div>
+      </div>`;
+
+            const kArr = kData.results || kData || [];
+            document.getElementById('kyc-q').innerHTML = kArr.length ? kArr.map(k =>
+                drawCard(`@${k.username}`, k.email, 'Review Info', `/admin/users/user/${k.id}/change/`)
+            ).join('') : '<div class="p-6 border border-dashed border-slate-300 dark:border-slate-800 rounded-xl text-emerald-500/70 font-bold text-sm text-center mt-4">Queue Empty</div>';
+
+            const lArr = lData.results || lData || [];
+            document.getElementById('lists-q').innerHTML = lArr.length ? lArr.map(l =>
+                drawCard(`${l.title}`, `@${l.host}`, 'View Draft', `/admin/listings/listing/${l.id}/change/`)
+            ).join('') : '<div class="p-6 border border-dashed border-slate-300 dark:border-slate-800 rounded-xl text-emerald-500/70 font-bold text-sm text-center mt-4">Queue Empty</div>';
+
+            const dArr = dData.results || dData || [];
+            document.getElementById('disp-q').innerHTML = dArr.length ? dArr.map(d =>
+                drawCard(`TXN ID: #${d.id}`, d.listing_title, 'Resolve', `/admin/bookings/booking/${d.id}/change/`, 'bg-red-50 dark:bg-[#21151a]', 'border-rose-900/40', 'hover:border-rose-500/80', 'text-rose-100')
+            ).join('') : '<div class="p-6 border border-dashed border-rose-950/50 rounded-xl text-emerald-500/70 font-bold text-sm text-center mt-4">Zero active conflicts</div>';
+        } catch (e) { console.error('Queue poll failure', e); }
+    }
+    document.addEventListener('DOMContentLoaded', loadQueues);
+</script>
+{% endblock %}

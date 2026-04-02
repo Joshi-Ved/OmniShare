@@ -15,6 +15,8 @@ from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.shortcuts import render
+from django.contrib.admin.views.decorators import staff_member_required
 
 from users.models import User
 from listings.models import Listing
@@ -634,3 +636,32 @@ def user_analytics(request):
         'average_trust_score': float(avg_trust_score),
         'active_users': active_users,
     })
+
+
+@staff_member_required
+def admin_crm_dashboard(request):
+    """Renders the graphical CRM admin UI instead of raw JSON."""
+    return render(request, "admin/crm_dashboard.html")
+
+
+@staff_member_required
+def admin_scm_dashboard(request):
+    """Renders the graphical ERP-SCM admin UI instead of raw JSON."""
+    return render(request, "admin/scm_dashboard.html")
+
+
+@staff_member_required
+def admin_customers_gui(request):
+    return render(request, "admin/customers_gui.html")
+
+@staff_member_required
+def admin_sales_gui(request):
+    return render(request, "admin/sales_gui.html")
+
+@staff_member_required
+def admin_decision_gui(request):
+    return render(request, "admin/decision_gui.html")
+
+@staff_member_required
+def admin_moderation_gui(request):
+    return render(request, "admin/moderation_gui.html")

@@ -1,0 +1,156 @@
+{% extends "admin/base_site.html" %}
+{% block title %}ERP Supply Chain Dashboard{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    #content {
+        padding: 0 !important;
+    }
+</style>
+<script>
+  tailwind.config = { darkMode: ['class', '[data-theme="dark"]'] }
+</script>
+{% endblock %}
+{% block content %}
+<div class="bg-slate-50 dark:bg-[#0f111a] min-h-screen p-8 text-slate-900 dark:text-white font-sans" id="scm-app">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1
+                    class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+                    SCM & Logistics Intelligence</h1>
+                <p class="text-slate-600 dark:text-slate-400 mt-1">Supplier metrics, risk analysis, and procurement signals</p>
+            </div>
+            <button onclick="loadSCM()"
+                class="px-5 py-2 bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none hover:bg-slate-200 dark:hover:bg-[#23273b] text-blue-600 dark:text-blue-400 font-semibold rounded-lg border border-blue-500/30 transition-all shadow-[0_0_15px_rgba(59,130,246,0.15)]">Sync
+                Signals</button>
+        </div>
+
+        <!-- Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="scm-kpis">
+            <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
+            <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
+            <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Procurement Signals -->
+            <div class="bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl border border-slate-300 dark:border-slate-800 overflow-hidden shadow-2xl">
+                <div class="p-5 border-b border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-[#161825]">
+                    <h3 class="text-lg font-semibold flex items-center gap-2"><span class="text-purple-600 dark:text-purple-400">🔔</span>
+                        Procurement Action Signals</h3>
+                </div>
+                <div class="p-0 overflow-x-auto max-h-[400px] overflow-y-auto">
+                    <table class="w-full text-left text-sm" id="signals-table">
+                        <tbody class="text-slate-700 dark:text-slate-300">
+                            <tr>
+                                <td class="p-6 text-center text-slate-500">Loading signals...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Supplier Performance -->
+            <div class="bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl border border-slate-300 dark:border-slate-800 overflow-hidden shadow-2xl">
+                <div class="p-5 border-b border-slate-300 dark:border-slate-800 bg-slate-100 dark:bg-[#161825]">
+                    <h3 class="text-lg font-semibold flex items-center gap-2"><span class="text-blue-600 dark:text-blue-400">🏭</span>
+                        Supplier Risk Matrix</h3>
+                </div>
+                <div class="p-0 overflow-x-auto max-h-[400px] overflow-y-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-200 dark:bg-[#11131d] text-slate-600 dark:text-slate-400 text-xs uppercase font-bold tracking-wider">
+                            <tr>
+                                <th class="p-4">Supplier</th>
+                                <th class="p-4">Fill Rate</th>
+                                <th class="p-4">Disputes</th>
+                                <th class="p-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700 dark:text-slate-300" id="supplier-table">
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-500">Computing supplier matrix...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadSCM() {
+        try {
+            const res = await fetch('/api/crm/scm-dashboard/', { credentials: 'include' });
+            const data = await res.json();
+
+            // Details
+            document.getElementById('scm-kpis').innerHTML = `
+      <div class="bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none p-6 rounded-xl border border-slate-300 dark:border-slate-800 flex flex-col justify-center">
+        <p class="text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">Total Inventory Nodes</p>
+        <p class="text-3xl font-black">${data.scm_summary?.total_inventory_nodes || 0}</p>
+      </div>
+      <div class="bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none p-6 rounded-xl border border-blue-900/40 relative overflow-hidden">
+        <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-500/20 rounded-full blur-xl"></div>
+        <p class="text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider text-xs mb-2">Logistics: Pending Handovers</p>
+        <p class="text-3xl font-black">${data.logistics_kpis?.handover_pending || 0}</p>
+      </div>
+      <div class="bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none p-6 rounded-xl ${data.logistics_kpis?.disputed_orders > 0 ? 'border-red-900/40' : 'border-slate-300 dark:border-slate-800'} relative overflow-hidden">
+        ${data.logistics_kpis?.disputed_orders > 0 ? '<div class="absolute -right-4 -top-4 w-20 h-20 bg-red-500/20 rounded-full blur-xl"></div>' : ''}
+        <p class="${data.logistics_kpis?.disputed_orders > 0 ? 'text-red-400' : 'text-slate-600 dark:text-slate-400'} font-bold uppercase tracking-wider text-xs mb-2">Disputed Orders</p>
+        <p class="text-3xl font-black">${data.logistics_kpis?.disputed_orders || 0}</p>
+      </div>
+    `;
+
+            // Procurement
+            if (data.procurement_signals && data.procurement_signals.length > 0) {
+                document.getElementById('signals-table').innerHTML = data.procurement_signals.map(s => `
+        <tr class="border-b border-slate-300 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#1f2336] transition-colors">
+          <td class="p-4">
+             <div class="font-bold text-slate-800 dark:text-slate-200">${s.title}</div>
+             <div class="text-xs text-slate-500">${s.host} • ${s.category}</div>
+          </td>
+          <td class="p-4 text-right">
+             <span class="px-3 py-1 rounded-full text-xs font-bold ${s.signal === 'restock_priority' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                ${s.signal.replace('_', ' ').toUpperCase()}
+             </span>
+             <div class="text-xs text-slate-500 mt-2">${s.reason}</div>
+          </td>
+        </tr>
+      `).join('');
+            } else {
+                document.getElementById('signals-table').innerHTML = `<tr><td class="p-6 text-center text-slate-500">No priority signals detected.</td></tr>`;
+            }
+
+            // Suppliers
+            if (data.supplier_performance && data.supplier_performance.length > 0) {
+                document.getElementById('supplier-table').innerHTML = data.supplier_performance.map(s => `
+        <tr class="border-b border-slate-300 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-[#1f2336] transition-colors">
+          <td class="p-4 font-bold text-slate-800 dark:text-slate-200">${s.username}</td>
+          <td class="p-4">
+             <div class="flex items-center gap-2">
+               <div class="w-16 h-2 bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-blue-500" style="width: ${s.fill_rate_percent}%"></div></div>
+               <span class="text-xs">${s.fill_rate_percent}%</span>
+             </div>
+          </td>
+          <td class="p-4">${s.dispute_count > 0 ? `<span class="text-red-400 font-bold">${s.dispute_count}</span>` : '<span class="text-slate-500">0</span>'}</td>
+          <td class="p-4">
+             <span class="px-2 py-1 rounded md text-xs font-bold ${s.risk_band === 'high' ? 'bg-red-500/10 text-red-400' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'}">
+               ${s.risk_band.toUpperCase()}
+             </span>
+          </td>
+        </tr>
+      `).join('');
+            } else {
+                document.getElementById('supplier-table').innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-500">No supplier data found.</td></tr>`;
+            }
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', loadSCM);
+</script>
+{% endblock %}

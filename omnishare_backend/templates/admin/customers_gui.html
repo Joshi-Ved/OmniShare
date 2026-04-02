@@ -1,0 +1,80 @@
+{% extends "admin/base_site.html" %}
+{% block title %}Graphical Customers UI{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    #content {
+        padding: 0 !important
+    }
+</style>
+<script>
+  tailwind.config = { darkMode: ['class', '[data-theme="dark"]'] }
+</script>
+{% endblock %}
+{% block content %}
+<div class="bg-slate-50 dark:bg-slate-900 min-h-screen p-8 text-slate-900 dark:text-white">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <div class="flex justify-between">
+            <h1 class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">Customer Intelligence Hub</h1>
+            <button onclick="loadUsers()"
+                class="px-5 py-2 bg-white shadow dark:bg-slate-800 dark:shadow-none text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded shadow-[0_0_10px_rgba(16,185,129,0.15)] hover:bg-slate-200 dark:hover:bg-slate-700 transition">Refresh
+                User Cache</button>
+        </div>
+        <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none rounded-xl border border-slate-300 dark:border-slate-700 overflow-hidden shadow-2xl">
+            <div class="overflow-x-auto max-h-[70vh]">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-400 text-xs uppercase font-bold sticky top-0 shadow">
+                        <tr>
+                            <th class="p-4">User Identity</th>
+                            <th class="p-4">Active Role</th>
+                            <th class="p-4">Trust Score</th>
+                            <th class="p-4">KYC State</th>
+                            <th class="p-4 bg-emerald-900/10">Guest Outflow</th>
+                            <th class="p-4 bg-cyan-900/10">Host Generated</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-tbody" class="text-slate-700 dark:text-slate-300">
+                        <tr>
+                            <td colspan="6"
+                                class="p-6 text-center text-slate-500 font-mono tracking-widest animate-pulse">
+                                Requesting Client Payload...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    async function loadUsers() {
+        const res = await fetch('/api/crm/customers/', { credentials: 'include' });
+        const data = await res.json();
+        const arr = data.results || data || [];
+
+        if (arr.length === 0) {
+            document.getElementById('user-tbody').innerHTML = `<tr><td colspan="6" class="p-6 text-center">No platform users found.</td></tr>`;
+            return;
+        }
+
+        document.getElementById('user-tbody').innerHTML = arr.map(u => `
+    <tr class="border-b border-slate-300 dark:border-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700/30 transition-colors">
+      <td class="p-4 cursor-pointer hover:underline text-slate-900 dark:text-white"><div class="flex flex-col">
+        <span class="font-bold tracking-tight">@${u.username} ${u.gold_host_flag ? '👑' : ''}</span>
+        <span class="font-normal text-xs text-slate-500" style="font-family: monospace">${u.email}</span>
+      </div></td>
+      <td class="p-4"><span class="px-2 py-1 bg-slate-700 rounded-full text-xs font-bold text-slate-700 dark:text-slate-300 uppercase">${u.role}</span></td>
+      <td class="p-4">
+        <div class="flex items-center gap-2">
+          <span class="${u.trust_score >= 4 ? 'text-emerald-600 dark:text-emerald-400' : (u.trust_score < 3 ? 'text-red-400' : 'text-amber-600 dark:text-amber-400')} font-black text-md">${u.trust_score}</span>
+        </div>
+      </td>
+      <td class="p-4"><span class="px-2 py-1 rounded-sm text-xs border ${u.kyc_status === 'verified' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30' : (u.kyc_status === 'pending' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30')} uppercase tracking-wide font-bold">${u.kyc_status.replace('_', ' ')}</span></td>
+      <td class="p-4 text-emerald-300 font-bold" style="font-family: 'Space Grotesk', sans-serif">₹${u.guest_spend}</td>
+      <td class="p-4 text-cyan-300 font-bold" style="font-family: 'Space Grotesk', sans-serif">₹${u.host_revenue}</td>
+    </tr>
+  `).join('');
+    }
+    document.addEventListener('DOMContentLoaded', loadUsers);
+</script>
+{% endblock %}

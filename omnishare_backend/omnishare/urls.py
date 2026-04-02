@@ -35,10 +35,18 @@ def admin_erp_redirect(_request):
 def healthcheck(_request):
     return JsonResponse({'status': 'ok'})
 
+from crm import views as crm_views
+
 urlpatterns = [
     path('', root_redirect),
     path('healthz/', healthcheck, name='healthcheck'),
     path('admin/erp/', admin_erp_redirect, name='admin-erp'),
+    path('admin/crm-dashboard/', crm_views.admin_crm_dashboard, name='admin_crm_dashboard'),
+    path('admin/scm-dashboard/', crm_views.admin_scm_dashboard, name='admin_scm_dashboard'),
+    path('admin/customers-gui/', crm_views.admin_customers_gui, name='admin_customers_gui'),
+    path('admin/sales-gui/', crm_views.admin_sales_gui, name='admin_sales_gui'),
+    path('admin/decision-gui/', crm_views.admin_decision_gui, name='admin_decision_gui'),
+    path('admin/moderation-gui/', crm_views.admin_moderation_gui, name='admin_moderation_gui'),
     path('admin/', admin.site.urls),
     path('api/', api_root, name='api-root'),
     path('api/users/', include('users.urls')),
