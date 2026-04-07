@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from .models import Notification
 
 User = get_user_model()
 
@@ -36,19 +37,20 @@ class UserSerializer(serializers.ModelSerializer):
     """Serializer for user profile"""
     can_create_listing = serializers.SerializerMethodField()
     can_book = serializers.SerializerMethodField()
+    unread_notifications_count = serializers.SerializerMethodField()
     
     class Meta:
         model = User
         fields = [
             'id', 'username', 'email', 'phone_number', 'profile_image',
             'role', 'kyc_status', 'trust_score', 'total_bookings',
-            'successful_bookings', 'gold_host_flag', 'gold_host_since',
+            'successful_bookings', 'gold_host_flag', 'gold_host_since', 'loyalty_coins',
             'is_staff', 'is_superuser',
-            'created_at', 'can_create_listing', 'can_book'
+            'created_at', 'can_create_listing', 'can_book', 'unread_notifications_count'
         ]
         read_only_fields = [
             'id', 'trust_score', 'total_bookings', 'successful_bookings',
-            'gold_host_flag', 'gold_host_since', 'is_staff', 'is_superuser', 'created_at'
+            'gold_host_flag', 'gold_host_since', 'loyalty_coins', 'is_staff', 'is_superuser', 'created_at'
         ]
     
     def get_can_create_listing(self, obj):
@@ -56,6 +58,11 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_can_book(self, obj):
         return obj.can_book()
+
+    def get_unread_notifications_count(self, obj):
+        if obj.pk:
+            return obj.notifications.filter(is_read=False).count()
+        return 0
 
 
 class KYCSubmissionSerializer(serializers.ModelSerializer):
@@ -107,3 +114,21 @@ class TrustScoreSerializer(serializers.ModelSerializer):
         if obj.total_bookings == 0:
             return 0
         return round((obj.successful_bookings / obj.total_bookings) * 100, 2)
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """Serializer for user notifications"""
+    sender_name = serializers.CharField(source='sender.username', read_only=True)
+    can_claim = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Notification
+        fields = [
+            'id', 'recipient', 'sender', 'sender_name', 'notification_type',
+            'title', 'message', 'coin_amount', 'is_read', 'read_at',
+            'is_claimed', 'claimed_at', 'email_sent_at', 'can_claim', 'created_at'
+        ]
+        read_only_fields = ['id', 'recipient', 'sender', 'is_read', 'read_at', 'created_at']
+
+    def get_can_claim(self, obj):
+        return bool(obj.coin_amount > 0 and obj.is_read and not obj.is_claimed)

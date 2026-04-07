@@ -51,8 +51,9 @@ class ListingSerializer(serializers.ModelSerializer):
         model = Listing
         fields = [
             'id', 'host', 'title', 'description', 'category', 'category_name',
-            'daily_price', 'deposit', 'insurance_plan', 'location', 'rating', 'total_reviews',
-            'promoted_flag', 'primary_image', 'is_bookable', 'created_at'
+            'daily_price', 'deposit', 'insurance_plan', 'location', 'verification_status',
+            'is_available', 'rating', 'total_reviews', 'promoted_flag', 'primary_image',
+            'is_bookable', 'created_at'
         ]
         read_only_fields = ['id', 'host', 'rating', 'total_reviews', 'created_at']
     

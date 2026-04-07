@@ -17,6 +17,8 @@ import GuestDashboard from './pages/GuestDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ERPDashboard from './pages/ERPDashboard';
 import ListingDetails from './pages/ListingDetails';
+import AllListingsPage from './pages/AllListingsPage';
+import NotificationsPage from './pages/NotificationsPage';
 import BookingPage from './pages/BookingPage';
 import PaymentPage from './pages/PaymentPage';
 import CreateListing from './pages/CreateListing';
@@ -57,6 +59,8 @@ const AnimatedRoutes = () => {
         <Route path="/register" element={<Navigate to="/clerk/sign-up" replace />} />
         <Route path="/clerk/sign-in" element={<PageWrapper><ClerkAuthPage mode="signin" /></PageWrapper>} />
         <Route path="/clerk/sign-up" element={<PageWrapper><ClerkAuthPage mode="signup" /></PageWrapper>} />
+        <Route path="/listings/all" element={<PageWrapper><AllListingsPage /></PageWrapper>} />
+        <Route path="/notifications" element={<PrivateRoute><PageWrapper><NotificationsPage /></PageWrapper></PrivateRoute>} />
         <Route path="/listings/:id" element={<PageWrapper><ListingDetails /></PageWrapper>} />
         <Route path="/crm" element={<PageWrapper><CRMPage /></PageWrapper>} />
         <Route path="/scm" element={<PageWrapper><SCMPage /></PageWrapper>} />

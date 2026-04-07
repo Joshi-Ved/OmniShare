@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from .serializers import (
@@ -13,8 +14,10 @@ from .serializers import (
     KYCSubmissionSerializer,
     KYCVerificationSerializer,
     UserProfileUpdateSerializer,
-    TrustScoreSerializer
+    TrustScoreSerializer,
+    NotificationSerializer,
 )
+from .models import Notification
 from .permissions import IsOwnerOrAdmin, IsAdmin
 
 User = get_user_model()
@@ -170,6 +173,80 @@ class GoldHostListView(generics.ListAPIView):
     
     def get_queryset(self):
         return User.objects.filter(gold_host_flag=True).order_by('-trust_score')
+
+
+class NotificationListView(generics.ListAPIView):
+    """List current user's notifications"""
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Notification.objects.filter(recipient=self.request.user).select_related('sender')
+
+
+class NotificationMarkReadView(generics.GenericAPIView):
+    """Mark a notification as read"""
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, notification_id):
+        notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+        notification.mark_read()
+        return Response({
+            'message': 'Notification marked as read',
+            'notification': NotificationSerializer(notification, context={'request': request}).data,
+        }, status=status.HTTP_200_OK)
+
+
+class NotificationOpenView(generics.GenericAPIView):
+    """Mark a notification as opened/read by user"""
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, notification_id):
+        notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+        notification.mark_read()
+        return Response({
+            'message': 'Notification opened',
+            'notification': NotificationSerializer(notification, context={'request': request}).data,
+        }, status=status.HTTP_200_OK)
+
+
+class NotificationClaimCoinsView(generics.GenericAPIView):
+    """Claim loyalty coins for an opened notification"""
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, notification_id):
+        notification = get_object_or_404(Notification, id=notification_id, recipient=request.user)
+
+        if not notification.is_read:
+            return Response({
+                'error': 'Open the loyalty message before claiming coins.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if notification.is_claimed:
+            return Response({
+                'error': 'Coins already claimed for this message.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if notification.coin_amount <= 0:
+            return Response({
+                'error': 'No coins available to claim for this message.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        claimed = notification.claim_coins()
+        if not claimed:
+            return Response({
+                'error': 'Unable to claim coins right now.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        request.user.refresh_from_db(fields=['loyalty_coins'])
+        return Response({
+            'message': f'{notification.coin_amount} coins claimed successfully.',
+            'coins_balance': request.user.loyalty_coins,
+            'notification': NotificationSerializer(notification, context={'request': request}).data,
+        }, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

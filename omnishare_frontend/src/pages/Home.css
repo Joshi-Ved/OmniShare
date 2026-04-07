@@ -260,6 +260,14 @@
   margin-top: 28px;
 }
 
+.listings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .listings-grid {
   margin-top: 8px;
 }
@@ -334,6 +342,29 @@
 .listing-content h3 {
   color: var(--text-primary);
   margin-bottom: 8px;
+}
+
+.listings-overflow-cta {
+  margin-top: 18px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background:
+    radial-gradient(circle at right top, color-mix(in srgb, var(--primary) 12%, transparent), transparent 38%),
+    var(--surface-strong);
+}
+
+.listings-overflow-cta h3 {
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.listings-overflow-cta p {
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 62ch;
 }
 
 .listing-meta {

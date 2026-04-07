@@ -1,0 +1,249 @@
+.notifications-page {
+  min-height: calc(100vh - 76px);
+  padding: 28px 0 52px;
+  position: relative;
+}
+
+.confetti-stage {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1400;
+}
+
+.confetti-burst {
+  position: absolute;
+  inset: 0;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: var(--confetti-size);
+  height: calc(var(--confetti-size) * 0.65);
+  border-radius: 2px;
+  opacity: 0;
+  background: hsl(var(--confetti-hue), 92%, 58%);
+  animation: confettiFall var(--confetti-duration) cubic-bezier(0.14, 0.62, 0.22, 0.98) var(--confetti-delay) forwards;
+}
+
+.notifications-shell {
+  display: grid;
+  gap: 18px;
+}
+
+.notifications-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(250px, 0.8fr);
+  gap: 18px;
+  align-items: end;
+  padding: 28px;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--primary) 18%, transparent), transparent 35%),
+    linear-gradient(135deg, color-mix(in srgb, var(--surface) 92%, var(--bg-color)) 0%, var(--surface) 100%);
+}
+
+.notifications-kicker {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notifications-hero h1 {
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.notifications-hero p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.notifications-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.notifications-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.notifications-list-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.notification-card {
+  padding: 20px;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.notification-card.unread {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--line-color));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.notification-card.opened-animate {
+  animation: mailOpenedPop 0.9s ease;
+}
+
+.notification-card.claimed-animate {
+  animation: coinClaimBurst 1.2s ease;
+}
+
+@keyframes mailOpenedPop {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--elev-shadow-sm);
+  }
+  35% {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 14px 30px color-mix(in srgb, var(--primary) 24%, transparent);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--elev-shadow-sm);
+  }
+}
+
+@keyframes coinClaimBurst {
+  0% {
+    transform: scale(1);
+    border-color: var(--line-color);
+    box-shadow: var(--elev-shadow-sm);
+  }
+  40% {
+    transform: scale(1.018);
+    border-color: color-mix(in srgb, var(--success) 54%, var(--line-color));
+    box-shadow: 0 16px 34px color-mix(in srgb, var(--success) 32%, transparent);
+  }
+  100% {
+    transform: scale(1);
+    border-color: var(--line-color);
+    box-shadow: var(--elev-shadow-sm);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translate3d(0, -12px, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--confetti-drift), 108vh, 0) rotate(var(--confetti-rotate));
+    opacity: 0;
+  }
+}
+
+.notification-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.notification-type {
+  display: inline-flex;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary-dark);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notification-card h3 {
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.notification-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.coin-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: color-mix(in srgb, var(--warning) 18%, transparent);
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.notification-card p {
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.notification-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+.read-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success) 16%, transparent);
+  color: var(--success-dark, var(--success));
+  padding: 8px 12px;
+  font-weight: 700;
+}
+
+.empty-state-card {
+  padding: 26px;
+  text-align: center;
+}
+
+.empty-state-card h2 {
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.empty-state-card p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .notifications-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .notification-card-head {
+    flex-direction: column;
+  }
+
+  .notification-meta {
+    align-items: flex-start;
+  }
+}

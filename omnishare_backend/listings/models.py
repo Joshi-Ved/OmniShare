@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils.text import slugify
 
 User = get_user_model()
@@ -100,7 +100,7 @@ class Listing(models.Model):
         max_digits=3,
         decimal_places=2,
         default=0.00,
-        validators=[MinValueValidator(0), MinValueValidator(5)]
+        validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
     total_reviews = models.IntegerField(default=0)
     total_bookings = models.IntegerField(default=0)
@@ -167,22 +167,22 @@ class Review(models.Model):
     booking = models.OneToOneField('bookings.Booking', on_delete=models.CASCADE, related_name='review')
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews_given')
     
-    rating = models.IntegerField(validators=[MinValueValidator(1), MinValueValidator(5)])
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
     
     # Review aspects
     cleanliness_rating = models.IntegerField(
-        validators=[MinValueValidator(1), MinValueValidator(5)],
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
         blank=True,
         null=True
     )
     accuracy_rating = models.IntegerField(
-        validators=[MinValueValidator(1), MinValueValidator(5)],
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
         blank=True,
         null=True
     )
     value_rating = models.IntegerField(
-        validators=[MinValueValidator(1), MinValueValidator(5)],
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
         blank=True,
         null=True
     )

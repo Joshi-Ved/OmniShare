@@ -184,6 +184,10 @@ const ProfilePage = () => {
 
           <div className="profile-stats-grid">
             <div className="profile-stat-card">
+              <span>{profile.loyalty_coins || 0}</span>
+              <p>Loyalty Coins</p>
+            </div>
+            <div className="profile-stat-card">
               <span>{rentals.length}</span>
               <p>Items Rented</p>
             </div>

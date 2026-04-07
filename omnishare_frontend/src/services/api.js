@@ -45,6 +45,13 @@ export const authAPI = {
   }),
 };
 
+export const notificationsAPI = {
+  getAll: () => api.get('/users/notifications/'),
+  markRead: (notificationId) => api.post(`/users/notifications/${notificationId}/read/`),
+  open: (notificationId) => api.post(`/users/notifications/${notificationId}/open/`),
+  claimCoins: (notificationId) => api.post(`/users/notifications/${notificationId}/claim/`),
+};
+
 // Listings API
 export const listingsAPI = {
   getAll: (params) => api.get('/listings/', { params }),

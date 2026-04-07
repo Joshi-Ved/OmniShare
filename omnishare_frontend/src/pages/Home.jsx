@@ -180,6 +180,8 @@ const Home = () => {
   const [leadSubmitting, setLeadSubmitting] = useState(false);
   const initializedRef = useRef(false);
   const promotedCount = listings.filter((item) => item.promoted_flag).length;
+  const featuredListings = listings.slice(0, 6);
+  const hasMoreListings = listings.length > featuredListings.length;
 
   useEffect(() => {
     document.title = 'OmniShare Rentals | Trusted P2P Rentals Near You';
@@ -692,9 +694,12 @@ const Home = () => {
             <>
               <div className="listings-header">
                 <h2>{listings.length} rentals available</h2>
+                <Link to="/listings/all" className="btn btn-secondary">
+                  View All Listings
+                </Link>
               </div>
               <div className="listings-grid grid grid-3">
-                {listings.map((listing) => (
+                {featuredListings.map((listing) => (
                   <Link to={`/listings/${listing.id}`} key={listing.id} className="listing-card">
                     <div className="listing-image-wrapper">
                       {listing.primary_image ? (
@@ -759,6 +764,19 @@ const Home = () => {
                   </Link>
                 ))}
               </div>
+              {hasMoreListings && (
+                <div className="listings-overflow-cta card">
+                  <div>
+                    <h3>There are more rentals to explore</h3>
+                    <p>
+                      Browse the full catalog to see every verified listing, sorted and filterable in one place.
+                    </p>
+                  </div>
+                  <Link to="/listings/all" className="btn btn-primary">
+                    Open All Listings
+                  </Link>
+                </div>
+              )}
             </>
           ) : (
             <div className="no-listings">

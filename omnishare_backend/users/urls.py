@@ -20,6 +20,12 @@ urlpatterns = [
     path('trust-score/', views.TrustScoreView.as_view(), name='trust-score'),
     path('trust-score/<int:user_id>/', views.TrustScoreView.as_view(), name='trust-score-detail'),
     path('trust-scores/update-all/', views.force_update_trust_scores, name='update-trust-scores'),
+
+    # Notifications
+    path('notifications/', views.NotificationListView.as_view(), name='notification-list'),
+    path('notifications/<int:notification_id>/read/', views.NotificationMarkReadView.as_view(), name='notification-mark-read'),
+    path('notifications/<int:notification_id>/open/', views.NotificationOpenView.as_view(), name='notification-open'),
+    path('notifications/<int:notification_id>/claim/', views.NotificationClaimCoinsView.as_view(), name='notification-claim-coins'),
     
     # Gold Hosts
     path('gold-hosts/', views.GoldHostListView.as_view(), name='gold-hosts'),
