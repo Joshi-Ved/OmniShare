@@ -9,6 +9,45 @@
     #content {
         padding: 0 !important;
     }
+
+    #crm-app {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%) !important;
+        color: #0f172a !important;
+    }
+
+    #crm-app h1 {
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+        background: none !important;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    #crm-app h3 {
+        color: #1e293b !important;
+        font-weight: 700;
+    }
+
+    #crm-app .grid>div {
+        background: #fff !important;
+        border: 1px solid rgba(148, 163, 184, 0.32) !important;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    #crm-app button {
+        border-radius: 10px;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: 700;
+    }
+
+    #crm-app table,
+    #crm-app thead,
+    #crm-app tbody tr,
+    #crm-app td,
+    #crm-app th {
+        color: #0f172a !important;
+    }
 </style>
 <script>
   tailwind.config = { darkMode: ['class', '[data-theme="dark"]'] }
@@ -22,7 +61,7 @@
                 <h1
                     class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400">
                     OmniShare CRM Analytics</h1>
-                <p class="text-slate-600 dark:text-slate-400 mt-1">Real-time revenue & engagement metrics</p>
+                <p class="text-slate-600 dark:text-slate-400 mt-1">Real-time revenue mix: commission + insurance + ads + subscriptions</p>
             </div>
             <button onclick="loadData()"
                 class="px-5 py-2 bg-white shadow dark:bg-slate-800 dark:shadow-none hover:bg-slate-200 dark:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 font-semibold rounded-lg border border-emerald-500/30 transition-all shadow-[0_0_15px_rgba(16,185,129,0.15)]">Refresh
@@ -30,7 +69,9 @@
         </div>
 
         <!-- KPIs -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6" id="kpi-grid">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="kpi-grid">
+            <div class="animate-pulse bg-white shadow dark:bg-slate-800 dark:shadow-none rounded-xl h-28 border border-slate-300 dark:border-slate-700"></div>
+            <div class="animate-pulse bg-white shadow dark:bg-slate-800 dark:shadow-none rounded-xl h-28 border border-slate-300 dark:border-slate-700"></div>
             <div class="animate-pulse bg-white shadow dark:bg-slate-800 dark:shadow-none rounded-xl h-28 border border-slate-300 dark:border-slate-700"></div>
             <div class="animate-pulse bg-white shadow dark:bg-slate-800 dark:shadow-none rounded-xl h-28 border border-slate-300 dark:border-slate-700"></div>
             <div class="animate-pulse bg-white shadow dark:bg-slate-800 dark:shadow-none rounded-xl h-28 border border-slate-300 dark:border-slate-700"></div>
@@ -49,17 +90,75 @@
             </div>
         </div>
 
+        <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none p-6 rounded-xl border border-slate-300 dark:border-slate-700 shadow-xl">
+            <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">Advertising Inventory (Monetizable Slots)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50">
+                    <p class="text-xs uppercase text-slate-500">Premium Top Banner</p>
+                    <p class="text-lg font-black text-slate-800">Slot A</p>
+                    <p class="text-sm text-slate-600">Best for high-intent campaigns</p>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50">
+                    <p class="text-xs uppercase text-slate-500">Category Spotlight</p>
+                    <p class="text-lg font-black text-slate-800">Slot B</p>
+                    <p class="text-sm text-slate-600">Promotes inventory by category</p>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50">
+                    <p class="text-xs uppercase text-slate-500">Host Featured Carousel</p>
+                    <p class="text-lg font-black text-slate-800">Slot C</p>
+                    <p class="text-sm text-slate-600">Paid placement for conversion lift</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none p-6 rounded-xl border border-slate-300 dark:border-slate-700 shadow-xl">
+            <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200 mb-4">CRM Strategy Playbook (Selection -> Acquisition -> Retention -> Upgradation)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="strategy-grid">
+                <div class="p-5 rounded-xl border border-slate-300 bg-slate-50 animate-pulse h-40"></div>
+                <div class="p-5 rounded-xl border border-slate-300 bg-slate-50 animate-pulse h-40"></div>
+                <div class="p-5 rounded-xl border border-slate-300 bg-slate-50 animate-pulse h-40"></div>
+                <div class="p-5 rounded-xl border border-slate-300 bg-slate-50 animate-pulse h-40"></div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
     let revChartInstance = null;
     let catChartInstance = null;
+        const stages = ['selection', 'acquisition', 'retention', 'upgradation'];
+
+        function renderStrategies(strategies = {}) {
+                const strategyGrid = document.getElementById('strategy-grid');
+                if (!strategyGrid) return;
+
+                strategyGrid.innerHTML = stages.map((stageKey) => {
+                        const item = strategies[stageKey] || {};
+                        const title = item.title || stageKey;
+                        const description = item.description || '';
+                        const actions = Array.isArray(item.actions) ? item.actions : [];
+
+                        return `
+                            <div class="p-5 rounded-xl border border-slate-300 bg-slate-50">
+                                <p class="text-xs uppercase text-slate-500 font-bold mb-2">${stageKey}</p>
+                                <h4 class="text-lg font-black text-slate-900 mb-2">${title}</h4>
+                                <p class="text-sm text-slate-600 mb-3">${description}</p>
+                                <ul style="margin:0; padding-left: 1.1rem; color:#334155; line-height:1.6; font-size:0.9rem;">
+                                    ${actions.map((a) => `<li>${a}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                }).join('');
+        }
 
     async function loadData() {
         try {
             const res = await fetch('/api/crm/dashboard/', { credentials: 'include' });
             const data = await res.json();
+            const fmtINR = (value) => `₹${Number(value || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+
+            renderStrategies(data.crm_strategies || {});
 
             // Fill KPIs
             document.getElementById('kpi-grid').innerHTML = `
@@ -80,8 +179,21 @@
       </div>
       <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none p-6 rounded-xl border border-cyan-200 dark:border-cyan-900/50 shadow-lg relative overflow-hidden">
         <div class="absolute -right-4 -top-4 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl"></div>
-        <p class="text-cyan-400 text-sm font-bold tracking-wider uppercase mb-1">Platform Revenue</p>
-        <p class="text-3xl font-black text-slate-900 dark:text-white">₹${(data.revenue?.total_platform_revenue || 0).toLocaleString()}</p>
+                <p class="text-cyan-400 text-sm font-bold tracking-wider uppercase mb-1">Commission Revenue</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">${fmtINR(data.revenue?.total_platform_revenue)}</p>
+            </div>
+            <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none p-6 rounded-xl border border-blue-200 dark:border-blue-900/50 shadow-lg relative overflow-hidden">
+                <p class="text-blue-600 dark:text-blue-400 text-sm font-bold tracking-wider uppercase mb-1">Insurance Revenue (15%)</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">${fmtINR(data.revenue?.insurance_partner_revenue)}</p>
+            </div>
+            <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none p-6 rounded-xl border border-purple-200 dark:border-purple-900/50 shadow-lg relative overflow-hidden">
+                <p class="text-purple-600 dark:text-purple-400 text-sm font-bold tracking-wider uppercase mb-1">Ads + Subscription Revenue</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">${fmtINR((data.revenue?.advertising_revenue || 0) + (data.revenue?.subscription_revenue || 0))}</p>
+                <p class="text-xs text-slate-600 dark:text-slate-400 mt-2">${data.revenue?.active_subscriptions || 0} active subscriptions</p>
+            </div>
+            <div class="bg-white shadow dark:bg-slate-800 dark:shadow-none p-6 rounded-xl border border-emerald-200 dark:border-emerald-900/50 shadow-lg relative overflow-hidden">
+                <p class="text-emerald-600 dark:text-emerald-400 text-sm font-bold tracking-wider uppercase mb-1">Total Revenue Generated</p>
+                <p class="text-3xl font-black text-slate-900 dark:text-white">${fmtINR(data.revenue?.total_generated_revenue)}</p>
       </div>
     `;
 

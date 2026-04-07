@@ -12,6 +12,7 @@ from decimal import Decimal
 
 from django.db.models import Avg, Count, Sum, Q
 from django.utils import timezone
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -31,10 +32,36 @@ def _parse_date(date_str, fallback):
     return datetime.strptime(date_str, '%Y-%m-%d')
 
 
+def _apply_dummy_revenue(revenue_payload, force_demo=False):
+    """Injects demo revenue in local/dev when live data is empty."""
+    if not settings.DEBUG and not force_demo:
+        return revenue_payload
+
+    total_generated = float(revenue_payload.get('total_generated_revenue', 0) or 0)
+    if total_generated > 0 and not force_demo:
+        return revenue_payload
+
+    return {
+        **revenue_payload,
+        'total_platform_revenue': 184250.0,
+        'insurance_partner_revenue': 97200.0,
+        'advertising_revenue': 42850.0,
+        'subscription_revenue': 29940.0,
+        'total_generated_revenue': 354240.0,
+        'active_subscriptions': 60,
+        'monthly_gmv': 648000.0,
+    }
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdmin])
 def dashboard_analytics(request):
     """High-level operations dashboard."""
+    force_demo = request.query_params.get('demo') == '1'
+    INSURANCE_PARTNER_SHARE = Decimal('0.15')
+    ADS_PRIORITY_SHARE = Decimal('0.03')
+    MONTHLY_SUBSCRIPTION_FEE = Decimal('499')
+
     total_users = User.objects.count()
     verified_users = User.objects.filter(kyc_status='verified').count()
     gold_hosts = User.objects.filter(gold_host_flag=True).count()
@@ -48,9 +75,34 @@ def dashboard_analytics(request):
     active_bookings = Booking.objects.filter(booking_status__in=['confirmed', 'in_use']).count()
     disputed_bookings = Booking.objects.filter(dispute_flag=True).count()
 
-    total_revenue = Booking.objects.filter(booking_status='completed').aggregate(
+    completed_bookings_qs = Booking.objects.filter(booking_status='completed')
+
+    platform_commission_revenue = completed_bookings_qs.aggregate(
         total=Sum('platform_commission')
     )['total'] or Decimal('0')
+
+    completed_gmv = completed_bookings_qs.aggregate(total=Sum('rental_amount'))['total'] or Decimal('0')
+
+    # Insurance dealers share 15% of booking value to platform.
+    insurance_partner_revenue = completed_gmv * INSURANCE_PARTNER_SHARE
+
+    # Ads revenue modeled from completed promoted listings (customer-paid priority placement).
+    promoted_gmv = Booking.objects.filter(
+        booking_status='completed',
+        listing__promoted_flag=True,
+    ).aggregate(total=Sum('rental_amount'))['total'] or Decimal('0')
+    advertising_revenue = promoted_gmv * ADS_PRIORITY_SHARE
+
+    # Subscription revenue projection from Gold hosts as premium participants.
+    active_subscriptions = User.objects.filter(gold_host_flag=True, role__in=['host', 'both', 'admin']).count()
+    subscription_revenue = MONTHLY_SUBSCRIPTION_FEE * active_subscriptions
+
+    total_generated_revenue = (
+        platform_commission_revenue +
+        insurance_partner_revenue +
+        advertising_revenue +
+        subscription_revenue
+    )
 
     thirty_days_ago = timezone.now() - timedelta(days=30)
     monthly_gmv = Booking.objects.filter(
@@ -69,6 +121,55 @@ def dashboard_analytics(request):
         completed_bookings=Count('host_bookings', filter=Q(host_bookings__booking_status='completed')),
     ).order_by('-total_earnings')[:10]
 
+    revenue_payload = _apply_dummy_revenue({
+        'total_platform_revenue': float(platform_commission_revenue),
+        'insurance_partner_revenue': float(insurance_partner_revenue),
+        'advertising_revenue': float(advertising_revenue),
+        'subscription_revenue': float(subscription_revenue),
+        'total_generated_revenue': float(total_generated_revenue),
+        'active_subscriptions': active_subscriptions,
+        'monthly_gmv': float(monthly_gmv),
+    }, force_demo=force_demo)
+
+    crm_strategies = {
+        'selection': {
+            'title': 'Selection & Segmentation',
+            'description': 'Identify high-potential guests/hosts and prioritize quality inventory.',
+            'actions': [
+                'RFM-based audience buckets for high-intent renters and repeat users',
+                'City/category-wise demand heatmap to shortlist listings for campaigns',
+                'Trust-score + KYC filters for safer onboarding and better conversion quality',
+            ],
+        },
+        'acquisition': {
+            'title': 'Acquisition Engine',
+            'description': 'Bring new users with lifecycle email + referral + offer hooks.',
+            'actions': [
+                'Mailing system for welcome drip, abandoned inquiry reminders, and campaign blasts',
+                'Omni Coins sign-up bonus and referral rewards for first booking activation',
+                'Top-banner ad slots and promoted listing placements for paid demand capture',
+            ],
+        },
+        'retention': {
+            'title': 'Retention Loop',
+            'description': 'Increase repeat bookings through rewards, reminders, and service recovery.',
+            'actions': [
+                'Post-booking email journeys: return reminders, rebook nudges, seasonal recommendations',
+                'Omni Coins cashback slabs based on repeat bookings and booking value bands',
+                'Dispute-resolution follow-up workflows to recover trust and prevent churn',
+            ],
+        },
+        'upgradation': {
+            'title': 'Upgradation & Expansion',
+            'description': 'Move users to higher-value plans and premium platform behaviors.',
+            'actions': [
+                'Gold-host subscription upsell with premium placement + analytics perks',
+                'Insurance plan upgrade nudges (Basic -> Standard -> Premium) at checkout',
+                'Account-based email campaigns for enterprise/long-duration renters',
+            ],
+        },
+    }
+
     return Response({
         'users': {
             'total': total_users,
@@ -86,10 +187,8 @@ def dashboard_analytics(request):
             'active': active_bookings,
             'disputed': disputed_bookings,
         },
-        'revenue': {
-            'total_platform_revenue': float(total_revenue),
-            'monthly_gmv': float(monthly_gmv),
-        },
+        'revenue': revenue_payload,
+        'crm_strategies': crm_strategies,
         'category_performance': list(category_stats),
         'top_hosts': [
             {
@@ -286,6 +385,39 @@ def sales_report(request):
         booking_count=Count('bookings'),
         gmv=Sum('bookings__rental_amount', filter=Q(bookings__booking_status='completed')),
     ).order_by('-gmv')[:10]
+
+    force_demo = request.query_params.get('demo') == '1'
+    if (settings.DEBUG and totals['gmv'] <= 0) or force_demo:
+        totals = {
+            **totals,
+            'bookings_created': 138,
+            'bookings_completed': 114,
+            'bookings_cancelled': 24,
+            'completion_rate': 82.61,
+            'gmv': 648000.0,
+            'guest_revenue': 701200.0,
+            'host_payouts': 463750.0,
+            'platform_commission': 184250.0,
+            'average_order_value': 5684.21,
+        }
+
+        timeline = []
+        cursor = start_date
+        day_index = 0
+        while cursor <= end_date:
+            bucket_end = min(cursor + timedelta(days=buckets - 1), end_date)
+            gmv_value = 12000 + (day_index * 1450)
+            commission_value = round(gmv_value * 0.285, 2)
+            timeline.append({
+                'label': f"{cursor.date()} to {bucket_end.date()}",
+                'created': 3 + (day_index % 4),
+                'completed': 2 + (day_index % 3),
+                'cancelled': day_index % 2,
+                'gmv': float(gmv_value),
+                'platform_commission': float(commission_value),
+            })
+            cursor = bucket_end + timedelta(days=1)
+            day_index += 1
 
     return Response({
         'range': {'start_date': start_date, 'end_date': end_date, 'group_by': group_by},

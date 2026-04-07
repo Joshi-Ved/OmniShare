@@ -25,6 +25,10 @@ import ProfilePage from './pages/ProfilePage';
 import ShoppingCart from './pages/ShoppingCart';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmation from './pages/OrderConfirmation';
+import CRMPage from './pages/CRMPage';
+import SCMPage from './pages/SCMPage';
+import DemoCustomerPage from './pages/DemoCustomerPage';
+import DemoAdminPage from './pages/DemoAdminPage';
 
 // Components
 import Navbar from './components/Navbar';
@@ -54,6 +58,10 @@ const AnimatedRoutes = () => {
         <Route path="/clerk/sign-in" element={<PageWrapper><ClerkAuthPage mode="signin" /></PageWrapper>} />
         <Route path="/clerk/sign-up" element={<PageWrapper><ClerkAuthPage mode="signup" /></PageWrapper>} />
         <Route path="/listings/:id" element={<PageWrapper><ListingDetails /></PageWrapper>} />
+        <Route path="/crm" element={<PageWrapper><CRMPage /></PageWrapper>} />
+        <Route path="/scm" element={<PageWrapper><SCMPage /></PageWrapper>} />
+        <Route path="/demo/customer" element={<PageWrapper><DemoCustomerPage /></PageWrapper>} />
+        <Route path="/demo/admin" element={<PageWrapper><DemoAdminPage /></PageWrapper>} />
 
         {/* Protected Routes */}
         <Route path="/host/dashboard" element={<PrivateRoute><PageWrapper><HostDashboard /></PageWrapper></PrivateRoute>} />

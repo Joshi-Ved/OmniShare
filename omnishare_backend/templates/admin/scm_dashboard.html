@@ -7,6 +7,45 @@
     #content {
         padding: 0 !important;
     }
+
+    #scm-app {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%) !important;
+        color: #0f172a !important;
+    }
+
+    #scm-app h1 {
+        color: #0f172a !important;
+        -webkit-text-fill-color: #0f172a !important;
+        background: none !important;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    #scm-app h3 {
+        color: #1e293b !important;
+        font-weight: 700;
+    }
+
+    #scm-app .grid>div {
+        background: #fff !important;
+        border: 1px solid rgba(148, 163, 184, 0.32) !important;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    #scm-app button {
+        border-radius: 10px;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: 700;
+    }
+
+    #scm-app table,
+    #scm-app thead,
+    #scm-app tbody tr,
+    #scm-app td,
+    #scm-app th {
+        color: #0f172a !important;
+    }
 </style>
 <script>
   tailwind.config = { darkMode: ['class', '[data-theme="dark"]'] }
@@ -28,7 +67,8 @@
         </div>
 
         <!-- Metrics -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="scm-kpis">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6" id="scm-kpis">
+            <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
             <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
             <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
             <div class="animate-pulse bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none rounded-xl h-24"></div>
@@ -102,6 +142,10 @@
         <p class="${data.logistics_kpis?.disputed_orders > 0 ? 'text-red-400' : 'text-slate-600 dark:text-slate-400'} font-bold uppercase tracking-wider text-xs mb-2">Disputed Orders</p>
         <p class="text-3xl font-black">${data.logistics_kpis?.disputed_orders || 0}</p>
       </div>
+            <div class="bg-white shadow dark:bg-[#1a1d2d] dark:shadow-none p-6 rounded-xl border border-emerald-900/30 relative overflow-hidden">
+                <p class="text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider text-xs mb-2">Revenue Generated (Window)</p>
+                <p class="text-3xl font-black">₹${Number(data.scm_summary?.window_gmv || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+            </div>
     `;
 
             // Procurement

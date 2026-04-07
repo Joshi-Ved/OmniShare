@@ -51,7 +51,7 @@ class ListingSerializer(serializers.ModelSerializer):
         model = Listing
         fields = [
             'id', 'host', 'title', 'description', 'category', 'category_name',
-            'daily_price', 'deposit', 'location', 'rating', 'total_reviews',
+            'daily_price', 'deposit', 'insurance_plan', 'location', 'rating', 'total_reviews',
             'promoted_flag', 'primary_image', 'is_bookable', 'created_at'
         ]
         read_only_fields = ['id', 'host', 'rating', 'total_reviews', 'created_at']
@@ -82,7 +82,7 @@ class ListingDetailSerializer(serializers.ModelSerializer):
         model = Listing
         fields = [
             'id', 'host', 'title', 'description', 'category', 'category_name',
-            'daily_price', 'deposit', 'location', 'address', 'latitude', 'longitude',
+            'daily_price', 'deposit', 'insurance_plan', 'location', 'address', 'latitude', 'longitude',
             'availability_start', 'availability_end', 'is_available',
             'verification_status', 'rating', 'total_reviews', 'total_bookings',
             'promoted_flag', 'images', 'is_bookable', 'is_owner', 'created_at', 'updated_at'
@@ -108,7 +108,7 @@ class ListingCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
         fields = [
-            'title', 'description', 'category', 'daily_price', 'deposit',
+            'title', 'description', 'category', 'daily_price', 'deposit', 'insurance_plan',
             'location', 'address', 'latitude', 'longitude',
             'availability_start', 'availability_end', 'is_available'
         ]

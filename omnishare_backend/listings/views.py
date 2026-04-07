@@ -16,7 +16,7 @@ from .serializers import (
     ReviewSerializer,
     ListingVerificationSerializer
 )
-from users.permissions import IsVerifiedHost, IsAdmin, IsOwnerOrAdmin
+from users.permissions import IsKYCVerified, IsAdmin, IsOwnerOrAdmin
 
 
 class CategoryListView(generics.ListAPIView):
@@ -83,9 +83,9 @@ class ListingDetailView(generics.RetrieveAPIView):
 
 
 class ListingCreateView(generics.CreateAPIView):
-    """Create a new listing (verified hosts only)"""
+    """Create a new listing (any KYC-verified user)"""
     serializer_class = ListingCreateUpdateSerializer
-    permission_classes = [IsAuthenticated, IsVerifiedHost]
+    permission_classes = [IsAuthenticated, IsKYCVerified]
     
     def perform_create(self, serializer):
         serializer.save(host=self.request.user)

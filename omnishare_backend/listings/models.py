@@ -36,6 +36,12 @@ class Listing(models.Model):
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
     ]
+
+    INSURANCE_PLAN_CHOICES = [
+        ('basic', 'Basic'),
+        ('standard', 'Standard'),
+        ('premium', 'Premium'),
+    ]
     
     # Basic Info
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='listings')
@@ -54,6 +60,12 @@ class Listing(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)],
         help_text="Security deposit amount"
+    )
+    insurance_plan = models.CharField(
+        max_length=20,
+        choices=INSURANCE_PLAN_CHOICES,
+        default='basic',
+        help_text='Insurance plan selected by the host for this listing'
     )
     
     # Location

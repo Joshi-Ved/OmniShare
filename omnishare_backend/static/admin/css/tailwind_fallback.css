@@ -1,0 +1,192 @@
+/*
+  Offline-safe fallback for admin GUI templates that were authored with Tailwind utility classes.
+  This ensures those pages still render with consistent layout when CDN scripts are blocked.
+*/
+
+#content {
+  max-width: 100%;
+}
+
+/* Layout helpers */
+.min-h-screen { min-height: 100vh; }
+.max-w-7xl { max-width: 80rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.p-0 { padding: 0; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.p-10 { padding: 2.5rem; }
+.p-12 { padding: 3rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+.space-y-6 > * + * { margin-top: 1.5rem; }
+.space-y-8 > * + * { margin-top: 2rem; }
+
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.flex-col { flex-direction: column; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.items-center { align-items: center; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: 1fr; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 768px) {
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lg\:col-span-2 { grid-column: span 2 / span 2; }
+}
+
+/* Surface + typography */
+.bg-white { background: #ffffff; }
+.bg-slate-50 { background: #f8fafc; }
+.bg-slate-100 { background: #f1f5f9; }
+.bg-slate-200 { background: #e2e8f0; }
+.text-slate-900 { color: #0f172a; }
+.text-slate-800 { color: #1e293b; }
+.text-slate-700 { color: #334155; }
+.text-slate-600 { color: #475569; }
+.text-slate-500 { color: #64748b; }
+.text-slate-400 { color: #94a3b8; }
+.text-white { color: #ffffff; }
+.text-emerald-600 { color: #059669; }
+.text-blue-600 { color: #2563eb; }
+.text-indigo-600 { color: #4f46e5; }
+.text-purple-600 { color: #9333ea; }
+.text-red-400 { color: #f87171; }
+.text-emerald-400 { color: #34d399; }
+.text-cyan-400 { color: #22d3ee; }
+.text-blue-400 { color: #60a5fa; }
+
+.bg-clip-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.text-transparent {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.bg-gradient-to-r {
+  background-image: linear-gradient(90deg, var(--tw-gradient-from, #10b981), var(--tw-gradient-to, #06b6d4));
+}
+.from-emerald-400 { --tw-gradient-from: #34d399; }
+.to-cyan-400 { --tw-gradient-to: #22d3ee; }
+.from-blue-400 { --tw-gradient-from: #60a5fa; }
+.to-purple-400 { --tw-gradient-to: #a78bfa; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.rounded-full { border-radius: 9999px; }
+.text-right { text-align: right; }
+
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-lg { font-size: 1.125rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.font-sans { font-family: Inter, -apple-system, Segoe UI, Roboto, sans-serif; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-black { font-weight: 800; }
+.uppercase { text-transform: uppercase; }
+
+/* Card + border */
+.rounded, .rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 0.75rem; }
+.border { border: 1px solid rgba(148, 163, 184, 0.35); }
+.border-b { border-bottom: 1px solid rgba(148, 163, 184, 0.35); }
+.overflow-hidden { overflow: hidden; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+.shadow, .shadow-lg, .shadow-xl, .shadow-2xl {
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+/* Tables */
+table.w-full {
+  width: 100%;
+  border-collapse: collapse;
+}
+th.p-4, td.p-4, td.p-6, td.p-10 {
+  padding: 0.875rem 1rem;
+}
+thead {
+  background: #f1f5f9;
+}
+tr {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* Controls */
+button[class*='px-5'] {
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #ffffff;
+  cursor: pointer;
+}
+button[class*='px-5']:hover {
+  background: #f8fafc;
+}
+
+/* Pulse placeholders */
+.animate-pulse {
+  animation: omniPulse 1.5s ease-in-out infinite;
+}
+
+/* Dashboard-specific polish for CRM/SCM GUIs */
+#crm-app,
+#scm-app {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+#crm-app h1,
+#scm-app h1 {
+  color: #0f172a;
+  margin: 0;
+}
+
+#crm-app .grid > div,
+#scm-app .grid > div {
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+#crm-app table,
+#scm-app table {
+  background: #ffffff;
+}
+
+#crm-app thead,
+#scm-app thead {
+  background: #e2e8f0;
+}
+
+#crm-app tbody tr:nth-child(odd),
+#scm-app tbody tr:nth-child(odd) {
+  background: #f8fafc;
+}
+
+#crm-app tbody tr:hover,
+#scm-app tbody tr:hover {
+  background: #eaf2ff;
+}
+
+@keyframes omniPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}

@@ -44,6 +44,7 @@ const CreateListing = () => {
     category: '',
     daily_price: '',
     deposit: '',
+    insurance_plan: 'basic',
     location: '',
     address: '',
     latitude: '',
@@ -222,7 +223,7 @@ const CreateListing = () => {
       const errors = error.response?.data;
 
       if (statusCode === 403) {
-        toast.error('Only KYC-verified host accounts can create listings. Complete KYC and switch to host/both role.');
+        toast.error('Only KYC-verified users can create listings. Please complete KYC verification first.');
       } else if (typeof errors === 'string') {
         toast.error(errors);
       } else if (errors?.detail) {
@@ -381,6 +382,21 @@ const CreateListing = () => {
                   placeholder="2000"
                 />
               </div>
+            </div>
+
+            <div className="form-group">
+              <label>Insurance Plan *</label>
+              <select
+                name="insurance_plan"
+                value={formData.insurance_plan}
+                onChange={handleChange}
+                required
+              >
+                <option value="basic">Basic</option>
+                <option value="standard">Standard</option>
+                <option value="premium">Premium</option>
+              </select>
+              <small className="image-help-text">Select the insurance protection level for this listing.</small>
             </div>
 
             <div className="grid grid-2">

@@ -45,6 +45,8 @@ const Navbar = ({ isDark, onToggleTheme }) => {
 
           <div className={`nav-menu ${mobileOpen ? 'open' : ''}`}>
             <Link to="/" className="nav-link" onClick={() => setMobileOpen(false)}>Explore</Link>
+            <Link to="/demo/customer" className="nav-link" onClick={() => setMobileOpen(false)}>Customer Demo</Link>
+            <Link to="/demo/admin" className="nav-link" onClick={() => setMobileOpen(false)}>Admin Demo</Link>
 
             <button
               type="button"
