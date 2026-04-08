@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Terms of Service | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#f6fafe","surface-container-low":"#f0f4f8","surface-container-lowest":"#ffffff","outline":"#717786","outline-variant":"#c1c6d7","on-surface":"#171c1f","on-surface-variant":"#414754","primary":"#0059bb","primary-container":"#0070ea","on-primary":"#ffffff"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"]}}}}
+</script>
+<style>
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,h4,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  .content-section p { margin-bottom: 1rem; line-height: 1.6; color: #414754; }
+  .content-section h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; font-size: 1.5rem; color: #171c1f; }
+  .content-section ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; color: #414754; }
+  .content-section li { margin-bottom: 0.5rem; }
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)] border-b border-outline-variant/10">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
+    <nav class="hidden md:flex gap-6 items-center font-headline font-bold">
+      <a class="text-slate-500 hover:text-primary transition-colors" href="search.html">Browse</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="plans.html">Plans</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="signin.html">Sign In</a>
+      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container" href="signup.html">Join Now</a>
+    </div>
+  </div>
+</header>
+
+<main class="pt-32 pb-20 px-8 max-w-4xl mx-auto w-full flex-grow content-section">
+  <p class="text-xs font-bold uppercase tracking-widest text-primary mb-2">Legal</p>
+  <h1 class="font-headline font-bold text-5xl tracking-tight mb-4">Terms of Service</h1>
+  <p class="text-on-surface-variant mb-12">Last updated: Oct 12, 2024</p>
+
+  <h2>1. Platform Usage</h2>
+  <p>Welcome to OmniShare. By using our peer-to-peer peer rental marketplace, you agree to these Terms of Service. OmniShare connects owners ("Hosts") looking to rent out their equipment with individuals ("Renters") looking to lease such equipment.</p>
+
+  <h2>2. Eligibility & Verification</h2>
+  <p>To use OmniShare, you must be at least 18 years old and capable of forming legally binding contracts. We use DigiLocker API integration to verify identities. Providing false or inaccurate information during our KYC process is strictly prohibited and will result in immediate account suspension.</p>
+
+  <h2>3. Booking, Payments & Escrow</h2>
+  <ul>
+    <li>All payments are securely processed and held in escrow.</li>
+    <li>Security deposits are authorized on the Renter's card prior to the rental period and released within 24 hours of successful item return.</li>
+    <li>Hosts receive payouts minus the platform commission (12%-18% depending on subscription tier).</li>
+  </ul>
+
+  <h2>4. OmniGuard Insurance</h2>
+  <p>Rentals are covered by our OmniGuard insurance policy, subject to deductibles and limitations based on the plan selected at checkout. Damages caused by gross negligence, theft by the Renter, or water damage are explicitly excluded unless Premium coverage is purchased.</p>
+
+  <h2>5. Cancellations & Refunds</h2>
+  <p>Cancellations made 48 hours prior to the rental start date receive a full refund. Cancellations made within 48 hours are subject to a 50% cancellation fee. Hosts canceling a confirmed booking will receive a penalty to their host rating.</p>
+
+  <h2>6. Limitation of Liability</h2>
+  <p>OmniShare facilitates transactions between peers but does not hold ownership of any listed items. We are not liable for personal injury, indirect financial loss, or punitive damages arising from the use of rented equipment.</p>
+</main>
+
+<footer class="w-full mt-auto py-12 bg-slate-50 border-t border-slate-200">
+  <div class="px-12 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+    <div class="font-headline font-bold text-slate-900 text-lg">OmniShare</div>
+    <div class="flex gap-6">
+      <a class="hover:text-primary transition-colors" href="privacy.html">Privacy Policy</a>
+      <a class="text-primary font-bold" href="terms.html">Terms of Service</a>
+      <a class="hover:text-primary transition-colors" href="search.html">Contact Support</a>
+    </div>
+  </div>
+</footer>
+</body></html>

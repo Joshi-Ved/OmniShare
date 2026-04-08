@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Privacy Policy | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#f6fafe","surface-container-low":"#f0f4f8","surface-container-lowest":"#ffffff","outline":"#717786","outline-variant":"#c1c6d7","on-surface":"#171c1f","on-surface-variant":"#414754","primary":"#0059bb","primary-container":"#0070ea","on-primary":"#ffffff"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"]}}}}
+</script>
+<style>
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,h4,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  .content-section p { margin-bottom: 1rem; line-height: 1.6; color: #414754; }
+  .content-section h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; font-size: 1.5rem; color: #171c1f; }
+  .content-section ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; color: #414754; }
+  .content-section li { margin-bottom: 0.5rem; }
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)] border-b border-outline-variant/10">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
+    <nav class="hidden md:flex gap-6 items-center font-headline font-bold">
+      <a class="text-slate-500 hover:text-primary transition-colors" href="search.html">Browse</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="plans.html">Plans</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="signin.html">Sign In</a>
+      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container" href="signup.html">Join Now</a>
+    </div>
+  </div>
+</header>
+
+<main class="pt-32 pb-20 px-8 max-w-4xl mx-auto w-full flex-grow content-section">
+  <p class="text-xs font-bold uppercase tracking-widest text-primary mb-2">Legal</p>
+  <h1 class="font-headline font-bold text-5xl tracking-tight mb-4">Privacy Policy</h1>
+  <p class="text-on-surface-variant mb-12">Last updated: Oct 12, 2024</p>
+
+  <h2>1. Data We Collect</h2>
+  <p>We collect information to provide a smooth, secure peer-to-peer exchange experience. This includes:</p>
+  <ul>
+    <li><strong>Account Information:</strong> Name, email address, password, and phone number.</li>
+    <li><strong>Identity Verification (KYC):</strong> Aadhaar and PAN details securely matched via DigiLocker API strictly for verification.</li>
+    <li><strong>Transaction Data:</strong> Payment histories, escrow details, and booking logs.</li>
+  </ul>
+
+  <h2>2. Use of Your Data</h2>
+  <p>The information we collect is used to:</p>
+  <ul>
+    <li>Facilitate transactions and communication between Hosts and Renters.</li>
+    <li>Process payments via Razorpay and securely manage escrow payouts.</li>
+    <li>Prevent fraud and ensure community safety through our identity vetting process.</li>
+    <li>Provide Customer Support and process insurance claims via OmniGuard.</li>
+  </ul>
+
+  <h2>3. Third-Party Sharing</h2>
+  <p>We do not sell your personal data. Data is only shared with trusted third parties necessary for app functioning: payment processors (Razorpay), authentication providers (Clerk), and government verification API services (DigiLocker).</p>
+
+  <h2>4. Security</h2>
+  <p>We use industry-standard encryption protocols (SSL/TLS) to protect data at rest and in transit. However, no electronic transmission over the internet or storage system is 100% secure.</p>
+
+  <h2>5. Your Rights</h2>
+  <p>You have the right to request access, modification, or deletion of your personal data at any time. Accounts can be terminated from the User Profile section, which will prompt a 30-day data deletion protocol.</p>
+</main>
+
+<footer class="w-full mt-auto py-12 bg-slate-50 border-t border-slate-200">
+  <div class="px-12 max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+    <div class="font-headline font-bold text-slate-900 text-lg">OmniShare</div>
+    <div class="flex gap-6">
+      <a class="text-primary font-bold" href="privacy.html">Privacy Policy</a>
+      <a class="hover:text-primary transition-colors" href="terms.html">Terms of Service</a>
+      <a class="hover:text-primary transition-colors" href="search.html">Contact Support</a>
+    </div>
+  </div>
+</footer>
+</body></html>
