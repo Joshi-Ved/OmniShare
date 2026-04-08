@@ -6,6 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script id="tailwind-config">
   tailwind.config = {
     darkMode: "class",
@@ -266,9 +267,9 @@
         </div>
         <div class="flex gap-4 mt-6">
           <button onclick="goStep(2)" class="flex-1 py-4 bg-surface-container-high rounded-full font-headline font-bold text-lg hover:bg-surface-container-highest transition-colors">Back</button>
-          <a href="order_confirmation.html" id="pay-btn" class="flex-1 py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+          <button type="button" onclick="checkoutWithRazorpay()" id="pay-btn" class="flex-1 py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
             Confirm &amp; Pay <span id="pay-btn-total">₹4,200</span>
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -454,5 +455,35 @@
 
   // ── Init ───────────────────────────────────────────────
   calcTotal();
+
+  // ── Razorpay Integration ────────────────────────────────
+  function checkoutWithRazorpay() {
+    const rawTotalStr = document.getElementById('sum-total').textContent.replace(/[^\d.-]/g, '');
+    const amountInPaise = parseInt(rawTotalStr) * 100;
+    
+    var options = {
+      "key": "rzp_test_SSYa8qxHpH3R2I",
+      "amount": amountInPaise, 
+      "currency": "INR",
+      "name": "OmniShare",
+      "description": "Red Komodo 6K Cinema Package",
+      "handler": function (response) {
+          window.location.href = "order_confirmation.html?ref=" + response.razorpay_payment_id;
+      },
+      "prefill": {
+          "name": "Alex Renter",
+          "email": "alex@example.com",
+          "contact": "9999999999"
+      },
+      "theme": {
+          "color": "#0059bb"
+      }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert("Payment Failed. Reason: " + response.error.description);
+    });
+    rzp1.open();
+  }
 </script>
 </body></html>

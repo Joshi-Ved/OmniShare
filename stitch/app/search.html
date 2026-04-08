@@ -99,8 +99,8 @@
 </div>
 </div>
 <div class="flex items-center gap-4">
-<button class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 transition-all active:scale-95">Sign In</button>
-<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold transition-all hover:opacity-80 active:scale-95">Join Now</button>
+<a href="signin.html" class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 transition-all active:scale-95">Sign In</a>
+<a href="signup.html" class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold transition-all hover:opacity-80 active:scale-95 inline-block">Join Now</a>
 </div>
 </nav>
 </header>
@@ -148,7 +148,7 @@
 </div>
 </div>
 <!-- Search Reset -->
-<button class="w-full py-3 text-sm font-bold text-primary border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors">
+<button onclick="document.querySelectorAll('aside input[type=checkbox]').forEach(cb => cb.checked = false); document.querySelector('input[type=range]').value = 0;" class="w-full py-3 text-sm font-bold text-primary border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors">
                         Clear all filters
                     </button>
 </div>
