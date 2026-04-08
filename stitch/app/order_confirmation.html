@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Confirmed | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-bright":"#f6fafe","surface-container":"#eaeef2","background":"#f6fafe","on-primary-fixed":"#001a41","surface-variant":"#dfe3e7","on-secondary-container":"#586377","outline":"#717786","on-surface":"#171c1f","surface-container-low":"#f0f4f8","secondary-container":"#d5e0f8","on-secondary":"#ffffff","surface-container-highest":"#dfe3e7","secondary":"#545f73","outline-variant":"#c1c6d7","primary-fixed":"#d8e2ff","surface":"#f6fafe","on-primary-container":"#fefcff","tertiary":"#4d5d73","on-primary":"#ffffff","error":"#ba1a1a","secondary-fixed":"#d8e3fb","on-surface-variant":"#414754","on-error":"#ffffff","inverse-primary":"#adc7ff","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","primary":"#0059bb","surface-tint":"#005bc0","on-background":"#171c1f","primary-container":"#0070ea","primary-fixed-dim":"#adc7ff","on-primary-fixed-variant":"#004493"
+        },
+        "borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},
+        "fontFamily":{"headline":["Space Grotesk"],"body":["Inter"],"label":["Inter"]}
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  @keyframes pop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+  .pop-in{animation:pop 0.5s cubic-bezier(.175,.885,.32,1.275) forwards;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .fade-up{animation:fadeUp 0.5s ease forwards;}
+  .delay-1{animation-delay:0.15s;opacity:0;}
+  .delay-2{animation-delay:0.3s;opacity:0;}
+  .delay-3{animation-delay:0.45s;opacity:0;}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)]">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
+    <div class="flex items-center gap-4">
+      <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="tracking.html">My Bookings</a>
+      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container active:scale-95" href="search.html">Browse More</a>
+    </div>
+  </div>
+</header>
+
+<main class="flex-grow pt-28 pb-20 px-8 max-w-[1440px] mx-auto w-full">
+  <div class="max-w-3xl mx-auto">
+
+    <!-- Success Banner -->
+    <div class="text-center mb-14">
+      <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-50 mb-6 pop-in">
+        <span class="material-symbols-outlined text-5xl text-emerald-600" style="font-variation-settings:'FILL' 1;">check_circle</span>
+      </div>
+      <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4 fade-up delay-1">Booking Confirmed!</h1>
+      <p class="text-on-surface-variant text-lg max-w-md mx-auto leading-relaxed fade-up delay-2">
+        Your rental has been secured. The owner has been notified and will confirm shortly.
+      </p>
+      <div class="inline-flex items-center gap-2 mt-4 px-5 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-bold fade-up delay-3">
+        <span class="material-symbols-outlined text-base">mail</span>
+        Confirmation sent to your email
+      </div>
+    </div>
+
+    <!-- Booking Reference Card -->
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden mb-8 fade-up delay-2">
+      <div class="bg-gradient-to-r from-primary to-primary-container p-6 flex justify-between items-center">
+        <div>
+          <p class="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Booking Reference</p>
+          <p class="text-white font-headline font-bold text-2xl tracking-wider">#OMN-2024-9847</p>
+        </div>
+        <div class="bg-white/15 rounded-xl p-4 text-center">
+          <p class="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Status</p>
+          <p class="text-white font-headline font-bold">Pending Confirm</p>
+        </div>
+      </div>
+
+      <!-- Item Info -->
+      <div class="p-8">
+        <div class="flex gap-6 pb-8 border-b border-outline-variant/15">
+          <div class="w-24 h-24 rounded-xl overflow-hidden shrink-0">
+            <img alt="Red Komodo 6K Cinema Package" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+          </div>
+          <div class="flex-1">
+            <h2 class="font-headline font-bold text-xl mb-1">Red Komodo 6K Cinema Package</h2>
+            <p class="text-sm text-on-surface-variant mb-4">Listed by Julian R. · Brooklyn, NY</p>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">Start Date</span>
+                <span class="font-semibold">Oct 12, 2024</span>
+              </div>
+              <div>
+                <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">End Date</span>
+                <span class="font-semibold">Oct 15, 2024</span>
+              </div>
+              <div>
+                <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">Duration</span>
+                <span class="font-semibold">3 Days</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial Summary -->
+        <div class="py-8 border-b border-outline-variant/15 space-y-3 text-sm">
+          <h3 class="font-headline font-bold text-base mb-4">Payment Breakdown</h3>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Rental (3 days @ ₹20,500)</span><span class="font-semibold">₹61,500</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Delivery Fee (15%)</span><span class="font-semibold">₹9,225</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Transaction Fee (18%)</span><span class="font-semibold">₹11,070</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">OmniGuard Insurance</span><span class="font-semibold">₹2,520</span></div>
+          <div class="flex justify-between text-outline text-xs"><span>Security Deposit (Escrowed)</span><span>₹42,000</span></div>
+          <div class="pt-3 border-t border-outline-variant/15 flex justify-between items-center">
+            <span class="font-headline font-bold text-base">Total Charged</span>
+            <div class="text-right">
+              <p class="font-headline font-bold text-xl text-primary">₹1,16,745</p>
+              <p class="text-xs text-primary/70">≈ $1,397 USD</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR & Handover Info -->
+        <div class="pt-8">
+          <h3 class="font-headline font-bold text-base mb-6">Handover Information</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-surface-container-low rounded-xl p-6 flex flex-col items-center justify-center text-center">
+              <div class="w-32 h-32 bg-surface-container-highest rounded-xl flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-6xl text-outline-variant">qr_code_2</span>
+              </div>
+              <p class="text-xs font-bold uppercase tracking-widest text-outline mb-1">Handover QR Code</p>
+              <p class="text-xs text-on-surface-variant">Present to owner at pickup to initiate the rental</p>
+              <button class="mt-4 text-primary text-xs font-bold hover:underline underline-offset-2 flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">download</span> Download QR
+              </button>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-start gap-4 p-4 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary mt-0.5">person</span>
+                <div>
+                  <p class="font-bold text-sm">Owner Contact</p>
+                  <p class="text-xs text-on-surface-variant">Julian R. — Verified Host · 4.9★</p>
+                  <button class="text-primary text-xs font-bold mt-2 hover:underline underline-offset-2">Message Owner</button>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 p-4 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary mt-0.5">location_on</span>
+                <div>
+                  <p class="font-bold text-sm">Pickup Location</p>
+                  <p class="text-xs text-on-surface-variant">47 Wythe Ave, Brooklyn, New York</p>
+                  <p class="text-xs text-on-surface-variant">Between 9 AM – 6 PM on Oct 12</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4 p-4 bg-surface-container-low rounded-xl">
+                <span class="material-symbols-outlined text-primary mt-0.5">shield_with_heart</span>
+                <div>
+                  <p class="font-bold text-sm">OmniGuard Active</p>
+                  <p class="text-xs text-on-surface-variant">Coverage up to ₹2,50,000 · Policy #OG-8847</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="bg-primary-container rounded-xl p-8 relative overflow-hidden mb-8">
+      <div class="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+      <h3 class="font-headline font-bold text-on-primary-container text-xl mb-6">What Happens Next?</h3>
+      <div class="space-y-4">
+        <div class="flex items-start gap-4">
+          <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">1</div>
+          <div><p class="text-white font-semibold text-sm">Owner confirms your booking</p><p class="text-white/70 text-xs mt-0.5">Usually within 2–4 hours. You'll get an email notification.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">2</div>
+          <div><p class="text-white font-semibold text-sm">Meet for handover using your QR code</p><p class="text-white/70 text-xs mt-0.5">Owner scans the QR to mark your rental as active.</p></div>
+        </div>
+        <div class="flex items-start gap-4">
+          <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">3</div>
+          <div><p class="text-white font-semibold text-sm">Return and deposit release</p><p class="text-white/70 text-xs mt-0.5">Upon verified return, your ₹42,000 deposit is released within 24 hours.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-4">
+      <a href="tracking.html" class="flex-1 py-4 text-center border-2 border-outline-variant/30 rounded-full font-headline font-bold hover:bg-surface-container-low transition-colors">
+        View My Bookings
+      </a>
+      <a href="search.html" class="flex-1 py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+        Continue Browsing
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="w-full mt-auto py-12 bg-slate-50">
+  <div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto">
+    <p class="font-headline font-bold text-slate-900">OmniShare</p>
+    <div class="flex gap-8 mt-4 md:mt-0 text-xs uppercase tracking-widest text-slate-400">
+      <a class="hover:text-primary transition-colors" href="#">Privacy</a>
+      <a class="hover:text-primary transition-colors" href="#">Terms</a>
+      <a class="hover:text-primary transition-colors" href="#">Support</a>
+    </div>
+  </div>
+</footer>
+</body></html>

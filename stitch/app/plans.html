@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniShare Plans | Choose Your Tier</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface-bright":"#f6fafe","surface-container":"#eaeef2","background":"#f6fafe","on-primary-fixed":"#001a41","surface-variant":"#dfe3e7","on-secondary-container":"#586377","outline":"#717786","on-surface":"#171c1f","surface-container-low":"#f0f4f8","secondary-container":"#d5e0f8","on-secondary":"#ffffff","surface-container-highest":"#dfe3e7","secondary":"#545f73","outline-variant":"#c1c6d7","primary-fixed":"#d8e2ff","surface":"#f6fafe","on-primary-container":"#fefcff","tertiary":"#4d5d73","on-primary":"#ffffff","error":"#ba1a1a","secondary-fixed":"#d8e3fb","on-surface-variant":"#414754","on-error":"#ffffff","inverse-primary":"#adc7ff","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","primary":"#0059bb","surface-tint":"#005bc0","on-background":"#171c1f","primary-container":"#0070ea","primary-fixed-dim":"#adc7ff","on-primary-fixed-variant":"#004493"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"],"label":["Inter"]}}}}
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  .glass-nav{background:rgba(246,250,254,.8);backdrop-filter:blur(12px);}
+  /* Toggle pill */
+  #billing-toggle:checked ~ label #pill-monthly{transform:translateX(0);}
+  #billing-toggle:checked ~ label #lbl-monthly{color:#0059bb;font-weight:700;}
+  #billing-toggle:checked ~ label #lbl-annual{color:#717786;font-weight:500;}
+  .plan-card{transition:transform .25s,box-shadow .25s;}
+  .plan-card:hover{transform:translateY(-4px);box-shadow:0 24px 48px -8px rgba(23,28,31,.10);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  .fade-up{animation:fadeUp .5s ease both;}
+  .d1{animation-delay:.05s} .d2{animation-delay:.15s} .d3{animation-delay:.25s}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 glass-nav shadow-[0_4px_40px_-10px_rgba(23,28,31,.05)]">
+  <div class="flex justify-between items-center px-8 h-20 max-w-[1440px] mx-auto">
+    <a class="font-headline font-bold text-2xl tracking-tight text-[#171c1f]" href="landing.html">OmniShare</a>
+    <nav class="hidden md:flex items-center gap-8 font-headline font-bold">
+      <a class="text-slate-500 hover:text-primary transition-colors" href="search.html">Browse Rentals</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
+      <a class="text-primary border-b-2 border-primary pb-1" href="plans.html">Plans</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a class="text-slate-500 font-medium hover:text-primary transition-colors" href="signin.html">Sign In</a>
+      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-primary-container transition-colors" href="signup.html">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<main class="pt-28 pb-20 flex-grow">
+
+  <!-- Hero -->
+  <section class="px-8 pt-10 pb-20 text-center max-w-4xl mx-auto">
+    <span class="inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-bold text-xs uppercase tracking-widest mb-6 fade-up">Simple Pricing</span>
+    <h1 class="font-headline font-bold text-5xl md:text-7xl leading-[1.05] tracking-tighter mb-6 fade-up d1">
+      One platform.<br/><span class="text-primary">Three tiers.</span>
+    </h1>
+    <p class="text-xl text-on-surface-variant max-w-xl mx-auto leading-relaxed mb-10 fade-up d2">
+      Start free, upgrade when ready. No hidden fees, no lock-in contracts.
+    </p>
+
+    <!-- Billing Toggle -->
+    <div class="inline-flex items-center gap-4 bg-surface-container rounded-full p-1.5 mb-16 fade-up d3">
+      <input class="hidden" id="billing-toggle" type="checkbox"/>
+      <label class="flex items-center gap-4 cursor-pointer" for="billing-toggle">
+        <span id="lbl-monthly" class="text-primary font-bold text-sm px-4 py-2 rounded-full bg-surface-container-lowest shadow-sm">Monthly</span>
+        <span id="lbl-annual" class="text-outline font-medium text-sm px-4 py-2">Annual <span class="text-emerald-600 font-bold text-[10px] uppercase tracking-wider">Save 20%</span></span>
+      </label>
+    </div>
+
+    <!-- Plans Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
+
+      <!-- Free -->
+      <div class="plan-card bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/15 shadow-sm flex flex-col fade-up d1">
+        <div class="mb-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-outline block mb-3">Free Forever</span>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="font-headline font-bold text-5xl">₹0</span>
+            <span class="text-on-surface-variant text-sm">/month</span>
+          </div>
+          <p class="text-xs text-outline">No credit card required</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-8">
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Browse &amp; rent any item</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>List up to 2 items</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Basic OmniGuard insurance</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Standard 48-hr KYC verification</li>
+          <li class="flex items-start gap-3 text-sm text-outline"><span class="material-symbols-outlined text-outline text-base mt-0.5">remove</span>Standard shipping (paid)</li>
+          <li class="flex items-start gap-3 text-sm text-outline"><span class="material-symbols-outlined text-outline text-base mt-0.5">remove</span>Priority listing placement</li>
+        </ul>
+        <a href="signup.html" class="block w-full py-3.5 text-center border-2 border-primary text-primary rounded-full font-headline font-bold hover:bg-primary/5 transition-colors">
+          Start Free
+        </a>
+      </div>
+
+      <!-- OmniShare+ ★ POPULAR -->
+      <div class="plan-card relative bg-gradient-to-br from-primary to-primary-container rounded-2xl p-8 shadow-xl shadow-primary/20 flex flex-col fade-up d2 scale-105">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-5 py-1.5 bg-amber-400 text-amber-900 rounded-full text-[11px] font-black uppercase tracking-widest whitespace-nowrap shadow-lg">
+          ⭐ Most Popular
+        </div>
+        <div class="mb-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-white/60 block mb-3">OmniShare+</span>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="font-headline font-bold text-5xl text-white" id="price-plus">₹199</span>
+            <span class="text-white/70 text-sm">/month</span>
+          </div>
+          <p class="text-white/50 text-xs" id="note-plus">Billed monthly · Cancel anytime</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-8">
+          <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Everything in Free</li>
+          <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Unlimited listings</li>
+          <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Free standard shipping (every rental)</li>
+          <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Priority listing review (under 2 hrs)</li>
+          <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>24-hr early booking window</li>
+          <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Standard OmniGuard insurance</li>
+          <li class="flex items-start gap-3 text-sm text-white/60"><span class="material-symbols-outlined text-white/40 text-base mt-0.5">remove</span>5-Hour express delivery</li>
+        </ul>
+        <a href="checkout.html" class="block w-full py-3.5 text-center bg-white text-primary rounded-full font-headline font-bold hover:bg-surface-container-lowest transition-colors shadow-md">
+          Get OmniShare+
+        </a>
+        <p class="text-center text-white/50 text-xs mt-3">14-day free trial · No card now</p>
+      </div>
+
+      <!-- OmniShare Pro -->
+      <div class="plan-card bg-surface-container-lowest rounded-2xl p-8 border border-outline-variant/15 shadow-sm flex flex-col fade-up d3">
+        <div class="mb-6">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs font-bold uppercase tracking-widest text-outline">OmniShare Pro</span>
+            <span class="px-2 py-0.5 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase tracking-wider">Gold Host</span>
+          </div>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="font-headline font-bold text-5xl" id="price-pro">₹299</span>
+            <span class="text-on-surface-variant text-sm">/month</span>
+          </div>
+          <p class="text-xs text-outline" id="note-pro">Billed monthly · Cancel anytime</p>
+        </div>
+        <ul class="space-y-3 flex-1 mb-8">
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Everything in OmniShare+</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><strong>5-Hour express delivery</strong> (metro cities)</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Premium OmniGuard (up to ₹2,00,000)</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Gold Host badge &amp; verified profile</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Promoted listing (1 free/month)</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Dedicated account manager</li>
+          <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Instant DigiLocker KYC (auto)</li>
+        </ul>
+        <a href="checkout.html" class="block w-full py-3.5 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+          Go Pro
+        </a>
+        <p class="text-center text-outline text-xs mt-3">14-day free trial · No card now</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Comparison Table -->
+  <section class="px-8 py-20 bg-surface-container-low">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-headline font-bold text-4xl text-center tracking-tight mb-12">Full Feature Comparison</h2>
+      <div class="overflow-hidden rounded-2xl bg-surface-container-lowest shadow-sm">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container-high">
+              <th class="p-6 font-headline font-bold text-base">Feature</th>
+              <th class="p-6 font-headline font-bold text-base text-center text-outline">Free</th>
+              <th class="p-6 font-headline font-bold text-base text-center text-primary bg-primary/5">OmniShare+ <br/><span class="text-sm font-normal">₹199/mo</span></th>
+              <th class="p-6 font-headline font-bold text-base text-center">Pro <br/><span class="text-sm font-normal text-outline">₹299/mo</span></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant/15 text-sm">
+            <tr><td class="p-5 font-medium">Max Listings</td><td class="p-5 text-center text-outline">2</td><td class="p-5 text-center bg-primary/5 font-bold text-primary">Unlimited</td><td class="p-5 text-center font-bold">Unlimited</td></tr>
+            <tr class="bg-surface-container-low/50"><td class="p-5 font-medium">Standard Shipping</td><td class="p-5 text-center text-outline">Paid</td><td class="p-5 text-center bg-primary/5"><span class="material-symbols-outlined text-emerald-500 text-base" style="font-variation-settings:'FILL' 1;">check_circle</span></td><td class="p-5 text-center"><span class="material-symbols-outlined text-emerald-500 text-base" style="font-variation-settings:'FILL' 1;">check_circle</span></td></tr>
+            <tr><td class="p-5 font-medium">5-Hour Express Delivery</td><td class="p-5 text-center"><span class="material-symbols-outlined text-outline text-base">close</span></td><td class="p-5 text-center bg-primary/5"><span class="material-symbols-outlined text-outline text-base">close</span></td><td class="p-5 text-center"><span class="material-symbols-outlined text-emerald-500 text-base" style="font-variation-settings:'FILL' 1;">check_circle</span></td></tr>
+            <tr class="bg-surface-container-low/50"><td class="p-5 font-medium">KYC Verification Speed</td><td class="p-5 text-center text-outline">48 hrs</td><td class="p-5 text-center bg-primary/5 font-bold text-primary">Under 2 hrs</td><td class="p-5 text-center font-bold">Instant (DigiLocker)</td></tr>
+            <tr><td class="p-5 font-medium">OmniGuard Insurance</td><td class="p-5 text-center text-outline">Basic (₹10k)</td><td class="p-5 text-center bg-primary/5">Standard (₹50k)</td><td class="p-5 text-center font-bold">Premium (₹2L)</td></tr>
+            <tr class="bg-surface-container-low/50"><td class="p-5 font-medium">Early Booking Window</td><td class="p-5 text-center"><span class="material-symbols-outlined text-outline text-base">close</span></td><td class="p-5 text-center bg-primary/5"><span class="font-bold text-primary">24 hours early</span></td><td class="p-5 text-center"><span class="font-bold">48 hours early</span></td></tr>
+            <tr><td class="p-5 font-medium">Gold Host Badge</td><td class="p-5 text-center"><span class="material-symbols-outlined text-outline text-base">close</span></td><td class="p-5 text-center bg-primary/5"><span class="material-symbols-outlined text-outline text-base">close</span></td><td class="p-5 text-center"><span class="material-symbols-outlined text-emerald-500 text-base" style="font-variation-settings:'FILL' 1;">check_circle</span></td></tr>
+            <tr class="bg-surface-container-low/50"><td class="p-5 font-medium">Promoted Listing</td><td class="p-5 text-center text-outline">Paid</td><td class="p-5 text-center bg-primary/5 text-outline">Paid</td><td class="p-5 text-center font-bold">1 Free/month</td></tr>
+            <tr><td class="p-5 font-medium">Transaction Fee</td><td class="p-5 text-center text-outline">6% guest</td><td class="p-5 text-center bg-primary/5 font-bold text-primary">3% guest</td><td class="p-5 text-center font-bold">1% guest</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="px-8 py-20 max-w-3xl mx-auto" id="faq">
+    <h2 class="font-headline font-bold text-4xl text-center tracking-tight mb-12">Frequently Asked</h2>
+    <div class="space-y-4" id="faq-list">
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden">
+        <button class="w-full text-left p-6 flex justify-between items-center font-headline font-bold text-base hover:bg-surface-container-low transition-colors" onclick="toggleFaq(this)">
+          Can I cancel my subscription anytime?
+          <span class="material-symbols-outlined text-outline transition-transform">expand_more</span>
+        </button>
+        <div class="faq-body hidden px-6 pb-6 text-sm text-on-surface-variant leading-relaxed">
+          Yes. Cancel anytime from your profile settings. Your plan stays active until the end of the billing period with no extra charges.
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden">
+        <button class="w-full text-left p-6 flex justify-between items-center font-headline font-bold text-base hover:bg-surface-container-low transition-colors" onclick="toggleFaq(this)">
+          What is DigiLocker KYC?
+          <span class="material-symbols-outlined text-outline transition-transform">expand_more</span>
+        </button>
+        <div class="faq-body hidden px-6 pb-6 text-sm text-on-surface-variant leading-relaxed">
+          Pro members get instant identity verification via India's official DigiLocker system. We match your Aadhaar / PAN with government records automatically — no manual document upload needed.
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden">
+        <button class="w-full text-left p-6 flex justify-between items-center font-headline font-bold text-base hover:bg-surface-container-low transition-colors" onclick="toggleFaq(this)">
+          Is the 14-day trial really free?
+          <span class="material-symbols-outlined text-outline transition-transform">expand_more</span>
+        </button>
+        <div class="faq-body hidden px-6 pb-6 text-sm text-on-surface-variant leading-relaxed">
+          Yes. No credit card required to start the trial. You'll be reminded 3 days before the trial ends. If you don't upgrade, you move to the Free plan automatically.
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden">
+        <button class="w-full text-left p-6 flex justify-between items-center font-headline font-bold text-base hover:bg-surface-container-low transition-colors" onclick="toggleFaq(this)">
+          How does the annual discount work?
+          <span class="material-symbols-outlined text-outline transition-transform">expand_more</span>
+        </button>
+        <div class="faq-body hidden px-6 pb-6 text-sm text-on-surface-variant leading-relaxed">
+          Annual billing gives you 20% off: OmniShare+ drops to ₹159/month (billed ₹1,908/year) and Pro drops to ₹239/month (billed ₹2,868/year). Switch anytime in settings.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="px-8 py-20 bg-on-surface">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="font-headline font-bold text-4xl text-surface tracking-tight mb-4">Ready to get started?</h2>
+      <p class="text-surface-variant text-lg mb-10">Join 50,000+ members. Free forever, upgrade when it counts.</p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="signup.html" class="px-10 py-4 bg-primary text-white rounded-full font-headline font-bold text-lg hover:bg-primary-container transition-colors shadow-xl shadow-primary/30">
+          Start Free
+        </a>
+        <a href="checkout.html" class="px-10 py-4 bg-white/10 text-white rounded-full font-headline font-bold text-lg hover:bg-white/20 transition-colors">
+          Get OmniShare+ — ₹199/mo
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="w-full py-14 bg-slate-50">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-8 px-12 max-w-7xl mx-auto">
+    <div class="col-span-2 md:col-span-1">
+      <div class="text-lg font-bold text-slate-900 mb-4 font-headline">OmniShare</div>
+      <p class="text-sm text-slate-500 leading-relaxed">The premier P2P rental marketplace for creators and enthusiasts.</p>
+    </div>
+    <div><h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Platform</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600" href="search.html">Browse Rentals</a></li>
+        <li><a class="hover:text-blue-600" href="owner_portal.html">List an Item</a></li>
+        <li><a class="hover:text-blue-600" href="plans.html">Pricing</a></li>
+      </ul>
+    </div>
+    <div><h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Account</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600" href="signin.html">Sign In</a></li>
+        <li><a class="hover:text-blue-600" href="signup.html">Create Account</a></li>
+        <li><a class="hover:text-blue-600" href="profile.html">My Profile</a></li>
+      </ul>
+    </div>
+    <div><h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Company</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600" href="admin.html">Admin</a></li>
+        <li><a class="hover:text-blue-600" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-blue-600" href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Billing toggle
+  const toggle = document.getElementById('billing-toggle');
+  toggle.addEventListener('change', () => {
+    const annual = toggle.checked;
+    document.getElementById('price-plus').textContent = annual ? '₹159' : '₹199';
+    document.getElementById('note-plus').textContent  = annual ? 'Billed ₹1,908/year · Save 20%' : 'Billed monthly · Cancel anytime';
+    document.getElementById('price-pro').textContent  = annual ? '₹239' : '₹299';
+    document.getElementById('note-pro').textContent   = annual ? 'Billed ₹2,868/year · Save 20%' : 'Billed monthly · Cancel anytime';
+    document.getElementById('lbl-monthly').className  = annual
+      ? 'text-outline font-medium text-sm px-4 py-2'
+      : 'text-primary font-bold text-sm px-4 py-2 rounded-full bg-surface-container-lowest shadow-sm';
+    document.getElementById('lbl-annual').className   = annual
+      ? 'text-primary font-bold text-sm px-4 py-2 rounded-full bg-surface-container-lowest shadow-sm'
+      : 'text-outline font-medium text-sm px-4 py-2';
+  });
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const body = btn.nextElementSibling;
+    const icon = btn.querySelector('.material-symbols-outlined');
+    body.classList.toggle('hidden');
+    icon.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
+  }
+</script>
+</body></html>

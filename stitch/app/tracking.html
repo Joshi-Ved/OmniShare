@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Track Your Order | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface-bright":"#f6fafe","surface-container":"#eaeef2","background":"#f6fafe","on-primary-fixed":"#001a41","outline":"#717786","on-surface":"#171c1f","surface-container-low":"#f0f4f8","secondary-container":"#d5e0f8","on-secondary":"#ffffff","surface-container-highest":"#dfe3e7","secondary":"#545f73","outline-variant":"#c1c6d7","primary-fixed":"#d8e2ff","surface":"#f6fafe","on-primary-container":"#fefcff","on-primary":"#ffffff","error":"#ba1a1a","on-surface-variant":"#414754","on-error":"#ffffff","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","primary":"#0059bb","surface-tint":"#005bc0","on-background":"#171c1f","primary-container":"#0070ea","primary-fixed-dim":"#adc7ff","on-primary-fixed-variant":"#004493"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"],"label":["Inter"]}}}}
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+
+  /* Timeline */
+  .step-done   .step-dot{background:#10b981;border-color:#10b981;}
+  .step-done   .step-dot span{color:#fff;}
+  .step-active .step-dot{background:#0059bb;border-color:#0059bb;box-shadow:0 0 0 6px rgba(0,89,187,.15);}
+  .step-active .step-dot span{color:#fff;}
+  .step-idle   .step-dot{background:#fff;border-color:#c1c6d7;}
+  .step-idle   .step-dot span{color:#717786;}
+
+  .step-done .step-line{background:#10b981;}
+  .step-active .step-line{background:linear-gradient(to bottom,#10b981 50%,#e4e9ed 50%);}
+  .step-idle .step-line{background:#e4e9ed;}
+
+  @keyframes pulse-ring{0%{transform:scale(1);opacity:.6}70%{transform:scale(1.6);opacity:0}100%{transform:scale(1.6);opacity:0}}
+  .pulse-ring::before{content:'';position:absolute;inset:0;border-radius:9999px;border:2px solid #0059bb;animation:pulse-ring 1.5s ease-out infinite;}
+
+  @keyframes slide-in{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
+  .slide-in{animation:slide-in 0.4s ease forwards;}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)]">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
+    <div class="flex items-center gap-4">
+      <a href="profile.html" class="text-sm font-bold text-primary hover:underline underline-offset-2">My Bookings</a>
+      <a href="search.html" class="bg-primary text-white px-5 py-2 rounded-full font-bold text-sm hover:bg-primary-container transition-colors">Browse More</a>
+    </div>
+  </div>
+</header>
+
+<main class="pt-28 pb-20 px-6 max-w-4xl mx-auto w-full flex-grow">
+
+  <!-- Header -->
+  <div class="mb-10">
+    <p class="text-xs font-bold uppercase tracking-widest text-primary mb-2">Live Tracking</p>
+    <h1 class="font-headline font-bold text-4xl md:text-5xl tracking-tight mb-3">Your Rental <span class="text-primary italic">Journey</span></h1>
+    <div class="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
+      <span>Booking Ref: <strong class="text-on-surface">#OMN-2024-9847</strong></span>
+      <span>·</span>
+      <span>Red Komodo 6K Cinema Package</span>
+      <span>·</span>
+      <span>Oct 12 – Oct 15, 2024</span>
+    </div>
+  </div>
+
+  <!-- Main Tracking Card -->
+  <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/10 shadow-sm overflow-hidden mb-8">
+
+    <!-- Status Hero -->
+    <div class="bg-gradient-to-r from-primary to-primary-container p-8 md:p-10 relative overflow-hidden">
+      <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+      <div class="relative z-10">
+        <p class="text-white/60 text-xs font-bold uppercase tracking-widest mb-2">Current Status</p>
+        <div class="flex items-center gap-3 mb-2">
+          <span class="material-symbols-outlined text-white text-3xl" id="status-icon" style="font-variation-settings:'FILL' 1;">local_shipping</span>
+          <h2 class="font-headline font-bold text-3xl text-white" id="status-text">On the Way</h2>
+        </div>
+        <p class="text-white/70 text-sm" id="status-sub">Your item is with our delivery partner and will arrive today.</p>
+        <div class="mt-6 flex items-center gap-3">
+          <div class="flex-1 bg-white/20 rounded-full h-2 overflow-hidden">
+            <div class="h-full bg-white rounded-full transition-all duration-1000" id="progress-bar" style="width:65%"></div>
+          </div>
+          <span class="text-white font-bold text-sm" id="progress-pct">65%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="p-8 md:p-10">
+      <h3 class="font-headline font-bold text-lg mb-8">Delivery Timeline</h3>
+      <div class="flex flex-col gap-0" id="timeline">
+
+        <!-- Step: Booked -->
+        <div class="step-done flex gap-6" id="step-booked">
+          <div class="flex flex-col items-center">
+            <div class="step-dot w-10 h-10 rounded-full border-2 flex items-center justify-center relative transition-all duration-500">
+              <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            </div>
+            <div class="step-line w-0.5 h-16 mt-1 transition-all duration-500"></div>
+          </div>
+          <div class="pb-8 slide-in">
+            <p class="font-headline font-bold text-base">Booking Confirmed</p>
+            <p class="text-xs text-on-surface-variant mt-0.5">Oct 11, 2024 · 10:32 AM</p>
+            <p class="text-sm text-on-surface-variant mt-2">Owner Julian R. accepted your booking. Payment of ₹5,790 charged successfully.</p>
+          </div>
+        </div>
+
+        <!-- Step: Preparing -->
+        <div class="step-done flex gap-6" id="step-preparing">
+          <div class="flex flex-col items-center">
+            <div class="step-dot w-10 h-10 rounded-full border-2 flex items-center justify-center relative transition-all duration-500">
+              <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            </div>
+            <div class="step-line w-0.5 h-16 mt-1 transition-all duration-500"></div>
+          </div>
+          <div class="pb-8 slide-in" style="animation-delay:0.1s">
+            <p class="font-headline font-bold text-base">Item Prepared &amp; Packed</p>
+            <p class="text-xs text-on-surface-variant mt-0.5">Oct 11, 2024 · 4:15 PM</p>
+            <p class="text-sm text-on-surface-variant mt-2">Host packed and quality-checked the Red Komodo 6K kit. OmniGuard insurance activated.</p>
+          </div>
+        </div>
+
+        <!-- Step: On Route (ACTIVE) -->
+        <div class="step-active flex gap-6" id="step-route">
+          <div class="flex flex-col items-center">
+            <div class="step-dot w-10 h-10 rounded-full border-2 flex items-center justify-center relative pulse-ring transition-all duration-500">
+              <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">local_shipping</span>
+            </div>
+            <div class="step-line w-0.5 h-16 mt-1 transition-all duration-500"></div>
+          </div>
+          <div class="pb-8 slide-in" style="animation-delay:0.2s">
+            <div class="flex items-center gap-2 mb-0.5">
+              <p class="font-headline font-bold text-base">On the Way</p>
+              <span class="px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wide">Live</span>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-0.5">Oct 12, 2024 · In Transit</p>
+            <p class="text-sm text-on-surface-variant mt-2">Your item is with <strong>BlueDart Express</strong>. Tracking ID: BDX-4892761. ETA: Today before 6 PM.</p>
+            <div class="mt-4 bg-surface-container-low rounded-xl p-4 flex items-center gap-4">
+              <span class="material-symbols-outlined text-primary">gps_fixed</span>
+              <div>
+                <p class="font-bold text-sm">Current Location</p>
+                <p class="text-xs text-on-surface-variant" id="location-text">Andheri West, Mumbai — 4.2 km away</p>
+              </div>
+              <div class="ml-auto w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step: Delivering -->
+        <div class="step-idle flex gap-6" id="step-delivering">
+          <div class="flex flex-col items-center">
+            <div class="step-dot w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500">
+              <span class="material-symbols-outlined text-lg">pin_drop</span>
+            </div>
+            <div class="step-line w-0.5 h-16 mt-1 transition-all duration-500"></div>
+          </div>
+          <div class="pb-8 text-on-surface-variant">
+            <p class="font-headline font-bold text-base text-outline">Out for Delivery</p>
+            <p class="text-xs text-outline mt-0.5">Expected: Oct 12, 2024 · 5–6 PM</p>
+            <p class="text-sm mt-2">Delivery agent will call 30 mins before arrival. Show your OTP to confirm.</p>
+          </div>
+        </div>
+
+        <!-- Step: Delivered -->
+        <div class="step-idle flex gap-6" id="step-delivered">
+          <div class="flex flex-col items-center">
+            <div class="step-dot w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500">
+              <span class="material-symbols-outlined text-lg">verified</span>
+            </div>
+            <div class="step-line w-0.5 h-12 mt-1 transition-all duration-500"></div>
+          </div>
+          <div class="pb-8 text-on-surface-variant">
+            <p class="font-headline font-bold text-base text-outline">Delivered &amp; Rental Active</p>
+            <p class="text-xs text-outline mt-0.5">Pending</p>
+            <p class="text-sm mt-2">QR handover scan will activate your rental officially.</p>
+          </div>
+        </div>
+
+        <!-- Step: Returned -->
+        <div class="step-idle flex gap-6" id="step-returned">
+          <div class="flex flex-col items-center">
+            <div class="step-dot w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all duration-500">
+              <span class="material-symbols-outlined text-lg">assignment_return</span>
+            </div>
+          </div>
+          <div class="pb-4 text-on-surface-variant">
+            <p class="font-headline font-bold text-base text-outline">Return &amp; Deposit Released</p>
+            <p class="text-xs text-outline mt-0.5">Oct 15, 2024 (expected)</p>
+            <p class="text-sm mt-2">After return scan, escrow deposit of ₹1,500 refunded within 24 hrs.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+      <span class="material-symbols-outlined text-primary mb-3" style="font-variation-settings:'FILL' 1;">support_agent</span>
+      <h4 class="font-headline font-bold text-sm mb-1">Need Help?</h4>
+      <p class="text-xs text-on-surface-variant mb-3">Contact support or message the owner directly.</p>
+      <button class="text-primary text-xs font-bold hover:underline underline-offset-2">Chat with Support</button>
+    </div>
+    <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+      <span class="material-symbols-outlined text-primary mb-3" style="font-variation-settings:'FILL' 1;">qr_code_2</span>
+      <h4 class="font-headline font-bold text-sm mb-1">Delivery OTP</h4>
+      <p class="text-4xl font-headline font-black text-primary tracking-widest my-2">8 4 7 2</p>
+      <p class="text-xs text-on-surface-variant">Show this to the delivery agent to confirm receipt.</p>
+    </div>
+    <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+      <span class="material-symbols-outlined text-primary mb-3" style="font-variation-settings:'FILL' 1;">shield_with_heart</span>
+      <h4 class="font-headline font-bold text-sm mb-1">Insurance Active</h4>
+      <p class="text-xs text-on-surface-variant mb-2">OmniGuard Standard · Coverage up to ₹50,000</p>
+      <span class="text-[10px] font-black px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full uppercase tracking-wider">Policy #OG-8847</span>
+    </div>
+  </div>
+
+  <!-- Simulate Progress (Demo) -->
+  <div class="bg-primary/5 border border-primary/15 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div>
+      <p class="font-headline font-bold text-sm">Demo: Simulate Status Progression</p>
+      <p class="text-xs text-on-surface-variant mt-1">Click to advance the tracking state in real-time.</p>
+    </div>
+    <button onclick="advanceStep()" class="px-6 py-3 bg-primary text-white rounded-full font-headline font-bold text-sm hover:bg-primary-container transition-colors shrink-0 flex items-center gap-2">
+      <span class="material-symbols-outlined text-base">skip_next</span> Advance Status
+    </button>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="w-full mt-auto py-10 bg-slate-50">
+  <div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto gap-4">
+    <p class="font-headline font-bold text-slate-900">OmniShare</p>
+    <div class="flex gap-8 text-xs uppercase tracking-widest text-slate-400">
+      <a class="hover:text-primary transition-colors" href="search.html">Browse</a>
+      <a class="hover:text-primary transition-colors" href="profile.html">My Bookings</a>
+      <a class="hover:text-primary transition-colors" href="#">Support</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── State machine ────────────────────────────────────────
+  const states = [
+    {
+      id:'booked', progress:20, pct:'20%',
+      icon:'receipt_long', text:'Booking Confirmed',
+      sub:'Payment processed. Owner notified and accepted your booking.',
+      location: null
+    },
+    {
+      id:'preparing', progress:40, pct:'40%',
+      icon:'inventory_2', text:'Item Being Prepared',
+      sub:'Host is packing your item. Expected dispatch in 2 hours.',
+      location: 'Preparing at host location — Bandra West, Mumbai'
+    },
+    {
+      id:'route', progress:65, pct:'65%',
+      icon:'local_shipping', text:'On the Way',
+      sub:'Your item is with our delivery partner and will arrive today.',
+      location: 'Andheri West, Mumbai — 4.2 km away'
+    },
+    {
+      id:'delivering', progress:85, pct:'85%',
+      icon:'pin_drop', text:'Out for Delivery',
+      sub:'Delivery agent is nearby. Keep your phone handy for OTP.',
+      location: 'Powai, Mumbai — 1.1 km away · Arriving in ~10 mins'
+    },
+    {
+      id:'delivered', progress:100, pct:'100%',
+      icon:'verified', text:'Delivered — Rental Active',
+      sub:'Item handed over. Your rental officially starts now. Enjoy!',
+      location: null
+    }
+  ];
+
+  let current = 2; // start at "On the Way"
+
+  const allStepIds = ['booked','preparing','route','delivering','returned'];
+
+  function applyState(idx) {
+    const s = states[idx];
+    // Hero
+    document.getElementById('status-icon').textContent = s.icon;
+    document.getElementById('status-text').textContent = s.text;
+    document.getElementById('status-sub').textContent  = s.sub;
+    document.getElementById('progress-bar').style.width = s.pct;
+    document.getElementById('progress-pct').textContent = s.pct;
+    if (s.location) {
+      document.getElementById('location-text').textContent = s.location;
+    }
+
+    // Classes
+    allStepIds.forEach((sid, i) => {
+      const el = document.getElementById('step-' + sid);
+      if (!el) return;
+      el.className = el.className.replace(/step-\w+/, '');
+      if (i < idx) el.classList.add('step-done');
+      else if (i === idx) el.classList.add('step-active');
+      else el.classList.add('step-idle');
+    });
+
+    // Add pulse only to active dot
+    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('pulse-ring'));
+    const activeDot = document.querySelector('.step-active .step-dot');
+    if (activeDot) activeDot.classList.add('pulse-ring');
+  }
+
+  function advanceStep() {
+    if (current < states.length - 1) {
+      current++;
+      applyState(current);
+    } else {
+      alert('Rental journey complete! Deposit ₹1,500 will be released within 24 hours.');
+    }
+  }
+
+  // Location ticker simulation
+  const locations = [
+    'Andheri West, Mumbai — 4.2 km away',
+    'Andheri East, Mumbai — 3.8 km away',
+    'Powai, Mumbai — 2.9 km away',
+    'Powai, Mumbai — 1.9 km away',
+    'Powai, Mumbai — 0.8 km away'
+  ];
+  let locIdx = 0;
+  setInterval(() => {
+    if (current === 2) {
+      locIdx = (locIdx + 1) % locations.length;
+      document.getElementById('location-text').textContent = locations[locIdx];
+    }
+  }, 4000);
+
+  applyState(current);
+</script>
+</body></html>

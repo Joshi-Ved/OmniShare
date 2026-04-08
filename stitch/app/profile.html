@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Profile | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode:"class",
+    theme:{extend:{"colors":{"surface-bright":"#f6fafe","surface-container":"#eaeef2","background":"#f6fafe","on-primary-fixed":"#001a41","surface-variant":"#dfe3e7","on-secondary-container":"#586377","outline":"#717786","on-surface":"#171c1f","surface-container-low":"#f0f4f8","secondary-container":"#d5e0f8","on-secondary":"#ffffff","surface-container-highest":"#dfe3e7","secondary":"#545f73","outline-variant":"#c1c6d7","primary-fixed":"#d8e2ff","surface":"#f6fafe","on-primary-container":"#fefcff","tertiary":"#4d5d73","on-primary":"#ffffff","error":"#ba1a1a","secondary-fixed":"#d8e3fb","on-surface-variant":"#414754","on-error":"#ffffff","inverse-primary":"#adc7ff","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","primary":"#0059bb","surface-tint":"#005bc0","on-background":"#171c1f","primary-container":"#0070ea","primary-fixed-dim":"#adc7ff","on-primary-fixed-variant":"#004493"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"],"label":["Inter"]}}}
+  }
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  .tab-btn.active{border-bottom:2px solid #0059bb;color:#0059bb;font-weight:700;}
+  .tab-content{display:none;} .tab-content.active{display:block;}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)]">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
+    <nav class="hidden md:flex gap-6 items-center font-headline font-bold">
+      <a class="text-slate-500 hover:text-primary transition-colors" href="search.html">Browse Rentals</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="subscription.html">How it Works</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a class="material-symbols-outlined p-2 text-slate-500 hover:text-primary hover:bg-surface-container-low rounded-full transition-all relative" href="#">
+        notifications
+        <span class="absolute top-1 right-1 w-3 h-3 bg-primary rounded-full border-2 border-white"></span>
+      </a>
+      <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
+        <img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfMEpaHhPeLp0yEooiRD7ibpUsSkOl6fjaY22MfZ1gQeIToNY_70wEbaIFgxaoixR3NgsTv7g19p_U2O8GsbhgqU8NtKakNm61pOn2h33-TCCMHcZAZA4z7Jvv3l5qI_TAkW1K0ZGhhO4C4YhehXAW_sLXIX8ZDwNwnmReL5bHrwr8C6jNTOax9v0iQGFWbmG9e9l2z9duoEzfAyoV5hQ6ZqVz_2kxwYNziocA6ZfJpQKh8Uh1QTLhpmvIyETClwPpOVwJpaAHUs"/>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="pt-28 pb-20 px-8 max-w-[1440px] mx-auto w-full flex-grow">
+
+  <!-- Profile Hero -->
+  <div class="bg-gradient-to-br from-primary-fixed to-secondary-container rounded-2xl p-8 md:p-12 mb-10 relative overflow-hidden">
+    <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-8">
+      <div class="relative">
+        <div class="w-24 h-24 rounded-full overflow-hidden ring-4 ring-white shadow-xl">
+          <img alt="Marcus Sterling" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfMEpaHhPeLp0yEooiRD7ibpUsSkOl6fjaY22MfZ1gQeIToNY_70wEbaIFgxaoixR3NgsTv7g19p_U2O8GsbhgqU8NtKakNm61pOn2h33-TCCMHcZAZA4z7Jvv3l5qI_TAkW1K0ZGhhO4C4YhehXAW_sLXIX8ZDwNwnmReL5bHrwr8C6jNTOax9v0iQGFWbmG9e9l2z9duoEzfAyoV5hQ6ZqVz_2kxwYNziocA6ZfJpQKh8Uh1QTLhpmvIyETClwPpOVwJpaAHUs"/>
+        </div>
+        <div class="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+          <span class="material-symbols-outlined text-white text-xs" style="font-variation-settings:'FILL' 1;">verified</span>
+        </div>
+      </div>
+      <div class="flex-1">
+        <div class="flex flex-wrap items-center gap-3 mb-2">
+          <h1 class="font-headline font-bold text-3xl text-on-primary-fixed">Marcus Sterling</h1>
+          <span class="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full uppercase tracking-wider">Gold Host</span>
+          <span class="px-3 py-1 bg-white/40 text-on-primary-fixed text-xs font-bold rounded-full">KYC Verified</span>
+        </div>
+        <p class="text-on-primary-fixed/70 text-sm mb-4">m.sterling@studio.com · Member since January 2023</p>
+        <div class="flex flex-wrap gap-6 text-sm">
+          <div class="text-center">
+            <p class="font-headline font-bold text-2xl text-on-primary-fixed">4.9</p>
+            <p class="text-on-primary-fixed/60 text-xs uppercase tracking-wider">Trust Score</p>
+          </div>
+          <div class="text-center">
+            <p class="font-headline font-bold text-2xl text-on-primary-fixed">24</p>
+            <p class="text-on-primary-fixed/60 text-xs uppercase tracking-wider">Rentals</p>
+          </div>
+          <div class="text-center">
+            <p class="font-headline font-bold text-2xl text-on-primary-fixed">8</p>
+            <p class="text-on-primary-fixed/60 text-xs uppercase tracking-wider">Listings</p>
+          </div>
+          <div class="text-center">
+            <p class="font-headline font-bold text-2xl text-on-primary-fixed">₹1,240</p>
+            <p class="text-on-primary-fixed/60 text-xs uppercase tracking-wider">Loyalty Coins</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        <a href="owner_portal.html" class="px-6 py-3 bg-primary text-white rounded-full font-headline font-bold text-sm hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 text-center">
+          Host Dashboard
+        </a>
+        <button class="px-6 py-3 bg-white/30 text-on-primary-fixed rounded-full font-headline font-bold text-sm hover:bg-white/50 transition-colors text-center">
+          Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KYC Banner -->
+  <div class="flex items-center gap-4 p-5 bg-emerald-50 border border-emerald-200 rounded-xl mb-10">
+    <span class="material-symbols-outlined text-emerald-600 text-2xl" style="font-variation-settings:'FILL' 1;">verified_user</span>
+    <div class="flex-1">
+      <p class="font-bold text-emerald-800 text-sm">KYC Verified — Full Platform Access</p>
+      <p class="text-xs text-emerald-700">Identity verified on Jan 14, 2023. You can list items and book rentals without restrictions.</p>
+    </div>
+    <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Active</span>
+  </div>
+
+  <!-- Tabs -->
+  <div class="border-b border-outline-variant/20 mb-8">
+    <div class="flex gap-8 overflow-x-auto no-scrollbar">
+      <button class="tab-btn active pb-4 text-sm font-semibold tracking-tight whitespace-nowrap transition-colors" onclick="switchTab('bookings', this)">My Bookings</button>
+      <button class="tab-btn pb-4 text-sm font-semibold text-outline tracking-tight whitespace-nowrap transition-colors hover:text-on-surface" onclick="switchTab('listings', this)">My Listings</button>
+      <button class="tab-btn pb-4 text-sm font-semibold text-outline tracking-tight whitespace-nowrap transition-colors hover:text-on-surface" onclick="switchTab('notifications', this)">Notifications</button>
+      <button class="tab-btn pb-4 text-sm font-semibold text-outline tracking-tight whitespace-nowrap transition-colors hover:text-on-surface" onclick="switchTab('settings', this)">Settings</button>
+    </div>
+  </div>
+
+  <!-- Tab: Bookings -->
+  <div class="tab-content active" id="tab-bookings">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-headline font-bold text-xl">Recent Bookings</h2>
+      <div class="flex gap-2">
+        <button class="px-4 py-2 bg-primary text-white rounded-full text-xs font-bold">All</button>
+        <button class="px-4 py-2 bg-surface-container-low rounded-full text-xs font-bold text-on-surface-variant hover:bg-surface-container transition-colors">Active</button>
+        <button class="px-4 py-2 bg-surface-container-low rounded-full text-xs font-bold text-on-surface-variant hover:bg-surface-container transition-colors">Completed</button>
+      </div>
+    </div>
+    <div class="space-y-4">
+      <!-- Booking 1 -->
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+        <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0">
+          <img alt="Red Komodo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+        </div>
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+            <h3 class="font-headline font-bold">Red Komodo 6K Cinema Package</h3>
+            <span class="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-extrabold uppercase tracking-wider">Pending Confirm</span>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-3">Oct 12 – Oct 15, 2024 · 3 Days · Brooklyn, NY</p>
+          <div class="flex flex-wrap items-center gap-4 text-sm">
+            <span class="font-headline font-bold text-primary">₹1,16,745 total</span>
+            <span class="text-outline">Ref: #OMN-2024-9847</span>
+            <a href="order_confirmation.html" class="text-primary font-bold hover:underline underline-offset-2">View Details</a>
+          </div>
+        </div>
+      </div>
+      <!-- Booking 2 -->
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+        <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-surface-container-low">
+          <img alt="Profoto Studio Kit" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKQ6hy46JO9QnSimNFXnf8Ch7ogx-V_vs4rBh6lY06al6_1tFRUGcZ-qvY_qgQciDt0YcFbDF9DXo-hPdkHEzPatSTFy65Lq_35XJo1f-eZqjtejZDgoVSv47Sws8Oxwx-Ujsdy37ACsbrUt4mILjBcPfoyHzTSCXLkEYN0VklulnZdvdLDd95XdUMM2G_Vjh36S97rJiS2SyEWTr1p2_n1HB125K7_CLaJW36Wjfa8QLhWmWERk3VhvzEibEMEcVfm9nW1yC5oVI"/>
+        </div>
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+            <h3 class="font-headline font-bold">Profoto B10X Plus Studio Kit</h3>
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-extrabold uppercase tracking-wider">Completed</span>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-3">Sep 5 – Sep 7, 2024 · 2 Days · Manhattan, NY</p>
+          <div class="flex flex-wrap items-center gap-4 text-sm">
+            <span class="font-headline font-bold text-primary">₹67,200 total</span>
+            <span class="text-outline">Ref: #OMN-2024-8833</span>
+            <button class="text-primary font-bold hover:underline underline-offset-2">Leave Review</button>
+          </div>
+        </div>
+      </div>
+      <!-- Booking 3 -->
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+        <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-surface-container-low">
+          <img alt="Gibson Les Paul" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIYOByjDSUrNH3ymzp3a6e7hbpmepA8FkFi_AvPmOwu6RMszLzdiMA2X00XVjRMwCYEamMbqNXWXnZxCLeTOLlsi-EQlxBikWYPYvk1Os3a9WeJ2NqO-6wphPDXvtR373n4IU7kDui2s1HcWH8Rl0uTwx1rfDxIbly6teSRwT8kUBXNHvQ4Y4R2SSED5idj8OgPMkOPr2DqRv5EnY_Y8qJsdm23G8t_VJhwF2I3LGD_FfvtOkxYlFMDDsYMhJB2lplZkd8wSq16lY"/>
+        </div>
+        <div class="flex-1">
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+            <h3 class="font-headline font-bold">Gibson Les Paul Custom</h3>
+            <span class="px-3 py-1 bg-red-50 text-red-700 rounded-full text-[10px] font-extrabold uppercase tracking-wider">Cancelled</span>
+          </div>
+          <p class="text-sm text-on-surface-variant mb-3">Aug 20, 2024 · 1 Day · Astoria, NY</p>
+          <div class="flex flex-wrap items-center gap-4 text-sm">
+            <span class="font-headline font-bold text-outline">₹31,080 refunded</span>
+            <span class="text-outline">Ref: #OMN-2024-7711</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Listings -->
+  <div class="tab-content" id="tab-listings">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="font-headline font-bold text-xl">My Listings</h2>
+      <a href="owner_portal.html" class="px-5 py-2.5 bg-primary text-white rounded-full font-bold text-sm hover:bg-primary-container transition-colors flex items-center gap-2">
+        <span class="material-symbols-outlined text-base">add</span> New Listing
+      </a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/10 shadow-sm group cursor-pointer hover:shadow-md transition-shadow" onclick="window.location.href='product_detail.html'">
+        <div class="relative aspect-video overflow-hidden">
+          <img alt="Phase One Camera" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnSoAttA24u90SHtD6FwFYJb3HZryuYA9G0YuNEZeKvlgh4PoApV2R8ELQsOF4PzJRPG9ZvTGgI_TI977_x_ZX5tTipVsRM7ZHtbqRkuULMdba_LMYex2Utm_OVVYreWBGiuVN6zdwQMNrsuAfEy1DGcd5btQhF4gXXbVr9W3rbqE4wiSGyST4W1YJcJ9r-bY2g6hzh8kvz3FTOhPDqV0Ju5tHEywO_TPXRACUjlmsKringoZ_t0w0Rmb7IqYYXSheUucMo5EVcsE"/>
+          <span class="absolute top-3 left-3 px-2 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full">Approved</span>
+        </div>
+        <div class="p-5">
+          <h3 class="font-headline font-bold mb-1">Phase One XF Camera System</h3>
+          <p class="text-primary font-headline font-bold text-sm mb-3">₹2,05,000 <span class="text-xs font-normal text-outline">/ day</span></p>
+          <div class="flex items-center justify-between text-xs text-on-surface-variant">
+            <span>12 bookings · 4.8★</span>
+            <button class="text-primary font-bold hover:underline">Edit</button>
+          </div>
+        </div>
+      </div>
+      <a href="owner_portal.html" class="border-2 border-dashed border-outline-variant/40 rounded-xl flex flex-col items-center justify-center py-16 text-center hover:border-primary hover:bg-primary/5 transition-all group">
+        <span class="material-symbols-outlined text-5xl text-outline-variant group-hover:text-primary transition-colors mb-4">add_circle</span>
+        <p class="font-headline font-bold text-on-surface-variant group-hover:text-primary transition-colors">Add New Listing</p>
+        <p class="text-xs text-outline mt-1">Share your gear with the community</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Tab: Notifications -->
+  <div class="tab-content" id="tab-notifications">
+    <h2 class="font-headline font-bold text-xl mb-6">Notifications</h2>
+    <div class="space-y-3">
+      <div class="flex items-start gap-4 p-5 bg-primary/5 border border-primary/15 rounded-xl">
+        <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">notifications_active</span>
+        <div class="flex-1">
+          <p class="font-bold text-sm">Booking confirmed by Julian R.</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">Your Red Komodo 6K booking is confirmed. Pickup on Oct 12 at 10 AM.</p>
+          <p class="text-xs text-outline mt-2">2 minutes ago</p>
+        </div>
+        <button class="text-xs text-primary font-bold shrink-0">Mark Read</button>
+      </div>
+      <div class="flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl">
+        <span class="material-symbols-outlined text-outline mt-0.5">paid</span>
+        <div class="flex-1">
+          <p class="font-bold text-sm">Payment processed successfully</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">₹1,16,745 charged · ₹42,000 held in escrow · Ref #OMN-2024-9847</p>
+          <p class="text-xs text-outline mt-2">10 minutes ago</p>
+        </div>
+      </div>
+      <div class="flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl">
+        <span class="material-symbols-outlined text-emerald-600 mt-0.5" style="font-variation-settings:'FILL' 1;">stars</span>
+        <div class="flex-1">
+          <p class="font-bold text-sm">You earned 120 Loyalty Coins</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">Bonus coins awarded for completing your Profoto B10X rental. Total balance: ₹1,240.</p>
+          <p class="text-xs text-outline mt-2">2 days ago</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Settings -->
+  <div class="tab-content" id="tab-settings">
+    <h2 class="font-headline font-bold text-xl mb-6">Account Settings</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm space-y-6">
+        <h3 class="font-headline font-bold text-base">Personal Information</h3>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Full Name</label>
+          <input type="text" value="Marcus Sterling" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Email</label>
+          <input type="email" value="m.sterling@studio.com" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Role</label>
+          <select class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20">
+            <option>Guest &amp; Host (Both)</option>
+            <option>Guest Only</option>
+            <option>Host Only</option>
+          </select>
+        </div>
+        <button class="w-full py-3 bg-primary text-white rounded-full font-headline font-bold text-sm hover:bg-primary-container transition-colors shadow-md shadow-primary/20">
+          Save Changes
+        </button>
+      </div>
+      <div class="space-y-6">
+        <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm">
+          <h3 class="font-headline font-bold text-base mb-4">KYC Status</h3>
+          <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-emerald-600 text-3xl" style="font-variation-settings:'FILL' 1;">shield_with_heart</span>
+            <div>
+              <p class="font-bold text-sm text-emerald-700">Fully Verified</p>
+              <p class="text-xs text-on-surface-variant">Verified Jan 14, 2023 · ID + Address Confirmed</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm">
+          <h3 class="font-headline font-bold text-base mb-4">Danger Zone</h3>
+          <div class="space-y-3">
+            <button class="w-full py-3 border border-error/30 text-error rounded-xl font-bold text-sm hover:bg-error/5 transition-colors">
+              Deactivate Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="w-full mt-auto py-12 bg-slate-50">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-8 px-12 max-w-7xl mx-auto">
+    <div class="col-span-2 md:col-span-1">
+      <div class="text-lg font-bold text-slate-900 mb-4 font-headline">OmniShare</div>
+      <p class="text-sm text-slate-500 leading-relaxed">The premier marketplace for editorial-grade rentals.</p>
+    </div>
+    <div>
+      <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Platform</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600 transition-colors" href="search.html">Browse Rentals</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="subscription.html">How it Works</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="owner_portal.html">List an Item</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Support</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600 transition-colors" href="#">Help Center</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="#">Terms</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="#">Privacy</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Management</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600 transition-colors" href="admin.html">Admin Console</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="profile.html">Member Profile</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.add('text-outline'); b.classList.remove('text-on-surface'); });
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+    btn.classList.remove('text-outline');
+  }
+</script>
+</body></html>

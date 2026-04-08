@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniStream+ | Elevate Your Rental Experience</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "surface": "#f6fafe",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#171c1f",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "secondary": "#545f73",
+                        "outline-variant": "#c1c6d7",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#dfe3e7",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "surface-container-highest": "#dfe3e7",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "primary": "#0059bb",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#d5e0f8",
+                        "on-primary-fixed-variant": "#004493",
+                        "primary-fixed-dim": "#adc7ff",
+                        "on-background": "#171c1f",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "background": "#f6fafe",
+                        "surface-container": "#eaeef2",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#d8e2ff",
+                        "outline": "#717786",
+                        "surface-tint": "#005bc0",
+                        "tertiary-container": "#66768d",
+                        "on-primary-fixed": "#001a41",
+                        "inverse-on-surface": "#edf1f5",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "surface-bright": "#f6fafe",
+                        "on-surface-variant": "#414754",
+                        "on-secondary-fixed": "#111c2d",
+                        "primary-container": "#0070ea",
+                        "surface-container-low": "#f0f4f8",
+                        "secondary-fixed": "#d8e3fb",
+                        "on-tertiary-container": "#fdfcff",
+                        "on-primary-container": "#fefcff",
+                        "inverse-surface": "#2c3134",
+                        "surface-dim": "#d6dade",
+                        "surface-container-high": "#e4e9ed",
+                        "on-secondary-container": "#586377",
+                        "tertiary": "#4d5d73",
+                        "inverse-primary": "#adc7ff",
+                        "on-tertiary-fixed-variant": "#38485d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(246, 250, 254, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .editorial-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+        }
+        @media (max-width: 768px) {
+            .editorial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar (Shared Component Execution) -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)]">
+<nav class="flex justify-between items-center px-8 h-20 max-w-[1440px] mx-auto">
+<a class="font-['Space_Grotesk'] font-bold text-2xl tracking-tight text-[#171c1f]" href="#">OmniStream</a>
+<div class="hidden md:flex items-center space-x-8 font-['Space_Grotesk'] font-bold text-lg">
+<a class="text-slate-500 hover:text-[#171c1f] transition-all duration-300" href="#">Discover</a>
+<a class="text-slate-500 hover:text-[#171c1f] transition-all duration-300" href="#">Marketplace</a>
+<a class="text-slate-500 hover:text-[#171c1f] transition-all duration-300" href="#">Fleet</a>
+<a class="text-[#0059bb] border-b-2 border-[#0059bb] pb-1" href="#">Plus</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="material-symbols-outlined text-slate-500 hover:opacity-80 transition-all">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:opacity-80 transition-all">loyalty</button>
+<a class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container block" href="#">
+<img alt="User profile with subscription badge" data-alt="Close up portrait of a professional man with a friendly expression in clean studio lighting with soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCFg8Q4b-Cyu4XbkuguPDZwL4B1jwpkz56_v-qLXiVjz2CcwFwLMZSkis7S4yQ0ekmkLZEpnAf5LA_3LbCtSgE42zBb43YaLtt_fpdie9Ka2TC3MrHbxkXV1WbhNmMxo7yLpeuN7LYPH-qOYAyyTlkzoaylXor02XH8Dv1Z_v1NVJNWFamEoWzhm7gegXgNaUZ-Z_r516EosjJs9bn9dirutaMyBFi2RfVq4SOU1pZpqUVitlRShw9bM-toKZs3rkfpnYVd_t4dYk"/>
+</a>
+</div>
+</nav>
+</header>
+<main class="pt-24 min-h-screen">
+<!-- Hero Section: The Curated Exchange -->
+<section class="px-8 lg:px-24 py-16 md:py-24">
+<div class="editorial-grid gap-16 items-center">
+<div class="space-y-8">
+<span class="inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label font-bold text-xs uppercase tracking-widest">Priority Access</span>
+<h1 class="font-headline font-bold text-5xl md:text-7xl leading-[1.1] text-on-surface">
+                        The Future of <span class="text-primary">Ownership</span> is Access.
+                    </h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                        Join OmniStream+ and transform your rental workflow with editorial-grade benefits tailored for the modern curator.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<a class="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-bold text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform text-center" href="/checkout">
+                            Upgrade for ₹499 / $6 per month
+                        </a>
+<a class="inline-block px-10 py-4 rounded-full bg-surface-container-high text-on-surface font-headline font-bold text-lg hover:bg-surface-container-highest transition-colors text-center" href="#benefits">
+                            Explore Benefits
+                        </a>
+</div>
+</div>
+<div class="relative">
+<div class="rounded-xl overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
+<img alt="Premium lifestyle photography" data-alt="High-end editorial fashion photography of premium camera equipment and leather accessories arranged artfully on a marble surface with dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7Byl59lJ0hG9rqy86xWtxmmEPoF2Odekb6EqrFNc14EcH1pGu7yYlUv6U-woO6IF_OAGoytcUACwjB5qZ_ZM2jy0T2jOU-GDlV8LwNkQn5PljHnVcey9q5fWm7H_llr1RvLaavmcv9lxGhN6EW4_xOu5PX3u4w09_inYouKVgzlEJGx_8UcJNQNALouEn2dEhoc7evIjbTk8K6-GWan7EIZFEUHT2IPvJEqm4lr6-4hq6NbWarHkSsZpNi8xHF3SCMmwRnDN97hg"/>
+</div>
+<div class="absolute -bottom-8 -left-8 bg-surface-container-lowest p-6 rounded-xl shadow-xl max-w-[240px] transform -rotate-3">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-headline font-bold text-primary">5-Hour Delivery</span>
+</div>
+<p class="text-xs text-on-surface-variant">Guaranteed arrival for all metropolitan orders placed before 2 PM.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Benefits -->
+<section class="px-8 lg:px-24 py-20 bg-surface-container-low" id="benefits">
+<div class="max-w-[1440px] mx-auto">
+<div class="mb-16 text-center md:text-left">
+<h2 class="font-headline font-bold text-4xl mb-4">Elite Privileges</h2>
+<p class="text-on-surface-variant">Designed for power users who demand precision and speed.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Benefit 1 -->
+<div class="md:col-span-2 bg-surface-container-lowest p-10 rounded-xl flex flex-col justify-between hover:bg-surface-bright transition-colors group">
+<div class="max-w-md">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary">local_shipping</span>
+</div>
+<h3 class="font-headline font-bold text-3xl mb-4">Unlimited Free Shipping</h3>
+<p class="text-on-surface-variant text-lg">Never worry about logistics costs again. OmniStream+ covers all standard and express shipping fees on every single rental, nationwide.</p>
+</div>
+<div class="mt-12 flex items-center gap-2 text-primary font-bold group-hover:translate-x-2 transition-transform">
+<span>Learn more</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+<!-- Benefit 2 -->
+<div class="bg-gradient-to-br from-primary-fixed-dim to-primary-container p-10 rounded-xl text-on-primary-fixed flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-4xl mb-6">verified</span>
+<h3 class="font-headline font-bold text-2xl mb-4">Priority Listing Approval</h3>
+</div>
+<p class="text-sm opacity-90 leading-relaxed">Your listings move to the front of our editorial review queue. Verified in under 2 hours, guaranteed.</p>
+</div>
+<!-- Benefit 3 -->
+<div class="bg-surface-container-lowest p-10 rounded-xl flex flex-col justify-between hover:bg-surface-bright transition-colors">
+<div>
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-secondary-container">schedule</span>
+</div>
+<h3 class="font-headline font-bold text-2xl mb-4">5-Hour Delivery</h3>
+</div>
+<p class="text-sm text-on-surface-variant">Exclusive logistical infrastructure for our Plus members in major hubs.</p>
+</div>
+<!-- Benefit 4 -->
+<div class="md:col-span-2 bg-surface-container-lowest p-10 rounded-xl relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="font-headline font-bold text-3xl mb-4">Early Access Bookings</h3>
+<p class="text-on-surface-variant text-lg max-w-sm">Secure high-demand inventory 24 hours before they go live to the general public.</p>
+</div>
+<div class="absolute right-0 bottom-0 w-1/2 h-full opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Comparison Table: Editorial Style -->
+<section class="px-8 lg:px-24 py-24">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="font-headline font-bold text-4xl mb-4">Choose Your Tier</h2>
+<p class="text-on-surface-variant">Transparent benefits for every type of collector.</p>
+</div>
+<div class="overflow-hidden rounded-xl bg-surface-container-low">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high">
+<th class="p-8 font-headline font-bold text-xl">Benefit</th>
+<th class="p-8 font-headline font-bold text-xl text-center text-on-surface-variant">Free</th>
+<th class="p-8 font-headline font-bold text-xl text-center text-primary bg-surface-container-highest/50">OmniStream+</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr>
+<td class="p-8 font-medium">Monthly Cost</td>
+<td class="p-8 text-center text-on-surface-variant">₹0 / $0</td>
+<td class="p-8 text-center font-headline font-bold text-primary bg-surface-container-highest/20">₹499 / $6</td>
+</tr>
+<tr>
+<td class="p-8 font-medium">Standard Shipping</td>
+<td class="p-8 text-center text-on-surface-variant">Paid</td>
+<td class="p-8 text-center text-primary bg-surface-container-highest/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</td>
+</tr>
+<tr>
+<td class="p-8 font-medium">Delivery Guarantee</td>
+<td class="p-8 text-center text-on-surface-variant">3-5 Days</td>
+<td class="p-8 text-center text-primary bg-surface-container-highest/20 font-bold">5 Hours</td>
+</tr>
+<tr>
+<td class="p-8 font-medium">Listing Verification</td>
+<td class="p-8 text-center text-on-surface-variant">48 Hours</td>
+<td class="p-8 text-center text-primary bg-surface-container-highest/20 font-bold">Priority</td>
+</tr>
+<tr>
+<td class="p-8 font-medium">Booking Window</td>
+<td class="p-8 text-center text-on-surface-variant">Standard</td>
+<td class="p-8 text-center text-primary bg-surface-container-highest/20 font-bold">24h Early</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-12 p-8 bg-primary-container/10 rounded-xl border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6">
+<div>
+<p class="font-headline font-bold text-xl text-on-primary-fixed-variant">Ready for the premium exchange?</p>
+<p class="text-sm text-on-surface-variant">Cancel anytime. No hidden contractual obligations.</p>
+</div>
+<a class="inline-block px-8 py-3 rounded-full bg-primary text-on-primary font-headline font-bold hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 text-center" href="/checkout">
+                        Start 14-Day Free Trial
+                    </a>
+</div>
+</div>
+</section>
+<!-- Visual Credibility Section -->
+<section class="px-8 lg:px-24 py-20 bg-on-surface text-surface">
+<div class="editorial-grid gap-16 items-center">
+<div class="order-2 md:order-1">
+<img alt="Logistics and distribution center" class="rounded-xl grayscale contrast-125 opacity-80" data-alt="Interior of a modern high-tech logistics hub with automated sorting systems and soft industrial blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYVD_aDg3q3RfGc0h0Jp9APtwRlyTlJHeVlBxOvoS65om8EbsX4DbnQ0HAkVIgURKgcyo_nWkti2XtLcdu7QL78VaHJJtbILpLgfEdtrqcwDzSBZvyyo8WCRx5I5lni2Rd_8bOIHOcdhZhSmpxvbyCqiLfbnCoeQIVfXPVl_eXNkyuYI1XZhGoP6mhsHwpSgv9QdWKIy3VEKESjAwq0CYPmhPoPNqWK4VQq5SCaEJO9qlbjIYNXElh0uz5z1Ir9E-YJyWIjkYh0OA"/>
+</div>
+<div class="order-1 md:order-2 space-y-6">
+<h2 class="font-headline font-bold text-4xl leading-tight">Infrastructure Built for the Professional Curator.</h2>
+<p class="text-surface-variant text-lg leading-relaxed">
+                        We've invested in a private fleet and dedicated fulfillment nodes to ensure that OmniStream+ members never have to wait for the tools they need to create.
+                    </p>
+<div class="pt-8 border-t border-surface-variant/20 grid grid-cols-2 gap-8">
+<div>
+<div class="font-headline font-bold text-3xl text-primary-fixed">99.8%</div>
+<p class="text-xs uppercase tracking-widest text-surface-variant">On-time Delivery</p>
+</div>
+<div>
+<div class="font-headline font-bold text-3xl text-primary-fixed">12k+</div>
+<p class="text-xs uppercase tracking-widest text-surface-variant">Premium Items</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component Execution) -->
+<footer class="w-full border-t-0 mt-20 bg-[#f6fafe] dark:bg-slate-950">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 w-full max-w-[1440px] mx-auto">
+<div class="mb-8 md:mb-0">
+<a class="font-['Space_Grotesk'] font-bold text-slate-900 text-xl" href="#">OmniStream</a>
+<p class="mt-4 font-['Inter'] text-xs uppercase tracking-widest text-slate-400">© 2024 OmniStream Editorial Rentals. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-['Inter'] text-xs uppercase tracking-widest">
+<a class="text-slate-400 hover:text-[#0059bb] transition-colors" href="#">Privacy Policy</a>
+<a class="text-slate-400 hover:text-[#0059bb] transition-colors" href="#">Terms of Service</a>
+<a class="text-slate-400 hover:text-[#0059bb] transition-colors" href="#">Shipping</a>
+<a class="text-slate-400 hover:text-[#0059bb] transition-colors" href="#">Careers</a>
+</div>
+</div>
+</footer>
+</body></html>

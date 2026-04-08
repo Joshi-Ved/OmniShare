@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OmniStream Admin Hub | Revenue &amp; Marketing</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@300..700&amp;family=Outfit:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary": "#ffffff",
+                    "surface": "#f6fafe",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#171c1f",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "on-error-container": "#93000a",
+                    "secondary": "#545f73",
+                    "outline-variant": "#c1c6d7",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#dfe3e7",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "surface-container-highest": "#dfe3e7",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed": "#d3e4fe",
+                    "primary": "#0059bb",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#d5e0f8",
+                    "on-primary-fixed-variant": "#004493",
+                    "primary-fixed-dim": "#adc7ff",
+                    "on-background": "#171c1f",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "background": "#f6fafe",
+                    "surface-container": "#eaeef2",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#d8e2ff",
+                    "outline": "#717786",
+                    "surface-tint": "#005bc0",
+                    "tertiary-container": "#66768d",
+                    "on-primary-fixed": "#001a41",
+                    "inverse-on-surface": "#edf1f5",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "surface-bright": "#f6fafe",
+                    "on-surface-variant": "#414754",
+                    "on-secondary-fixed": "#111c2d",
+                    "primary-container": "#0070ea",
+                    "surface-container-low": "#f0f4f8",
+                    "secondary-fixed": "#d8e3fb",
+                    "on-tertiary-container": "#fdfcff",
+                    "on-primary-container": "#fefcff",
+                    "inverse-surface": "#2c3134",
+                    "surface-dim": "#d6dade",
+                    "surface-container-high": "#e4e9ed",
+                    "on-secondary-container": "#586377",
+                    "tertiary": "#4d5d73",
+                    "inverse-primary": "#adc7ff",
+                    "on-tertiary-fixed-variant": "#38485d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        line-height: 1;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f6fafe;
+        color: #171c1f;
+      }
+      h1, h2, h3, .font-headline {
+        font-family: 'Space Grotesk', sans-serif;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="flex min-h-screen bg-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-[#f0f4f8] dark:bg-slate-900 flex flex-col p-4 space-y-2 z-40 hidden md:flex transition-transform duration-300">
+<div class="px-4 py-8">
+<h1 class="font-['Space_Grotesk'] font-extrabold text-blue-700 text-2xl tracking-tight">OmniAdmin</h1>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">System Controller</p>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center space-x-3 p-3 bg-white dark:bg-slate-800 text-[#0059bb] dark:text-blue-400 rounded-lg shadow-sm font-semibold hover:translate-x-1 transition-transform active:scale-98" href="/admin/hub">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-['Inter'] font-medium text-sm">Revenue Hub</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform active:scale-98" href="{{DATA:SCREEN:SCREEN_12}}">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform active:scale-98" href="{{DATA:SCREEN:SCREEN_9}}">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span class="font-['Inter'] font-medium text-sm">Communications</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform active:scale-98" href="/admin/inventory">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-['Inter'] font-medium text-sm">Inventory</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform active:scale-98" href="/admin/rentals">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-['Inter'] font-medium text-sm">Rentals</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform active:scale-98" href="/admin/customers">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Inter'] font-medium text-sm">Customers</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform active:scale-98" href="/admin/settings">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="pt-4 mt-auto border-t border-slate-200 dark:border-slate-800 space-y-1">
+<button class="w-full bg-primary text-on-primary font-headline py-3 rounded-xl mb-4 shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all">
+                Generate Report
+            </button>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform" href="/support">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-['Inter'] font-medium text-sm">Support</span>
+</a>
+<a class="flex items-center space-x-3 p-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-lg hover:translate-x-1 transition-transform" href="/auth/signout">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-['Inter'] font-medium text-sm">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-grow md:ml-64 px-8 pt-24 pb-12 overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="fixed top-0 left-0 md:left-64 right-0 z-50 bg-[#f6fafe]/80 backdrop-blur-xl h-20 flex justify-between items-center px-8 border-none tonal-shift bg-slate-100/50 shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)]">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-6">
+<a class="text-[#0059bb] border-b-2 border-[#0059bb] pb-1 font-['Space_Grotesk'] font-bold text-lg transition-all duration-300" href="/user/discover">Discover</a>
+<a class="text-slate-500 hover:text-[#171c1f] font-['Space_Grotesk'] font-bold text-lg transition-all duration-300" href="/user/collections">Collections</a>
+<a class="text-slate-500 hover:text-[#171c1f] font-['Space_Grotesk'] font-bold text-lg transition-all duration-300" href="/user/premium">Premium</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden sm:block">
+<input class="bg-surface-container-low border-none rounded-full px-6 py-2 w-64 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search data..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-2 text-slate-400" data-icon="search">search</span>
+</div>
+<button class="material-symbols-outlined text-slate-600 hover:opacity-80 transition-all" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-slate-600 hover:opacity-80 transition-all" data-icon="loyalty">loyalty</button>
+<a href="/user/profile">
+<img alt="User profile" class="w-10 h-10 rounded-full border-2 border-white shadow-sm hover:ring-2 hover:ring-primary/50 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr433IzJaCaWuUUAc_uxsQnCEQkG1zXq-boAaWz5EacPw_DBCpYb4-hi7iAmx3iHGITKMSlhgkpQKh6ooeQtGlcmgt0e-kiu3xhkflPTkdoIEtX5cLdCi5NUt9n6pl6M_8b3Pj2mQqjUlX7TidJw3k0uaY-_KaLaOTYVTp17gv0S9iK0yioKdPhMYjfX6I025-bVffUms9nB1rkUdGZlEYyiqaxfiWBeylom82QvsBAtQCw6fKbOBvNmmdE8fsAPfjRNdw_E7k_5w"/>
+</a>
+</div>
+</header>
+<!-- Editorial Hero Title -->
+<div class="mb-12 mt-4">
+<h2 class="text-5xl font-headline font-bold text-on-surface tracking-tight leading-tight">
+                Revenue &amp; <span class="text-primary italic">Market Momentum</span>
+</h2>
+<p class="text-secondary max-w-2xl mt-4 body-md">
+                Real-time performance tracking across CRM, supply chain availability, and affiliate network growth. 
+                Manage your editorial rental ecosystem from a single command center.
+            </p>
+</div>
+<!-- CRM Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="md:col-span-1 bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between hover:bg-surface-bright transition-all duration-300 group">
+<div>
+<span class="label-sm text-primary uppercase font-bold tracking-widest">Active Clients</span>
+<h3 class="text-4xl font-headline font-bold mt-2">1,284</h3>
+</div>
+<div class="mt-8 flex items-center text-emerald-600 text-sm font-bold">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+                    +12% from last month
+                </div>
+</div>
+<div class="md:col-span-1 bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between hover:bg-surface-bright transition-all duration-300">
+<div>
+<span class="label-sm text-secondary uppercase font-bold tracking-widest">Conversion Rate</span>
+<h3 class="text-4xl font-headline font-bold mt-2">8.4<span class="text-2xl opacity-50">%</span></h3>
+</div>
+<div class="mt-8 bg-surface-container-low h-1 w-full rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+<div class="md:col-span-2 bg-primary-container p-8 rounded-xl text-on-primary-container relative overflow-hidden flex flex-col justify-between">
+<div class="z-10">
+<span class="label-sm text-blue-100 uppercase font-bold tracking-widest">Total Rental Revenue</span>
+<div class="flex items-baseline gap-2 mt-2">
+<h3 class="text-5xl font-headline font-bold">₹3,58,95,000</h3>
+<span class="text-lg opacity-80 font-medium">($428,950.00)</span>
+</div>
+</div>
+<div class="z-10 flex gap-4 mt-8">
+<span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold">Q4 TARGET: 92%</span>
+<span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold">PEAK PERIOD</span>
+</div>
+<!-- Decorative element -->
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+</div>
+</div>
+<!-- Middle Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<!-- Supply Chain Overview -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-10">
+<h3 class="text-2xl font-headline font-bold">Supply Chain Flow</h3>
+<div class="flex gap-2">
+<span class="px-4 py-1 bg-surface-container-low rounded-full text-xs font-bold text-secondary">In Transit</span>
+<span class="px-4 py-1 bg-primary/10 rounded-full text-xs font-bold text-primary">Warehouse</span>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Gear Item Rows -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg hover:bg-white transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional cinema camera setup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnSoAttA24u90SHtD6FwFYJb3HZryuYA9G0YuNEZeKvlgh4PoApV2R8ELQsOF4PzJRPG9ZvTGgI_TI977_x_ZX5tTipVsRM7ZHtbqRkuULMdba_LMYex2Utm_OVVYreWBGiuVN6zdwQMNrsuAfEy1DGcd5btQhF4gXXbVr9W3rbqE4wiSGyST4W1YJcJ9r-bY2g6hzh8kvz3FTOhPDqV0Ju5tHEywO_TPXRACUjlmsKringoZ_t0w0Rmb7IqYYXSheUucMo5EVcsE"/>
+</div>
+<div>
+<p class="font-bold text-sm">Arri Alexa Mini Kit</p>
+<p class="text-xs text-secondary">ID: GEAR-992-BX</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">42 Units Available</p>
+<p class="text-xs text-emerald-600 font-medium">Healthy Inventory</p>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-lg hover:bg-white transition-all cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-slate-200 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High-end studio strobe lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtaRq26bks7Om1M8R7ATE4s73pyrF5goLBD0ONo87VJB0ce34ycOosJ8M0_onbqdwuATjmsXL254AleP7MKnHdfSTCdtPvXBonA2q-9VlNuYDlOjTD2KqUEhDeVv097K1vyqRxvEYkUVVcHGBzdeDWqyCyEfFizGqgsb8XoUmNUGIJwFQEpHQZ6otQWOAGJ_MKJZfoBZp1Zt9ETyaJLS_rhYWtL0IhiOMs4PvaquLzmMEmVYUbxMGCinfI1yTeKw_-fpWPbt4YB2M"/>
+</div>
+<div>
+<p class="font-bold text-sm">Profoto B10X Plus</p>
+<p class="text-xs text-secondary">ID: GEAR-124-LF</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold">12 Units Available</p>
+<p class="text-xs text-amber-600 font-medium">Low Stock Warning</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Affiliate Dashboard -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-xl font-headline font-bold">Affiliate Network</h3>
+<button class="material-symbols-outlined text-primary" data-icon="add_circle">add_circle</button>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl mb-6 shadow-sm">
+<span class="label-sm text-secondary font-bold uppercase tracking-widest">Affiliate Revenue</span>
+<div class="mt-2">
+<div class="text-3xl font-headline font-bold text-primary">₹15,44,200</div>
+<div class="text-sm text-secondary font-medium">($18,442.20)</div>
+</div>
+<p class="text-xs text-secondary mt-2">Generated from 142 unique partners</p>
+</div>
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Top Performers</h4>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-xs font-bold text-primary">EJ</div>
+<div class="flex-grow">
+<div class="flex justify-between">
+<span class="text-sm font-medium">Editorial Journal</span>
+<span class="text-sm font-bold">₹3.5L</span>
+</div>
+<div class="w-full bg-slate-200 h-1 rounded-full mt-1">
+<div class="bg-primary h-full w-[70%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-xs font-bold text-secondary">CV</div>
+<div class="flex-grow">
+<div class="flex justify-between">
+<span class="text-sm font-medium">CinemaVogue</span>
+<span class="text-sm font-bold">₹3.1L</span>
+</div>
+<div class="w-full bg-slate-200 h-1 rounded-full mt-1">
+<div class="bg-primary h-full w-[62%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-10 pt-6 border-t border-slate-300/30">
+<button class="w-full py-3 bg-surface-container-high rounded-full font-headline text-sm font-bold hover:bg-white transition-colors">
+                        View All Performance Links
+                    </button>
+</div>
+</div>
+</div>
+<!-- CRM & Transaction Table Section -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm overflow-hidden">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div>
+<h3 class="text-2xl font-headline font-bold">Recent Customer Transactions</h3>
+<p class="text-sm text-secondary">Monitoring the last 24 hours of platform activity</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 border border-outline-variant rounded-full text-xs font-bold hover:bg-surface-container transition-all">Filter By Date</button>
+<button class="px-4 py-2 bg-on-surface text-white rounded-full text-xs font-bold hover:opacity-90 transition-all">Export CSV</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-surface-container-high">
+<th class="pb-4 font-headline text-xs uppercase tracking-widest text-secondary px-4">Client</th>
+<th class="pb-4 font-headline text-xs uppercase tracking-widest text-secondary px-4">Order Details</th>
+<th class="pb-4 font-headline text-xs uppercase tracking-widest text-secondary px-4">Status</th>
+<th class="pb-4 font-headline text-xs uppercase tracking-widest text-secondary px-4">Amount</th>
+<th class="pb-4 font-headline text-xs uppercase tracking-widest text-secondary px-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="person">person</span>
+</div>
+<div>
+<p class="text-sm font-bold">Marcus Sterling</p>
+<p class="text-xs text-secondary">m.sterling@studio.com</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-4">
+<p class="text-sm font-medium">Phase One XF Camera System</p>
+<p class="text-xs text-secondary">7 Day Rental</p>
+</td>
+<td class="py-5 px-4">
+<span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-extrabold uppercase tracking-tighter">Completed</span>
+</td>
+<td class="py-5 px-4">
+<div class="font-headline font-bold text-sm">₹2,05,000</div>
+<div class="text-[10px] text-secondary">($2,450.00)</div>
+</td>
+<td class="py-5 px-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="person">person</span>
+</div>
+<div>
+<p class="text-sm font-bold">Elena Rodriguez</p>
+<p class="text-xs text-secondary">elena.r@indiefilm.io</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-4">
+<p class="text-sm font-medium">Lighting Grid &amp; Power Rig</p>
+<p class="text-xs text-secondary">On-Set Logistics</p>
+</td>
+<td class="py-5 px-4">
+<span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-[10px] font-extrabold uppercase tracking-tighter">Processing</span>
+</td>
+<td class="py-5 px-4">
+<div class="font-headline font-bold text-sm">₹4,28,000</div>
+<div class="text-[10px] text-secondary">($5,120.00)</div>
+</td>
+<td class="py-5 px-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="py-5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="person">person</span>
+</div>
+<div>
+<p class="text-sm font-bold">Julian Cho</p>
+<p class="text-xs text-secondary">j.cho@creative.co</p>
+</div>
+</div>
+</td>
+<td class="py-5 px-4">
+<p class="text-sm font-medium">Red V-Raptor 8K VV</p>
+<p class="text-xs text-secondary">Weekend Special</p>
+</td>
+<td class="py-5 px-4">
+<span class="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-extrabold uppercase tracking-tighter">Awaiting Return</span>
+</td>
+<td class="py-5 px-4">
+<div class="font-headline font-bold text-sm">₹1,51,000</div>
+<div class="text-[10px] text-secondary">($1,800.00)</div>
+</td>
+<td class="py-5 px-4 text-right">
+<button class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full border-t-0 mt-20 tonal-shift-from-surface-to-container-low bg-[#f6fafe] dark:bg-slate-950">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 w-full max-w-[1440px] mx-auto">
+<div class="mb-8 md:mb-0">
+<h4 class="font-['Space_Grotesk'] font-bold text-slate-900 dark:text-white text-xl">OmniStream</h4>
+<p class="font-['Inter'] text-xs uppercase tracking-widest text-slate-400 mt-2">© 2024 OmniStream Editorial Rentals. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap gap-8 justify-center">
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-[#0059bb] transition-colors" href="/legal/privacy">Privacy Policy</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-[#0059bb] transition-colors" href="/legal/terms">Terms of Service</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-[#0059bb] transition-colors" href="/shipping-info">Shipping</a>
+<a class="font-['Inter'] text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 hover:text-[#0059bb] transition-colors" href="/careers">Careers</a>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

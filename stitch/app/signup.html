@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Account | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2ltcGxlLWhlcnJpbmctNC5jbGVyay5hY2NvdW50cy5kZXYk" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" type="text/javascript"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#f6fafe","surface-container-low":"#f0f4f8","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","outline":"#717786","outline-variant":"#c1c6d7","on-surface":"#171c1f","on-surface-variant":"#414754","primary":"#0059bb","primary-container":"#0070ea","primary-fixed":"#d8e2ff","on-primary":"#ffffff","secondary":"#545f73","secondary-container":"#d5e0f8"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"]}}}}
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
+  .fallback-form input,.fallback-form select{width:100%;background:#f0f4f8;border:none;border-radius:0.75rem;padding:0.75rem 1rem;font-size:.875rem;outline:none;}
+  .fallback-form input:focus,.fallback-form select:focus{box-shadow:0 0 0 2px rgba(0,89,187,.2);}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+
+<div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
+
+  <!-- Left: Branding -->
+  <div class="hidden lg:flex flex-col justify-between bg-gradient-to-br from-[#001a41] to-primary p-16 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+    <div class="relative z-10">
+      <a href="landing.html" class="text-white font-headline font-black text-3xl tracking-tight">OmniShare</a>
+    </div>
+    <div class="relative z-10 space-y-8">
+      <div>
+        <h2 class="font-headline font-bold text-4xl text-white leading-tight mb-4">Start renting smarter.</h2>
+        <p class="text-white/70 text-lg">List your gear or rent what you need. Trusted by 50,000+ community members.</p>
+      </div>
+      <!-- Social proof -->
+      <div class="grid grid-cols-3 gap-6">
+        <div class="text-center">
+          <p class="font-headline font-bold text-3xl text-white">50k+</p>
+          <p class="text-white/50 text-xs uppercase tracking-wider mt-1">Members</p>
+        </div>
+        <div class="text-center">
+          <p class="font-headline font-bold text-3xl text-white">12k+</p>
+          <p class="text-white/50 text-xs uppercase tracking-wider mt-1">Listings</p>
+        </div>
+        <div class="text-center">
+          <p class="font-headline font-bold text-3xl text-white">4.9★</p>
+          <p class="text-white/50 text-xs uppercase tracking-wider mt-1">Avg Rating</p>
+        </div>
+      </div>
+      <!-- Plan teaser -->
+      <div class="bg-white/10 rounded-xl p-6">
+        <p class="text-white/60 text-xs font-bold uppercase tracking-widest mb-3">Plans from</p>
+        <div class="flex items-baseline gap-2 mb-2">
+          <span class="font-headline font-bold text-4xl text-white">₹199</span>
+          <span class="text-white/60 text-sm">/month</span>
+        </div>
+        <p class="text-white/70 text-sm">Free tier always available. Upgrade anytime.</p>
+      </div>
+    </div>
+    <p class="relative z-10 text-white/30 text-xs uppercase tracking-widest">© 2024 OmniShare</p>
+  </div>
+
+  <!-- Right: Form -->
+  <div class="flex flex-col justify-center items-center p-8 md:p-16">
+    <div class="w-full max-w-md">
+      <a href="landing.html" class="lg:hidden inline-block font-headline font-black text-2xl text-primary mb-10">OmniShare</a>
+
+      <h1 class="font-headline font-bold text-3xl mb-2">Create your account</h1>
+      <p class="text-on-surface-variant mb-8">Join the OmniShare community today.</p>
+
+      <!-- Clerk mount -->
+      <div id="clerk-signup"></div>
+
+      <!-- Fallback -->
+      <div id="fallback-signup" class="fallback-form hidden space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">First Name</label>
+            <input type="text" placeholder="Ved"/>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Last Name</label>
+            <input type="text" placeholder="Joshi"/>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Email</label>
+          <input type="email" placeholder="you@example.com"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Password</label>
+          <input type="password" placeholder="Min. 8 characters"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Account Role</label>
+          <select>
+            <option value="guest">Guest (Rent items)</option>
+            <option value="host">Host (List items)</option>
+            <option value="both">Both (Rent &amp; List)</option>
+          </select>
+        </div>
+        <a href="landing.html" class="block w-full py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-base hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+          Create Account
+        </a>
+        <p class="text-[10px] text-outline text-center leading-relaxed">By signing up you agree to our <a href="#" class="text-primary font-bold">Terms</a> and <a href="#" class="text-primary font-bold">Privacy Policy</a>.</p>
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-outline-variant/20 text-center">
+        <p class="text-sm text-on-surface-variant">Already have an account? <a href="signin.html" class="text-primary font-bold hover:underline underline-offset-2">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('load', async () => {
+    try {
+      await window.Clerk.load();
+      window.Clerk.mountSignUp(document.getElementById('clerk-signup'), {
+        afterSignUpUrl: 'landing.html',
+        signInUrl: 'signin.html'
+      });
+    } catch(e) {
+      document.getElementById('clerk-signup').classList.add('hidden');
+      document.getElementById('fallback-signup').classList.remove('hidden');
+    }
+  });
+</script>
+</body></html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Hub | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#f6fafe","surface-container":"#eaeef2","surface-container-low":"#f0f4f8","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","surface-container-highest":"#dfe3e7","outline":"#717786","outline-variant":"#c1c6d7","on-surface":"#171c1f","on-surface-variant":"#414754","primary":"#0059bb","primary-container":"#0070ea","primary-fixed":"#d8e2ff","primary-fixed-dim":"#adc7ff","on-primary":"#ffffff","on-primary-container":"#fefcff","on-primary-fixed":"#001a41","on-primary-fixed-variant":"#004493","secondary":"#545f73","secondary-container":"#d5e0f8","on-secondary":"#ffffff","error":"#ba1a1a","error-container":"#ffdad6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"]}}}}
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+
+  /* Sidebar */
+  #sidebar a.active{background:rgba(0,89,187,.12);color:#0059bb;font-weight:700;}
+
+  /* Tab system */
+  .tab-btn.active{border-bottom:2px solid #0059bb;color:#0059bb;font-weight:700;}
+  .tab-content{display:none;} .tab-content.active{display:block;}
+
+  /* Live feed */
+  @keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+  .tx-row{animation:slideDown .3s ease both;}
+
+  /* Chart bars */
+  .bar-fill{transition:height 1s cubic-bezier(.4,0,.2,1);}
+
+  /* KYC card flip */
+  .kyc-card{transition:all .25s;}
+  .kyc-card:hover{transform:translateY(-2px);box-shadow:0 12px 32px -8px rgba(23,28,31,.1);}
+
+  /* Pulse wifidot */
+  @keyframes wifipulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .live-dot{animation:wifipulse 1.2s ease-in-out infinite;}
+
+  /* Scrollbar */
+  #tx-feed::-webkit-scrollbar{width:4px;}
+  #tx-feed::-webkit-scrollbar-thumb{background:#c1c6d7;border-radius:4px;}
+
+  /* Gauge ring */
+  .gauge-ring{transform:rotate(-90deg);}
+  @keyframes dashAnim{from{stroke-dashoffset:283}to{stroke-dashoffset:var(--final)}}
+  .dash-anim{animation:dashAnim 1.6s cubic-bezier(.4,0,.2,1) forwards;}
+</style>
+</head>
+<body class="bg-surface-container-low text-on-surface min-h-screen flex">
+
+<!-- ── Sidebar ────────────────────────────────────────────── -->
+<aside class="w-64 shrink-0 hidden lg:flex flex-col bg-surface-container-lowest border-r border-outline-variant/20 min-h-screen fixed z-30">
+  <div class="p-6 border-b border-outline-variant/15">
+    <a href="landing.html" class="font-headline font-bold text-xl text-on-surface">OmniShare</a>
+    <span class="ml-2 px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded-full uppercase">Admin</span>
+  </div>
+  <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+    <a href="#" onclick="switchSection('revenue',this)" class="active flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">bar_chart</span>Revenue
+    </a>
+    <a href="#" onclick="switchSection('kyc',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">verified_user</span>KYC Verification
+    </a>
+    <a href="#" onclick="switchSection('users',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">group</span>Users
+    </a>
+    <a href="#" onclick="switchSection('listings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">storefront</span>Listings
+    </a>
+    <a href="#" onclick="switchSection('bookings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">calendar_month</span>Bookings
+    </a>
+    <a href="#" onclick="switchSection('settings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">settings</span>Settings
+    </a>
+  </nav>
+  <div class="p-4 border-t border-outline-variant/15">
+    <div class="flex items-center gap-3 px-2">
+      <div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">A</div>
+      <div><p class="font-bold text-sm">Admin</p><p class="text-xs text-outline">super@omnishare.in</p></div>
+    </div>
+    <a href="landing.html" class="mt-3 flex items-center gap-2 px-4 py-2 text-xs font-bold text-error hover:bg-error-container/20 rounded-xl transition-colors">
+      <span class="material-symbols-outlined text-sm">logout</span>Sign Out
+    </a>
+  </div>
+</aside>
+
+<!-- ── Main Content ─────────────────────────────────────────── -->
+<div class="lg:ml-64 flex-1 flex flex-col min-h-screen">
+
+  <!-- Top Bar -->
+  <div class="sticky top-0 z-20 bg-surface-container-lowest/80 backdrop-blur-xl border-b border-outline-variant/15 px-8 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <h1 class="font-headline font-bold text-xl" id="section-title">Revenue Dashboard</h1>
+      <div class="flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold">
+        <span class="w-2 h-2 bg-emerald-500 rounded-full live-dot"></span>
+        Live · WebSocket
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-xs text-outline" id="last-updated">Last updated: just now</span>
+      <a href="landing.html" class="text-on-surface-variant hover:text-primary transition-colors">
+        <span class="material-symbols-outlined">home</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION: REVENUE
+  ═══════════════════════════════════════════ -->
+  <div id="section-revenue" class="section-block p-8 space-y-8 flex-1">
+
+    <!-- KPI Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wider text-outline mb-2">Today's Revenue</p>
+        <p class="font-headline font-bold text-3xl" id="kpi-today">₹0</p>
+        <p class="text-xs text-emerald-600 font-bold mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">trending_up</span><span id="kpi-today-pct">+0%</span> vs yesterday</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wider text-outline mb-2">Platform Commission</p>
+        <p class="font-headline font-bold text-3xl" id="kpi-commission">₹0</p>
+        <p class="text-xs text-on-surface-variant mt-2">18% of all transactions</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wider text-outline mb-2">Active Bookings</p>
+        <p class="font-headline font-bold text-3xl" id="kpi-bookings">0</p>
+        <p class="text-xs text-amber-600 font-bold mt-2" id="kpi-pending">0 pending</p>
+      </div>
+      <div class="bg-gradient-to-br from-primary to-primary-container rounded-xl p-6">
+        <p class="text-xs font-bold uppercase tracking-wider text-white/60 mb-2">Monthly MRR</p>
+        <p class="font-headline font-bold text-3xl text-white" id="kpi-mrr">₹0</p>
+        <p class="text-xs text-white/70 mt-2">Subscriptions + commissions</p>
+      </div>
+    </div>
+
+    <!-- Bar Chart + Live Feed  -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Revenue Bar Chart -->
+      <div class="lg:col-span-2 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm">
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="font-headline font-bold text-lg">Revenue by Stream</h2>
+          <select class="bg-surface-container-low border-none rounded-full px-4 py-2 text-xs font-bold focus:ring-2 focus:ring-primary/20" id="chart-period" onchange="updateChart()">
+            <option value="today">Today</option>
+            <option value="week" selected>This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
+        <!-- Stream bars -->
+        <div class="space-y-5" id="stream-bars">
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Rental Commissions</span><span class="font-headline font-bold text-primary" id="bar-rentals-val">₹0</span></div>
+            <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
+              <div class="h-full bg-primary rounded-full bar-fill" id="bar-rentals" style="width:0%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Subscriptions</span><span class="font-headline font-bold text-emerald-600" id="bar-subs-val">₹0</span></div>
+            <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full bar-fill" id="bar-subs" style="width:0%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Insurance Premiums</span><span class="font-headline font-bold text-amber-600" id="bar-ins-val">₹0</span></div>
+            <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full bar-fill" id="bar-ins" style="width:0%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Delivery Fees</span><span class="font-headline font-bold text-purple-600" id="bar-del-val">₹0</span></div>
+            <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
+              <div class="h-full bg-purple-500 rounded-full bar-fill" id="bar-del" style="width:0%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Penalty / Late Fees</span><span class="font-headline font-bold text-red-500" id="bar-penalty-val">₹0</span></div>
+            <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
+              <div class="h-full bg-red-400 rounded-full bar-fill" id="bar-penalty" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Mini time series (last 7 ticks) -->
+        <div class="mt-8 border-t border-outline-variant/15 pt-6">
+          <p class="text-xs font-bold uppercase tracking-wider text-outline mb-4">Last 7 Transactions (simulated)</p>
+          <div class="flex items-end gap-2 h-16" id="sparkline">
+            <div class="flex-1 bg-primary/20 rounded-t" style="height:40%"></div>
+            <div class="flex-1 bg-primary/40 rounded-t" style="height:55%"></div>
+            <div class="flex-1 bg-primary/60 rounded-t" style="height:70%"></div>
+            <div class="flex-1 bg-primary/80 rounded-t" style="height:50%"></div>
+            <div class="flex-1 bg-primary rounded-t" style="height:85%"></div>
+            <div class="flex-1 bg-primary rounded-t" style="height:65%"></div>
+            <div class="flex-1 bg-emerald-500 rounded-t animate-pulse" id="spark-latest" style="height:40%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Transaction Feed -->
+      <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm flex flex-col overflow-hidden">
+        <div class="px-6 py-4 border-b border-outline-variant/15 flex items-center justify-between shrink-0">
+          <h2 class="font-headline font-bold text-base">Live Transactions</h2>
+          <div class="flex items-center gap-2 text-xs text-emerald-600 font-bold">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full live-dot"></span>WS
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto max-h-[440px] divide-y divide-outline-variant/10" id="tx-feed"></div>
+        <div class="px-6 py-3 bg-surface-container-low border-t border-outline-variant/15 text-center shrink-0">
+          <p class="text-xs text-outline" id="tx-count">0 transactions received</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gauges Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm text-center">
+        <svg class="gauge-ring w-24 h-24 mx-auto mb-3" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#eaeef2" stroke-width="8"/>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#0059bb" stroke-width="8"
+                  stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"
+                  id="gauge-approval" class="dash-anim" style="--final:85;transition:stroke-dashoffset 1s ease"/>
+        </svg>
+        <p class="font-headline font-bold text-2xl" id="gauge-approval-val">0%</p>
+        <p class="text-xs text-outline mt-1 uppercase tracking-wider">Booking Approval Rate</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm text-center">
+        <svg class="gauge-ring w-24 h-24 mx-auto mb-3" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#eaeef2" stroke-width="8"/>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="8"
+                  stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"
+                  id="gauge-kyc" class="dash-anim" style="--final:60;transition:stroke-dashoffset 1s ease"/>
+        </svg>
+        <p class="font-headline font-bold text-2xl" id="gauge-kyc-val">0%</p>
+        <p class="text-xs text-outline mt-1 uppercase tracking-wider">KYC Verified Users</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm text-center">
+        <svg class="gauge-ring w-24 h-24 mx-auto mb-3" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#eaeef2" stroke-width="8"/>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#f59e0b" stroke-width="8"
+                  stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"
+                  id="gauge-subs" class="dash-anim" style="--final:120;transition:stroke-dashoffset 1s ease"/>
+        </svg>
+        <p class="font-headline font-bold text-2xl" id="gauge-subs-val">0%</p>
+        <p class="text-xs text-outline mt-1 uppercase tracking-wider">Subscription Conversion</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION: KYC VERIFICATION
+  ═══════════════════════════════════════════ -->
+  <div id="section-kyc" class="section-block p-8 space-y-8 hidden">
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h2 class="font-headline font-bold text-2xl mb-1">KYC Verification Queue</h2>
+        <p class="text-on-surface-variant text-sm">New users awaiting identity verification. Matched against DigiLocker API.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold">
+          <span class="w-2 h-2 bg-emerald-500 rounded-full live-dot"></span>DigiLocker API Live
+        </div>
+        <button onclick="autoVerifyAll()" class="px-5 py-2 bg-primary text-white rounded-full text-sm font-bold hover:bg-primary-container transition-colors flex items-center gap-2">
+          <span class="material-symbols-outlined text-base">auto_awesome</span>Auto-Verify All
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+        <p class="text-xs text-outline font-bold uppercase tracking-wider mb-1">Pending</p>
+        <p class="font-headline font-bold text-3xl text-amber-600" id="kyc-pending-count">4</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+        <p class="text-xs text-outline font-bold uppercase tracking-wider mb-1">Auto-Verified Today</p>
+        <p class="font-headline font-bold text-3xl text-emerald-600" id="kyc-verified-count">0</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+        <p class="text-xs text-outline font-bold uppercase tracking-wider mb-1">Rejected</p>
+        <p class="font-headline font-bold text-3xl text-error" id="kyc-rejected-count">1</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10">
+        <p class="text-xs text-outline font-bold uppercase tracking-wider mb-1">Match Rate</p>
+        <p class="font-headline font-bold text-3xl text-primary" id="kyc-match-rate">0%</p>
+      </div>
+    </div>
+
+    <!-- How it works banner -->
+    <div class="bg-gradient-to-r from-primary/5 to-primary-fixed/30 border border-primary/15 rounded-xl p-6 flex flex-col md:flex-row items-start gap-4">
+      <span class="material-symbols-outlined text-primary text-3xl mt-0.5" style="font-variation-settings:'FILL' 1;">account_balance</span>
+      <div>
+        <p class="font-headline font-bold text-base text-primary mb-1">DigiLocker Auto-Verification Process</p>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+          When a user submits their <strong>Aadhaar + PAN</strong>, the system calls the DigiLocker API to validate government-issued identity records. Credentials are matched in real-time — if they match, the user is <span class="text-emerald-700 font-bold">automatically verified</span> and granted full platform access. Mismatches are flagged for manual review.
+        </p>
+        <div class="flex flex-wrap gap-3 mt-4">
+          <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">Aadhaar Lookup</span>
+          <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">PAN Cross-Match</span>
+          <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">Name + DOB Validation</span>
+          <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold">Live API Response</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KYC Queue -->
+    <div class="space-y-4" id="kyc-queue">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION: USERS (simplified)
+  ═══════════════════════════════════════════ -->
+  <div id="section-users" class="section-block p-8 hidden">
+    <h2 class="font-headline font-bold text-2xl mb-6">User Management</h2>
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden">
+      <div class="p-4 border-b border-outline-variant/15 flex items-center gap-4">
+        <input type="text" placeholder="Search users…" class="flex-1 bg-surface-container-low border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20"/>
+        <select class="bg-surface-container-low border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20">
+          <option>All Users</option><option>KYC Verified</option><option>Unverified</option><option>Suspended</option>
+        </select>
+      </div>
+      <table class="w-full text-left text-sm">
+        <thead><tr class="border-b border-outline-variant/15 bg-surface-container-low">
+          <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline">User</th>
+          <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline hidden md:table-cell">Plan</th>
+          <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline">KYC</th>
+          <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline hidden md:table-cell">Joined</th>
+          <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline">Action</th>
+        </tr></thead>
+        <tbody class="divide-y divide-outline-variant/10" id="users-table">
+          <tr><td class="p-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">M</div><div><p class="font-bold">Marcus Sterling</p><p class="text-xs text-outline">m.sterling@studio.com</p></div></div></td><td class="p-4 hidden md:table-cell"><span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase">Pro</span></td><td class="p-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Verified</span></td><td class="p-4 text-outline hidden md:table-cell text-xs">Jan 14, 2023</td><td class="p-4"><button class="text-primary text-xs font-bold hover:underline">View</button></td></tr>
+          <tr><td class="p-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-xs">E</div><div><p class="font-bold">Elena Rodriguez</p><p class="text-xs text-outline">e.r@studio.io</p></div></div></td><td class="p-4 hidden md:table-cell"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Plus</span></td><td class="p-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Verified</span></td><td class="p-4 text-outline hidden md:table-cell text-xs">Mar 3, 2023</td><td class="p-4"><button class="text-primary text-xs font-bold hover:underline">View</button></td></tr>
+          <tr><td class="p-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-amber-400 text-white flex items-center justify-center font-bold text-xs">J</div><div><p class="font-bold">Julian R.</p><p class="text-xs text-outline">julian.r@lens.co</p></div></div></td><td class="p-4 hidden md:table-cell"><span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Free</span></td><td class="p-4"><span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Pending</span></td><td class="p-4 text-outline hidden md:table-cell text-xs">Oct 5, 2024</td><td class="p-4"><button class="text-primary text-xs font-bold hover:underline" onclick="switchSection('kyc',document.querySelectorAll('#sidebar a')[1])">Verify</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Other sections: Listings / Bookings / Settings (stubs) -->
+  <div id="section-listings" class="section-block p-8 hidden">
+    <h2 class="font-headline font-bold text-2xl mb-4">Listings Management</h2>
+    <p class="text-on-surface-variant">Manage all platform listings, approve or reject submissions, and flag policy violations.</p>
+    <div class="mt-6 bg-surface-container-lowest rounded-xl p-16 text-center border border-outline-variant/10">
+      <span class="material-symbols-outlined text-5xl text-outline-variant mb-4">storefront</span>
+      <p class="font-headline font-bold text-xl text-on-surface-variant">Listings module coming soon</p>
+    </div>
+  </div>
+  <div id="section-bookings" class="section-block p-8 hidden">
+    <h2 class="font-headline font-bold text-2xl mb-4">All Bookings</h2>
+    <div class="mt-6 bg-surface-container-lowest rounded-xl p-16 text-center border border-outline-variant/10">
+      <span class="material-symbols-outlined text-5xl text-outline-variant mb-4">calendar_month</span>
+      <p class="font-headline font-bold text-xl text-on-surface-variant">Bookings module coming soon</p>
+    </div>
+  </div>
+  <div id="section-settings" class="section-block p-8 hidden">
+    <h2 class="font-headline font-bold text-2xl mb-4">Platform Settings</h2>
+    <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 space-y-6">
+      <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Platform Commission (%)</label><input type="number" value="18" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-48"/></div>
+      <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">OmniShare+ Monthly Price (₹)</label><input type="number" value="199" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-48"/></div>
+      <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">OmniShare Pro Monthly Price (₹)</label><input type="number" value="299" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-48"/></div>
+      <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">DigiLocker API Key</label><input type="text" value="digi_••••••••••••" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-96"/></div>
+      <button class="px-8 py-3 bg-primary text-white rounded-full font-headline font-bold hover:bg-primary-container transition-colors">Save Settings</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ── Section switching ─────────────────────────────────────
+const titles = {revenue:'Revenue Dashboard',kyc:'KYC Verification',users:'User Management',listings:'Listings',bookings:'Bookings',settings:'Platform Settings'};
+function switchSection(name, link) {
+  document.querySelectorAll('.section-block').forEach(s => s.classList.add('hidden'));
+  document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
+  document.getElementById('section-' + name).classList.remove('hidden');
+  document.getElementById('section-title').textContent = titles[name];
+  if (link) link.classList.add('active');
+  return false;
+}
+
+// ── Revenue Data Sets ──────────────────────────────────────
+const revenueData = {
+  today: { rentals:3400, subs:1200, ins:560, del:450, penalty:120, total:5730 },
+  week:  { rentals:28600, subs:8400, ins:3250, del:3800, penalty:720, total:44770 },
+  month: { rentals:98000, subs:31200, ins:11400, del:13500, penalty:2900, total:157000 }
+};
+let currentData = revenueData.week;
+let txCount = 0;
+let todayRevenue = 0;
+let commissionTotal = 0;
+let verifiedToday = 0;
+
+function fmt(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+function updateChart() {
+  const period = document.getElementById('chart-period').value;
+  currentData = revenueData[period];
+  const max = currentData.total;
+  const bars = [
+    ['rentals', currentData.rentals, '#0059bb'],
+    ['subs',    currentData.subs,    '#10b981'],
+    ['ins',     currentData.ins,     '#f59e0b'],
+    ['del',     currentData.del,     '#8b5cf6'],
+    ['penalty', currentData.penalty, '#ef4444'],
+  ];
+  bars.forEach(([k,v]) => {
+    document.getElementById('bar-'+k).style.width = Math.round(v/max*100)+'%';
+    document.getElementById('bar-'+k+'-val').textContent = fmt(v);
+  });
+}
+updateChart();
+
+// KPI refresh
+function refreshKPIs() {
+  const pct = Math.floor(Math.random() * 15 + 8);
+  document.getElementById('kpi-today').textContent = fmt(todayRevenue);
+  document.getElementById('kpi-today-pct').textContent = '+' + pct + '%';
+  document.getElementById('kpi-commission').textContent = fmt(commissionTotal);
+  document.getElementById('kpi-bookings').textContent = Math.floor(24 + txCount * 0.3);
+  document.getElementById('kpi-pending').textContent = Math.max(0, 4 - Math.floor(txCount/3)) + ' pending';
+  document.getElementById('kpi-mrr').textContent = fmt(157000 + todayRevenue * 0.4);
+}
+
+// Gauge animation (once)
+setTimeout(() => {
+  animateGauge('gauge-approval', 283 - Math.round(283 * 0.91), '91%');
+  animateGauge('gauge-kyc',      283 - Math.round(283 * 0.73), '73%');
+  animateGauge('gauge-subs',     283 - Math.round(283 * 0.42), '42%');
+}, 500);
+function animateGauge(id, offset, label) {
+  const el = document.getElementById(id);
+  const valEl = document.getElementById(id + '-val');
+  el.style.strokeDashoffset = offset;
+  setTimeout(() => { if(valEl) valEl.textContent = label; }, 900);
+}
+
+// ── Simulated WebSocket: Live Transaction Feed ────────────
+const txTypes = [
+  { icon:'local_shipping', label:'Rental Booking', color:'text-primary', stream:'rentals' },
+  { icon:'workspace_premium', label:'Subscription', color:'text-emerald-600', stream:'subs' },
+  { icon:'shield_with_heart', label:'Insurance Premium', color:'text-amber-600', stream:'ins' },
+  { icon:'directions_car', label:'Delivery Fee', color:'text-purple-600', stream:'del' },
+  { icon:'warning', label:'Late Return Penalty', color:'text-red-500', stream:'penalty' },
+];
+const items = ['Sony FX3','DJI Mavic 3','Canon RF 50mm','Profoto B10','Gibson Les Paul','Gibson Les Paul','Apple M3 MacBook','Nikon Z8','DJI Ronin','Zoom H6','OmniShare+ Monthly','OmniShare Pro Annual'];
+const users = ['Marcus S.','Elena R.','Priya M.','Arjun K.','Sophia L.','David W.','Ananya P.','Rohan S.'];
+
+function addTransaction() {
+  const t = txTypes[Math.floor(Math.random() * txTypes.length)];
+  const amount = Math.floor(Math.random() * 1400 + 100);
+  const user = users[Math.floor(Math.random() * users.length)];
+  const item = items[Math.floor(Math.random() * items.length)];
+  txCount++;
+  todayRevenue += amount;
+  commissionTotal += Math.round(amount * 0.18);
+
+  const feed = document.getElementById('tx-feed');
+  const row = document.createElement('div');
+  row.className = 'tx-row flex items-center gap-4 px-5 py-3.5 hover:bg-surface-container-low transition-colors';
+  row.innerHTML = `
+    <span class="material-symbols-outlined ${t.color} text-lg shrink-0" style="font-variation-settings:'FILL' 1;">${t.icon}</span>
+    <div class="flex-1 min-w-0">
+      <p class="font-bold text-xs truncate">${item}</p>
+      <p class="text-[10px] text-outline">${t.label} · ${user}</p>
+    </div>
+    <div class="text-right shrink-0">
+      <p class="font-headline font-bold text-sm ${t.color}">+₹${amount.toLocaleString('en-IN')}</p>
+      <p class="text-[10px] text-outline">${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</p>
+    </div>`;
+  feed.prepend(row);
+  // Keep only last 40
+  while (feed.children.length > 40) feed.removeChild(feed.lastChild);
+
+  document.getElementById('tx-count').textContent = txCount + ' transactions received';
+  document.getElementById('last-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+
+  // Animate sparkline latest bar
+  const spark = document.getElementById('spark-latest');
+  const pct = Math.round(amount / 1500 * 100);
+  spark.style.height = pct + '%';
+
+  // Update chart stream bar dynamically
+  currentData[t.stream] += amount;
+  currentData.total += amount;
+  updateChart();
+  refreshKPIs();
+}
+
+// Simulate WebSocket messages: random interval 1.5–4s
+function scheduleNext() {
+  addTransaction();
+  setTimeout(scheduleNext, Math.random() * 2500 + 1500);
+}
+setTimeout(scheduleNext, 800);
+
+// ── KYC Queue ─────────────────────────────────────────────
+const kycUsers = [
+  { id:'kyc1', name:'Priya Mehta', email:'priya.m@gmail.com', aadhaar:'XXXX-XXXX-3841', pan:'ABCDE1234F', dob:'12 Mar 1996', match:true, status:'pending' },
+  { id:'kyc2', name:'Arjun Kumar', email:'arjun.k@startup.in', aadhaar:'XXXX-XXXX-7712', pan:'FGHIJ5678K', dob:'3 Aug 1994', match:true, status:'pending' },
+  { id:'kyc3', name:'Divya Shah', email:'divya.s@design.co', aadhaar:'XXXX-XXXX-2290', pan:'LMNOP9012Q', dob:'27 Nov 1998', match:false, status:'pending' },
+  { id:'kyc4', name:'Rohan Singhania', email:'rohan.s@lens.io', aadhaar:'XXXX-XXXX-5567', pan:'RSTUV3456W', dob:'15 Jun 1992', match:true, status:'pending' },
+  { id:'kyc5', name:'Anika Patel', email:'anika.p@creative.in', aadhaar:'XXXX-XXXX-8834', pan:'XYZAB7890C', dob:'9 Feb 2000', match:false, status:'rejected' },
+];
+
+function renderKycQueue() {
+  const container = document.getElementById('kyc-queue');
+  container.innerHTML = '';
+  let pCount = 0, vCount = 0, rCount = 0;
+  kycUsers.forEach(u => {
+    if (u.status === 'pending') pCount++;
+    else if (u.status === 'verified') vCount++;
+    else if (u.status === 'rejected') rCount++;
+
+    const card = document.createElement('div');
+    card.id = u.id;
+    card.className = 'kyc-card bg-surface-container-lowest rounded-xl p-6 border shadow-sm ' +
+      (u.status === 'verified' ? 'border-emerald-200' : u.status === 'rejected' ? 'border-red-200' : 'border-outline-variant/10');
+
+    const badge = u.status === 'verified'
+      ? '<span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Auto-Verified</span>'
+      : u.status === 'rejected'
+      ? '<span class="px-3 py-1 bg-red-50 text-error rounded-full text-[10px] font-black uppercase">Mismatch / Rejected</span>'
+      : '<span class="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Awaiting Review</span>';
+
+    const matchBadge = u.match
+      ? '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black">✓ DigiLocker Match</span>'
+      : '<span class="px-2 py-0.5 bg-red-50 text-error rounded-full text-[10px] font-black">✗ No Match</span>';
+
+    const actions = u.status === 'pending' ? `
+      <button onclick="verifyUser('${u.id}', true)" class="px-4 py-2 bg-emerald-600 text-white rounded-full text-xs font-bold hover:bg-emerald-700 transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">check_circle</span>Approve
+      </button>
+      <button onclick="verifyUser('${u.id}', false)" class="px-4 py-2 border border-error/30 text-error rounded-full text-xs font-bold hover:bg-error/5 transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">cancel</span>Reject
+      </button>` : '';
+
+    card.innerHTML = `
+      <div class="flex flex-col md:flex-row gap-5">
+        <div class="flex items-start gap-4 flex-1">
+          <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center font-headline font-bold text-primary text-lg shrink-0">
+            ${u.name[0]}
+          </div>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <p class="font-headline font-bold text-base">${u.name}</p>
+              ${badge}
+            </div>
+            <p class="text-xs text-outline mb-3">${u.email}</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div><p class="text-outline font-bold uppercase tracking-wider mb-0.5">Aadhaar</p><p class="font-mono font-bold">${u.aadhaar}</p></div>
+              <div><p class="text-outline font-bold uppercase tracking-wider mb-0.5">PAN</p><p class="font-mono font-bold">${u.pan}</p></div>
+              <div><p class="text-outline font-bold uppercase tracking-wider mb-0.5">DOB</p><p class="font-bold">${u.dob}</p></div>
+              <div><p class="text-outline font-bold uppercase tracking-wider mb-0.5">API Match</p>${matchBadge}</div>
+            </div>
+          </div>
+        </div>
+        ${u.status === 'pending' ? `<div class="flex md:flex-col gap-3 shrink-0 justify-end">${actions}</div>` : ''}
+      </div>`;
+    container.appendChild(card);
+  });
+  document.getElementById('kyc-pending-count').textContent = pCount;
+  document.getElementById('kyc-verified-count').textContent = verifiedToday;
+  document.getElementById('kyc-rejected-count').textContent = rCount;
+  const total = pCount + verifiedToday + rCount;
+  document.getElementById('kyc-match-rate').textContent = total ? Math.round((verifiedToday/(verifiedToday+rCount||1))*100)+'%' : '0%';
+}
+
+function verifyUser(id, approve) {
+  const u = kycUsers.find(u => u.id === id);
+  if (!u) return;
+  // Simulate DigiLocker match check
+  const card = document.getElementById(id);
+  if (card) {
+    card.innerHTML = `<div class="flex items-center gap-3 text-sm"><span class="material-symbols-outlined animate-spin text-primary">autorenew</span>Calling DigiLocker API…</div>`;
+  }
+  setTimeout(() => {
+    if (approve && u.match) {
+      u.status = 'verified';
+      verifiedToday++;
+    } else {
+      u.status = 'rejected';
+    }
+    renderKycQueue();
+  }, 1400);
+}
+
+function autoVerifyAll() {
+  const pending = kycUsers.filter(u => u.status === 'pending');
+  if (!pending.length) { alert('No pending verifications!'); return; }
+  pending.forEach((u, i) => setTimeout(() => {
+    u.status = u.match ? 'verified' : 'rejected';
+    if (u.match) verifiedToday++;
+    renderKycQueue();
+  }, i * 900));
+}
+
+renderKycQueue();
+</script>
+</body></html>

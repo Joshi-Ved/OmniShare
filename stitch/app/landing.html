@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Omnishare | Editorial Rental Experience</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,FILL@0..1,GRAD@0,opsz@24&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#f6fafe",
+                    "surface-container": "#eaeef2",
+                    "tertiary-fixed": "#d3e4fe",
+                    "background": "#f6fafe",
+                    "on-primary-fixed": "#001a41",
+                    "surface-variant": "#dfe3e7",
+                    "on-secondary-fixed": "#111c2d",
+                    "on-secondary-container": "#586377",
+                    "outline": "#717786",
+                    "tertiary-container": "#66768d",
+                    "on-surface": "#171c1f",
+                    "inverse-surface": "#2c3134",
+                    "surface-container-low": "#f0f4f8",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "secondary-container": "#d5e0f8",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "surface-container-highest": "#dfe3e7",
+                    "secondary": "#545f73",
+                    "on-secondary-fixed-variant": "#3c475a",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#d6dade",
+                    "outline-variant": "#c1c6d7",
+                    "primary-fixed": "#d8e2ff",
+                    "surface": "#f6fafe",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#fefcff",
+                    "tertiary": "#4d5d73",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#d8e3fb",
+                    "secondary-fixed-dim": "#bcc7de",
+                    "on-surface-variant": "#414754",
+                    "on-tertiary-container": "#fdfcff",
+                    "on-error": "#ffffff",
+                    "inverse-primary": "#adc7ff",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#edf1f5",
+                    "surface-container-high": "#e4e9ed",
+                    "primary": "#0059bb",
+                    "surface-tint": "#005bc0",
+                    "on-background": "#171c1f",
+                    "primary-container": "#0070ea",
+                    "primary-fixed-dim": "#adc7ff",
+                    "on-primary-fixed-variant": "#004493"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .glass-nav {
+            background: rgba(246, 250, 254, 0.8);
+            backdrop-filter: blur(12px);
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 40px -10px rgba(23, 28, 31, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-12">
+<a class="text-2xl font-black text-blue-800 dark:text-blue-300 tracking-tighter font-headline" href="landing.html">OmniStream</a>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-blue-700 dark:text-blue-400 border-b-2 border-blue-700 dark:border-blue-400 pb-1 font-headline font-bold tracking-tight transition-all duration-300 hover:opacity-80" href="search.html">Browse Rentals</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 font-headline font-bold tracking-tight transition-all duration-300 hover:opacity-80" href="subscription.html">How it Works</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 font-headline font-bold tracking-tight transition-all duration-300 hover:opacity-80" href="owner_portal.html">List an Item</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="profile.html">Sign In</a>
+<a class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 active:scale-95 text-center" href="subscription.html">Join Now</a>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative px-8 py-20 overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7 z-10">
+<h1 class="font-headline text-display-lg text-6xl md:text-7xl font-extrabold tracking-tighter leading-[0.9] text-on-surface mb-8">
+                    The Curated <br/> <span class="text-primary italic">Exchange</span>
+</h1>
+<p class="text-title-md text-xl text-on-surface-variant max-w-xl mb-10 leading-relaxed">
+                    Access premium equipment, luxury essentials, and unique lifestyle items starting from ₹30,000 / $360. Editorial quality, shared daily.
+                </p>
+<!-- Search Bar -->
+<div class="bg-surface-container-lowest p-2 rounded-full editorial-shadow flex items-center max-w-2xl group transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/20">
+<div class="flex-1 flex items-center px-6 gap-3">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-body-md py-3" placeholder="What are you looking for?" type="text"/>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant/30 hidden md:block"></div>
+<div class="hidden md:flex flex-1 items-center px-6 gap-3">
+<span class="material-symbols-outlined text-outline">location_on</span>
+<input class="bg-transparent border-none focus:ring-0 w-full text-body-md py-3" placeholder="Location" type="text"/>
+</div>
+<a class="bg-primary text-on-primary h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300 hover:bg-primary-container active:scale-95 shrink-0" href="search.html">
+<span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="lg:col-span-5 relative">
+<div class="rounded-xl overflow-hidden aspect-[4/5] editorial-shadow transform rotate-2">
+<img alt="Close-up of premium designer sunglasses and high-end camera equipment" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9UbxSohADVJFNgFgN8KxTZ5g6Pa1Wrq9eo8gk13NamuWcjTt1s5izMnW27KtpgPRPq__hY-qNKzHaGtcksayq3_q87WZ92pJbzvwhbYIUDoExDY6yriQYsCL5nruaLgJ9MFKrwvompgYOKmBb1Fy0KohQFUWkslGu-yP9CZ21ZxEbDiZ7HZY2NxZFzzptz9cvsDJFpipo-QL-2h8LJoaCcHk5vLBKjuMnd6teDgJeoY3BQt41Lv9YFlbgL3RioXojkRPXE3csgeU"/>
+</div>
+<div class="absolute -bottom-8 -left-8 bg-surface-container-lowest p-6 rounded-xl editorial-shadow max-w-[200px] transform -rotate-3 border border-outline-variant/10">
+<div class="flex gap-2 mb-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-label-sm font-bold uppercase tracking-widest text-outline mb-1">Top Rated</p>
+<p class="text-body-md font-semibold">"Impeccable gear, effortless process."</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Featured Rentals (Bento Style) -->
+<section class="px-8 py-24 bg-surface-container-low">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-16">
+<div class="max-w-xl">
+<h2 class="font-headline text-4xl font-extrabold tracking-tighter mb-4">Featured Listings</h2>
+<p class="text-on-surface-variant">The most coveted items in our ecosystem, hand-selected for quality and reliability.</p>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 group" href="search.html">
+                    Browse All <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">east</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<!-- Large Feature -->
+<div class="md:col-span-2 md:row-span-2 group cursor-pointer" onclick="window.location.href='product_detail.html'">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow h-full flex flex-col">
+<div class="relative overflow-hidden aspect-[16/10]">
+<img alt="Professional cinema camera setup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzzy1G4e8H4Sc8884vYNjGMWGAmSf_CqKY7FlPLrGB_N8wFRjyo9H0XURNOqyjZO3TPj_78-6OnnS5Fty21gwo1VS-hrZwkxX2UwQk_STgdZepg3Xgs5qqniGU6zCQm63Fc_ms-q1LmE3r9aDmcCuy5vhpDYhgGvagSj8H0a9mf2ZZT9OlsJ2pTudpOsArjxNoN1BRWedzK8lq_KdydkO_f-uEElV6LiLOT5iV1aQlEGvHbXxa3KrXBAI7rtu_c-zRjhWDrlYDosc"/>
+<div class="absolute top-4 left-4 bg-primary-container text-on-primary-container text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">Editorial Choice</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline text-2xl font-bold">Red Komodo 6K Cinema Package</h3>
+<div class="font-headline text-2xl font-black text-primary text-right">
+                                    ₹42,000<br/>
+<span class="text-sm font-medium text-outline">$500/day</span>
+</div>
+</div>
+<p class="text-on-surface-variant mb-6 line-clamp-2">Complete production-ready kit including lenses, monitors, and media. Perfect for high-end commercial work.</p>
+<div class="mt-auto flex items-center gap-4 pt-6 border-t border-outline-variant/20">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container-lowest bg-slate-200 overflow-hidden">
+<img alt="Portrait of Julian R." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD33etfU9NvqRHAiRz81fNZg4AY4O4fNzrKjGIzgHWH0aaY44MT0KDP7kQe4WP0FmpXOYgHxP-vTrug2HnLQHGWmtCC87TFpuescub5YX4BpLMjC2DV1FsIzLa7dl7P4zM9gKHf6v4g86KEAky-3LnkIKBr0NfmBbHMUiabbFQF5eotmBqXGPL5H4ponXs5ujQ6En71G4UX3YGzS3Uj9FZzZoO0ITwEsRoXyyGnegfxPPCT6b2O2gnpZtqBg0Cmgv2eQ5Rseg8_u50"/>
+</div>
+<span class="text-label-sm font-semibold text-outline">Listed by Julian R. • 4.9★</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sponsored Item -->
+<div class="group cursor-pointer" onclick="window.location.href='product_detail.html'">
+<div class="bg-secondary-container/30 rounded-xl overflow-hidden editorial-shadow h-full flex flex-col">
+<div class="relative aspect-square">
+<img alt="Red vintage luxury sports car" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVCG12C-0nOiDEiTfmwHfu7KZhZYaY_7owyK8qGucBWtaA89fkR8ZM1HE5NW08xSIOMw4KJ5WdFMnpCc4SzPgGJyhX4GS_RmqU8XV6XztyhpbAVNlP_1Pdq7DzU131HWoJpIVjXpYKfbSWHvp2cmGJTKUp589vGX13jLj2tj_0EV0lbFcb7kd0L7o2F_w5l8hhs5ve9zeyuCL_M_I2UMVo-r1dKrOpsdKGP_7B0BBomASEyaF-kSfus_mQBfp6FQlsZrgvsKOWArU"/>
+<div class="absolute top-4 right-4 bg-surface-container-lowest/80 backdrop-blur text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Featured</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-lg font-bold mb-1">1964 Porsche 356 Rental</h3>
+<p class="text-primary font-headline font-black mb-4">₹67,000 <span class="text-xs font-normal text-outline">/ $800 day</span></p>
+<div class="flex items-center gap-2 text-label-sm text-on-secondary-container">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+                                Verified Owner
+                            </div>
+</div>
+</div>
+</div>
+<!-- Standard Item -->
+<div class="group cursor-pointer" onclick="window.location.href='product_detail.html'">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow h-full flex flex-col">
+<div class="relative aspect-square">
+<img alt="Modern minimalist luxury wristwatch" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJWaRzn8MoU5L-hXmPDFdwodCjgVqeXXUwXlzp3dQaOArx5P4DfpMsi_zIkroy8uPXma8A8gqjT6bpm5WxLEilUJzZa4e8n7mMFMvYUPUfL1ePz4fZtdDr12iuN8_E19zKAtyHyjwdwP23Z5Vc_jFMndwefBtIsKmnc1H5-K6gaiOLDUW6-6rHSqZVGt5F3pbP9uA8dbG3S3xMhm-0dBCoF-QxziyR_UOIRW3D0rEK0DpTzRWhVtlrrfqgjWYusWc8sGNa5z5cbCU"/>
+</div>
+<div class="p-6">
+<h3 class="font-headline text-lg font-bold mb-1">Minimalist Horology Set</h3>
+<p class="text-primary font-headline font-black mb-4">₹33,500 <span class="text-xs font-normal text-outline">/ $400 day</span></p>
+<div class="flex items-center gap-2 text-label-sm text-outline">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                Next day delivery
+                            </div>
+</div>
+</div>
+</div>
+<!-- Sidebar/Inline Ad -->
+<div class="md:col-span-2 mt-4">
+<div class="bg-surface-container-lowest rounded-xl p-8 flex items-center gap-8 border border-primary/10 h-full">
+<div class="flex-1">
+<p class="text-label-sm font-bold text-primary uppercase tracking-widest mb-2">Partner Spotlight</p>
+<h3 class="font-headline text-2xl font-bold mb-3">Insure your gear for up to ₹8,40,000</h3>
+<p class="text-on-surface-variant text-sm mb-4">Protect your assets with OmniGuard. Instant coverage for every rental up to $10,000.</p>
+<a class="text-primary font-bold text-sm underline underline-offset-4 decoration-primary/30 hover:decoration-primary" href="subscription.html">Learn more</a>
+</div>
+<div class="w-24 h-24 bg-surface-container rounded-lg flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-4xl text-outline-variant">security</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How it Works -->
+<section class="px-8 py-32">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+<div>
+<h2 class="font-headline text-5xl font-extrabold tracking-tighter mb-8 leading-tight">Renting Redefined: <br/>Simple &amp; Sophisticated.</h2>
+<div class="space-y-12">
+<div class="flex gap-6">
+<div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline font-bold text-xl shrink-0">1</div>
+<div>
+<h4 class="font-headline text-xl font-bold mb-2">Curate Your Request</h4>
+<p class="text-on-surface-variant">Browse our editorialized catalog and send a rental proposal to the owner. Direct messaging ensures clarity.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline font-bold text-xl shrink-0">2</div>
+<div>
+<h4 class="font-headline text-xl font-bold mb-2">Seamless Verification</h4>
+<p class="text-on-surface-variant">Our AI-driven verification system ensures both parties are legitimate, protecting the community's standards.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline font-bold text-xl shrink-0">3</div>
+<div>
+<h4 class="font-headline text-xl font-bold mb-2">Secure Exchange</h4>
+<p class="text-on-surface-variant">Meet in person or utilize our white-glove courier service. Payment is held in escrow until completion.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="bg-surface-container-high rounded-xl aspect-square relative overflow-hidden">
+<img alt="Modern workspace" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA821Dxb_XFkQeT2KIZn4EZoElGicgY4V9hb2r36gwfESCE8bIg9YeMHNdTxJhMDSYbzrkmCwxw-Uwp23jUDjfPSHP_TW8kj_JYMHsN4-ACF1MXKVUyIDccSPeII58-U9pwFy0c-N1fR2j7LCPgv7XPuu87R_FURoEjgLEp_EILWcZ8E3PNfKxnnYN6kQnbtCN28NoqYqrA1pSKnTuf9lX6j1P85D_nXAsviIk7T8Z0kgVzMhiaKaWQBpmFHyw0B-8TT9z1Af_E2VU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+<div class="absolute top-1/2 -right-12 -translate-y-1/2 bg-surface-container-lowest p-8 rounded-xl editorial-shadow hidden xl:block max-w-[280px]">
+<span class="material-symbols-outlined text-primary text-5xl mb-4">handshake</span>
+<p class="text-on-surface font-headline font-bold text-lg leading-tight mb-2">Trusted by 50,000+ Enthusiasts</p>
+<p class="text-on-surface-variant text-sm">Join the global network of shared luxury and utility.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Secure Banner -->
+<section class="px-8 py-20">
+<div class="max-w-7xl mx-auto">
+<div class="bg-primary-container rounded-3xl p-12 md:p-20 relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center gap-12">
+<div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -ml-48 -mb-48"></div>
+<div class="flex-1 relative z-10">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold tracking-tighter text-on-primary-container mb-6">Secure Transactions. <br/>Minimal Overhead.</h2>
+<p class="text-on-primary-container/80 text-lg max-w-xl leading-relaxed mb-8">
+                        We charge a flat 3% platform fee—the lowest in the industry. Your payments are protected by end-to-end encryption and our 100% satisfaction guarantee.
+                    </p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<div class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-on-primary-container text-sm font-bold">
+<span class="material-symbols-outlined text-lg">verified</span> Encrypted
+                        </div>
+<div class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-on-primary-container text-sm font-bold">
+<span class="material-symbols-outlined text-lg">account_balance</span> Escrow Support
+                        </div>
+<div class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-on-primary-container text-sm font-bold">
+<span class="material-symbols-outlined text-lg">support_agent</span> 24/7 Priority
+                        </div>
+</div>
+</div>
+<div class="relative z-10">
+<a class="inline-block bg-surface-container-lowest text-primary px-10 py-5 rounded-full font-headline font-bold text-xl transition-all duration-300 hover:scale-105 active:scale-95 editorial-shadow" href="checkout.html">
+                        Start Trading Today
+                    </a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 w-full mt-auto py-16">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 px-12 max-w-[1440px] mx-auto">
+<div class="col-span-2 md:col-span-1">
+<p class="text-xl font-bold text-slate-900 dark:text-white mb-6 font-headline">OmniStream</p>
+<p class="font-body text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                The premier marketplace for editorial-grade rentals. Curating the tools for the next generation of creators.
+            </p>
+<p class="font-body text-xs text-slate-400 mt-6 uppercase tracking-widest">
+                © 2024 OmniStream Editorial Rentals.
+            </p>
+</div>
+<div>
+<h5 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-widest mb-6">Platform</h5>
+<ul class="space-y-4 font-body text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="search.html">Browse Rentals</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="subscription.html">How it Works</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="owner_portal.html">Lister Portal</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-widest mb-6">Support</h5>
+<ul class="space-y-4 font-body text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="checkout.html">Help Center</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-widest mb-6">Management</h5>
+<ul class="space-y-4 font-body text-sm text-slate-500 dark:text-slate-400">
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="admin.html">Admin Console</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="profile.html">Member Profile</a></li>
+<li class="flex gap-4 mt-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">public</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">alternate_email</span>
+</li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>

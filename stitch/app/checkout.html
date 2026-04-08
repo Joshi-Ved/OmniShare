@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Checkout | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "surface-bright":"#f6fafe","surface-container":"#eaeef2","background":"#f6fafe","on-primary-fixed":"#001a41","surface-variant":"#dfe3e7","on-secondary-container":"#586377","outline":"#717786","on-surface":"#171c1f","surface-container-low":"#f0f4f8","secondary-container":"#d5e0f8","on-secondary":"#ffffff","surface-container-highest":"#dfe3e7","secondary":"#545f73","outline-variant":"#c1c6d7","primary-fixed":"#d8e2ff","surface":"#f6fafe","on-primary-container":"#fefcff","on-primary":"#ffffff","error":"#ba1a1a","secondary-fixed":"#d8e3fb","on-surface-variant":"#414754","on-error":"#ffffff","inverse-primary":"#adc7ff","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","primary":"#0059bb","surface-tint":"#005bc0","on-background":"#171c1f","primary-container":"#0070ea","primary-fixed-dim":"#adc7ff","on-primary-fixed-variant":"#004493"
+        },
+        "borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},
+        "fontFamily":{"headline":["Space Grotesk"],"body":["Inter"],"label":["Inter"]}
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  .step-active{background:#0059bb;color:#fff;}
+  .step-done{background:#d8e2ff;color:#004493;}
+  .step-idle{background:#eaeef2;color:#717786;}
+  .ins-label{transition:border-color 0.15s,background 0.15s;}
+  .ins-label.selected{border-color:#0059bb!important;background:#f0f4ff;}
+  .del-label{transition:border-color 0.15s,background 0.15s;}
+  .del-label.selected{border-color:#0059bb!important;background:#f0f4ff;}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+
+<!-- Nav -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 backdrop-blur-xl shadow-[0_40px_40px_-15px_rgba(23,28,31,0.04)]">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
+    <nav class="hidden md:flex gap-6 items-center font-headline font-bold">
+      <a class="text-slate-500 hover:text-primary transition-colors" href="search.html">Browse</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="subscription.html">How it Works</a>
+      <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="profile.html">Sign In</a>
+      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container active:scale-95" href="subscription.html">Join Now</a>
+    </div>
+  </div>
+</header>
+
+<main class="pt-28 pb-20 px-8 max-w-[1440px] mx-auto w-full flex-grow">
+  <!-- Breadcrumb -->
+  <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-outline mb-10">
+    <a class="hover:text-primary transition-colors" href="landing.html">Home</a>
+    <span class="material-symbols-outlined text-sm">chevron_right</span>
+    <a class="hover:text-primary transition-colors" href="product_detail.html">Listing</a>
+    <span class="material-symbols-outlined text-sm">chevron_right</span>
+    <span class="text-on-surface">Checkout</span>
+  </nav>
+
+  <!-- Step Indicators -->
+  <div class="flex items-center justify-center gap-4 mb-14">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center font-headline font-bold text-sm step-active" id="step1-dot">1</div>
+      <span class="font-headline font-bold text-sm text-on-surface hidden sm:block">Review</span>
+    </div>
+    <div class="w-12 h-0.5 bg-surface-container-high"></div>
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center font-headline font-bold text-sm step-idle" id="step2-dot">2</div>
+      <span class="font-headline font-bold text-sm text-outline hidden sm:block">Delivery</span>
+    </div>
+    <div class="w-12 h-0.5 bg-surface-container-high"></div>
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center font-headline font-bold text-sm step-idle" id="step3-dot">3</div>
+      <span class="font-headline font-bold text-sm text-outline hidden sm:block">Payment</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+    <!-- Left: Steps Content -->
+    <div class="lg:col-span-7">
+
+      <!-- ── STEP 1: Review Items ── -->
+      <div id="step-1">
+        <h1 class="font-headline text-3xl font-bold mb-8 tracking-tight">Review Your Rental</h1>
+
+        <!-- Item card -->
+        <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm mb-6">
+          <div class="flex gap-6">
+            <div class="w-28 h-28 rounded-xl overflow-hidden shrink-0 bg-surface-container-low">
+              <img alt="Red Komodo 6K Cinema Package" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-headline font-bold text-lg">Red Komodo 6K Cinema Package</h3>
+                  <p class="text-sm text-on-surface-variant mt-1">Listed by Julian R. • Brooklyn, NY</p>
+                  <div class="flex items-center gap-1 mt-2">
+                    <span class="material-symbols-outlined text-sm text-yellow-500" style="font-variation-settings:'FILL' 1;">star</span>
+                    <span class="text-xs font-bold">4.9</span>
+                    <span class="text-xs text-outline ml-1">42 reviews</span>
+                  </div>
+                </div>
+                <a href="product_detail.html" class="text-primary text-xs font-bold hover:underline underline-offset-2">Edit</a>
+              </div>
+              <div class="mt-4 flex gap-6 text-sm">
+                <div>
+                  <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-0.5">Rental Period</span>
+                  <span class="font-semibold">Oct 12 – Oct 15 (3 days)</span>
+                </div>
+                <div>
+                  <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-0.5">Daily Rate</span>
+                  <span class="font-headline font-bold text-primary">₹1,000 / day</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Insurance Toggle -->
+        <div class="bg-surface-container-low rounded-xl p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-headline font-bold">OmniGuard Insurance</h3>
+            <span class="text-xs font-bold text-primary uppercase tracking-wider">Recommended</span>
+          </div>
+          <div class="space-y-3">
+            <label class="ins-label selected flex items-center gap-4 p-4 bg-surface-container-lowest rounded-xl border-2 cursor-pointer" id="ins-standard-label">
+              <input type="radio" name="insurance" value="standard" checked class="accent-primary" onchange="calcTotal()"/>
+              <div class="flex-1">
+                <div class="font-bold text-sm">Standard Coverage</div>
+                <div class="text-xs text-on-surface-variant">Coverage up to ₹50,000 · ₹100/day</div>
+              </div>
+              <span class="font-headline font-bold text-primary">₹300</span>
+            </label>
+            <label class="ins-label flex items-center gap-4 p-4 bg-surface-container-lowest rounded-xl border border-outline-variant/20 cursor-pointer" id="ins-none-label">
+              <input type="radio" name="insurance" value="none" class="accent-primary" onchange="calcTotal()"/>
+              <div class="flex-1">
+                <div class="font-bold text-sm">No Insurance</div>
+                <div class="text-xs text-on-surface-variant">Renter assumes full liability for damages</div>
+              </div>
+              <span class="font-headline font-bold text-outline">₹0</span>
+            </label>
+          </div>
+        </div>
+
+        <button onclick="goStep(2)" class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+          Continue to Delivery
+        </button>
+      </div>
+
+      <!-- ── STEP 2: Delivery Address ── -->
+      <div id="step-2" class="hidden">
+        <h1 class="font-headline text-3xl font-bold mb-8 tracking-tight">Delivery Address</h1>
+        <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">First Name</label>
+              <input type="text" placeholder="Marcus" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Last Name</label>
+              <input type="text" placeholder="Sterling" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Street Address</label>
+            <input type="text" placeholder="47 Wythe Avenue, Apt 3B" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">City</label>
+              <input type="text" placeholder="Mumbai" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">State</label>
+              <input type="text" placeholder="Maharashtra" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Pincode</label>
+              <input type="text" placeholder="400001" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Phone Number</label>
+            <input type="tel" placeholder="+91 98765 43210" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+          </div>
+
+          <!-- Delivery Options -->
+          <div>
+            <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-3">Delivery Preference</label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="del-label selected flex items-center gap-3 p-4 bg-surface-container-low rounded-xl cursor-pointer border-2" id="del-standard-label">
+                <input type="radio" name="delivery" value="standard" checked class="accent-primary" onchange="calcTotal()"/>
+                <div>
+                  <div class="font-bold text-sm">Standard (3–5 days)</div>
+                  <div class="text-xs text-on-surface-variant">₹<span id="del-std-fee">450</span> delivery fee (15%)</div>
+                </div>
+              </label>
+              <label class="del-label flex items-center gap-3 p-4 bg-surface-container-low rounded-xl cursor-pointer border border-outline-variant/20" id="del-express-label">
+                <input type="radio" name="delivery" value="express" class="accent-primary" onchange="calcTotal()"/>
+                <div>
+                  <div class="font-bold text-sm">5-Hour Express <span class="text-primary text-[10px] font-black uppercase tracking-wider">Plus</span></div>
+                  <div class="text-xs text-on-surface-variant">₹<span id="del-exp-fee">900</span> delivery fee (30%)</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-4 mt-6">
+          <button onclick="goStep(1)" class="flex-1 py-4 bg-surface-container-high rounded-full font-headline font-bold text-lg hover:bg-surface-container-highest transition-colors">Back</button>
+          <button onclick="goStep(3)" class="flex-1 py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">Continue to Payment</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Payment ── -->
+      <div id="step-3" class="hidden">
+        <h1 class="font-headline text-3xl font-bold mb-8 tracking-tight">Payment Method</h1>
+        <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm space-y-6">
+          <div class="space-y-3">
+            <label class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl cursor-pointer border-2 border-primary">
+              <input type="radio" name="payment" value="razorpay" checked class="accent-primary"/>
+              <span class="material-symbols-outlined text-primary">credit_card</span>
+              <div class="flex-1">
+                <div class="font-bold text-sm">Razorpay — Card / UPI / NetBanking</div>
+                <div class="text-xs text-on-surface-variant">Securely processed via Razorpay gateway</div>
+              </div>
+            </label>
+            <label class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl cursor-pointer border border-outline-variant/20">
+              <input type="radio" name="payment" value="demo" class="accent-primary"/>
+              <span class="material-symbols-outlined text-outline">science</span>
+              <div class="flex-1">
+                <div class="font-bold text-sm">Demo Mode</div>
+                <div class="text-xs text-on-surface-variant">Simulated payment for demonstration purposes</div>
+              </div>
+            </label>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Card Number</label>
+            <input type="text" placeholder="4242 4242 4242 4242" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Expiry</label>
+              <input type="text" placeholder="MM / YY" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">CVV</label>
+              <input type="text" placeholder="•••" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-3 pt-4 border-t border-outline-variant/15">
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-full text-xs font-bold text-on-surface-variant">
+              <span class="material-symbols-outlined text-sm text-primary">verified</span>SSL Encrypted
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-full text-xs font-bold text-on-surface-variant">
+              <span class="material-symbols-outlined text-sm text-primary">account_balance</span>Escrow Protection
+            </div>
+            <div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low rounded-full text-xs font-bold text-on-surface-variant">
+              <span class="material-symbols-outlined text-sm text-primary">support_agent</span>24/7 Support
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-4 mt-6">
+          <button onclick="goStep(2)" class="flex-1 py-4 bg-surface-container-high rounded-full font-headline font-bold text-lg hover:bg-surface-container-highest transition-colors">Back</button>
+          <a href="order_confirmation.html" id="pay-btn" class="flex-1 py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+            Confirm &amp; Pay <span id="pay-btn-total">₹4,200</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right: Order Summary (sticky & live) ── -->
+    <div class="lg:col-span-5">
+      <div class="sticky top-28 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm">
+        <h2 class="font-headline font-bold text-xl mb-6">Order Summary</h2>
+
+        <div class="flex gap-4 pb-6 border-b border-outline-variant/15 mb-6">
+          <div class="w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-surface-container-low">
+            <img alt="Red Komodo 6K" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-sm leading-tight">Red Komodo 6K Cinema Package</h3>
+            <p class="text-xs text-on-surface-variant mt-1">Oct 12 – Oct 15 · 3 days</p>
+          </div>
+        </div>
+
+        <!-- Live-updating line items -->
+        <div class="space-y-3 text-sm mb-6">
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">Subtotal (3 days × ₹1,000)</span>
+            <span class="font-semibold" id="sum-subtotal">₹3,000</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant" id="sum-del-label">Delivery Fee (15%)</span>
+            <span class="font-semibold" id="sum-delivery">₹450</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">Transaction Fee (18%)</span>
+            <span class="font-semibold" id="sum-txfee">₹540</span>
+          </div>
+          <div class="flex justify-between" id="ins-row">
+            <span class="text-on-surface-variant" id="sum-ins-label">Insurance (Standard, 3 days)</span>
+            <span class="font-semibold" id="sum-insurance">₹300</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">Security Deposit (Escrowed)</span>
+            <span class="font-semibold" id="sum-deposit">₹1,500</span>
+          </div>
+          <div class="border-t border-outline-variant/15 pt-3 flex justify-between items-center">
+            <span class="font-headline font-bold text-base">Total Due</span>
+            <div class="text-right">
+              <p class="font-headline font-bold text-xl text-primary" id="sum-total">₹5,790</p>
+              <p class="text-xs text-primary/70" id="sum-total-note">incl. ₹1,500 refundable deposit</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl p-4">
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-lg mt-0.5">info</span>
+            <p class="text-xs text-on-surface-variant leading-relaxed">Security deposit is held in escrow and fully refunded upon verified return of the item.</p>
+          </div>
+        </div>
+        <div class="mt-6 flex items-center gap-2 text-xs text-outline">
+          <span class="material-symbols-outlined text-sm">lock</span>
+          <span>Secure SSL-encrypted checkout</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="w-full mt-auto py-12 bg-slate-50">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-8 px-12 max-w-7xl mx-auto">
+    <div class="col-span-2 md:col-span-1">
+      <div class="text-lg font-bold text-slate-900 mb-4 font-headline">OmniShare</div>
+      <p class="text-sm text-slate-500 leading-relaxed">The premier marketplace for editorial-grade rentals.</p>
+    </div>
+    <div>
+      <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Platform</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600 transition-colors" href="search.html">Browse Rentals</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="subscription.html">How it Works</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="owner_portal.html">List an Item</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Support</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600 transition-colors" href="#">Help Center</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="#">Terms of Service</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Management</h4>
+      <ul class="space-y-2 text-sm text-slate-500">
+        <li><a class="hover:text-blue-600 transition-colors" href="admin.html">Admin Console</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="profile.html">Member Profile</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="mt-10 pt-6 border-t border-slate-100 text-center">
+    <p class="text-sm text-slate-400">© 2024 OmniShare Editorial Rentals. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // ── Pricing constants ──────────────────────────────────
+  const DAILY_RATE    = 1000;   // ₹1,000/day
+  const DAYS          = 3;
+  const SUBTOTAL      = DAILY_RATE * DAYS;    // ₹3,000
+  const TX_RATE       = 0.18;                 // 18%
+  const DEL_STD_RATE  = 0.15;                 // 15%
+  const DEL_EXP_RATE  = 0.30;                 // 30%
+  const INS_PER_DAY   = 100;                  // ₹100/day standard
+  const DEPOSIT       = 1500;                 // ₹1,500 escrow
+
+  // Pre-compute some labels
+  document.getElementById('del-std-fee').textContent = fmt(SUBTOTAL * DEL_STD_RATE);
+  document.getElementById('del-exp-fee').textContent = fmt(SUBTOTAL * DEL_EXP_RATE);
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString('en-IN');
+  }
+
+  function calcTotal() {
+    const insVal   = document.querySelector('input[name="insurance"]:checked').value;
+    const delVal   = document.querySelector('input[name="delivery"]:checked')?.value || 'standard';
+
+    const insFee   = insVal === 'standard' ? INS_PER_DAY * DAYS : 0;
+    const delFee   = delVal === 'express'  ? SUBTOTAL * DEL_EXP_RATE : SUBTOTAL * DEL_STD_RATE;
+    const txFee    = SUBTOTAL * TX_RATE;
+    const total    = SUBTOTAL + delFee + txFee + insFee + DEPOSIT;
+
+    // Update summary panel
+    document.getElementById('sum-subtotal').textContent  = '₹' + fmt(SUBTOTAL);
+    document.getElementById('sum-delivery').textContent  = '₹' + fmt(delFee);
+    document.getElementById('sum-txfee').textContent     = '₹' + fmt(txFee);
+    document.getElementById('sum-deposit').textContent   = '₹' + fmt(DEPOSIT);
+    document.getElementById('sum-total').textContent     = '₹' + fmt(total);
+    document.getElementById('pay-btn-total').textContent = '₹' + fmt(total);
+
+    // Delivery label
+    document.getElementById('sum-del-label').textContent =
+      delVal === 'express' ? 'Delivery Fee (30% Express)' : 'Delivery Fee (15%)';
+
+    // Insurance row
+    if (insVal === 'none') {
+      document.getElementById('ins-row').classList.add('hidden');
+    } else {
+      document.getElementById('ins-row').classList.remove('hidden');
+      document.getElementById('sum-ins-label').textContent = `Insurance (Standard, ${DAYS} days)`;
+      document.getElementById('sum-insurance').textContent = '₹' + fmt(insFee);
+    }
+
+    // Style insurance labels
+    document.getElementById('ins-standard-label').className =
+      'ins-label flex items-center gap-4 p-4 bg-surface-container-lowest rounded-xl border-2 cursor-pointer ' +
+      (insVal === 'standard' ? 'selected border-primary' : 'border-outline-variant/20');
+    document.getElementById('ins-none-label').className =
+      'ins-label flex items-center gap-4 p-4 bg-surface-container-lowest rounded-xl border-2 cursor-pointer ' +
+      (insVal === 'none' ? 'selected border-primary' : 'border-outline-variant/20');
+
+    // Style delivery labels
+    const dlStd = document.getElementById('del-standard-label');
+    const dlExp = document.getElementById('del-express-label');
+    if (dlStd && dlExp) {
+      dlStd.className = 'del-label flex items-center gap-3 p-4 bg-surface-container-low rounded-xl cursor-pointer border-2 ' +
+        (delVal === 'standard' ? 'selected border-primary' : 'border-outline-variant/20');
+      dlExp.className = 'del-label flex items-center gap-3 p-4 bg-surface-container-low rounded-xl cursor-pointer border-2 ' +
+        (delVal === 'express' ? 'selected border-primary' : 'border-outline-variant/20');
+    }
+  }
+
+  // ── Step navigation ────────────────────────────────────
+  function goStep(n) {
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('step-' + i).classList.add('hidden');
+      const dot = document.getElementById('step' + i + '-dot');
+      dot.className = 'w-9 h-9 rounded-full flex items-center justify-center font-headline font-bold text-sm ' +
+        (i < n ? 'step-done' : i === n ? 'step-active' : 'step-idle');
+    }
+    document.getElementById('step-' + n).classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    calcTotal(); // always refresh on step change
+  }
+
+  // ── Init ───────────────────────────────────────────────
+  calcTotal();
+</script>
+</body></html>
