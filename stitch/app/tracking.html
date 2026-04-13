@@ -55,7 +55,7 @@
     <div class="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
       <span>Booking Ref: <strong class="text-on-surface">#OMN-2024-9847</strong></span>
       <span>·</span>
-      <span>Red Komodo 6K Cinema Package</span>
+      <span>Sony A7S III Camera Rig</span>
       <span>·</span>
       <span>Oct 12 – Oct 15, 2024</span>
     </div>
@@ -114,7 +114,7 @@
           <div class="pb-8 slide-in" style="animation-delay:0.1s">
             <p class="font-headline font-bold text-base">Item Prepared &amp; Packed</p>
             <p class="text-xs text-on-surface-variant mt-0.5">Oct 11, 2024 · 4:15 PM</p>
-            <p class="text-sm text-on-surface-variant mt-2">Host packed and quality-checked the Red Komodo 6K kit. OmniGuard insurance activated.</p>
+            <p class="text-sm text-on-surface-variant mt-2">Host packed and quality-checked the Sony A7S III kit. OmniGuard insurance activated.</p>
           </div>
         </div>
 
@@ -233,7 +233,7 @@
     <div class="flex gap-8 text-xs uppercase tracking-widest text-slate-400">
       <a class="hover:text-primary transition-colors" href="search.html">Browse</a>
       <a class="hover:text-primary transition-colors" href="profile.html">My Bookings</a>
-      <a class="hover:text-primary transition-colors" href="#">Support</a>
+      <a class="hover:text-primary transition-colors" href="mailto:support@omnishare.in">Support</a>
     </div>
   </div>
 </footer>
@@ -331,5 +331,56 @@
   }, 4000);
 
   applyState(current);
+</script>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
+  });
 </script>
 </body></html>

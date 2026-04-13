@@ -74,4 +74,55 @@
     </div>
   </div>
 </footer>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
+  });
+</script>
 </body></html>

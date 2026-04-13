@@ -32,7 +32,7 @@
       <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
     </nav>
     <div class="flex items-center gap-4">
-      <a class="material-symbols-outlined p-2 text-slate-500 hover:text-primary hover:bg-surface-container-low rounded-full transition-all relative" href="#">
+      <a class="material-symbols-outlined p-2 text-slate-500 hover:text-primary hover:bg-surface-container-low rounded-full transition-all relative" href="javascript:void(0)" title="Notifications">
         notifications
         <span class="absolute top-1 right-1 w-3 h-3 bg-primary rounded-full border-2 border-white"></span>
       </a>
@@ -132,12 +132,12 @@
         </div>
         <div class="flex-1">
           <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
-            <h3 class="font-headline font-bold">Red Komodo 6K Cinema Package</h3>
+            <h3 class="font-headline font-bold">Sony A7S III Camera Rig</h3>
             <span class="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-extrabold uppercase tracking-wider">Pending Confirm</span>
           </div>
           <p class="text-sm text-on-surface-variant mb-3">Oct 12 – Oct 15, 2024 · 3 Days · Brooklyn, NY</p>
           <div class="flex flex-wrap items-center gap-4 text-sm">
-            <span class="font-headline font-bold text-primary">₹1,16,745 total</span>
+            <span class="font-headline font-bold text-primary">₹11,500 total</span>
             <span class="text-outline">Ref: #OMN-2024-9847</span>
             <a href="order_confirmation.html" class="text-primary font-bold hover:underline underline-offset-2">View Details</a>
           </div>
@@ -173,7 +173,7 @@
           </div>
           <p class="text-sm text-on-surface-variant mb-3">Aug 20, 2024 · 1 Day · Astoria, NY</p>
           <div class="flex flex-wrap items-center gap-4 text-sm">
-            <span class="font-headline font-bold text-outline">₹31,080 refunded</span>
+            <span class="font-headline font-bold text-outline">₹2,100 refunded</span>
             <span class="text-outline">Ref: #OMN-2024-7711</span>
           </div>
         </div>
@@ -220,7 +220,7 @@
         <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">notifications_active</span>
         <div class="flex-1">
           <p class="font-bold text-sm">Booking confirmed by Julian R.</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">Your Red Komodo 6K booking is confirmed. Pickup on Oct 12 at 10 AM.</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">Your Sony A7S III booking is confirmed. Pickup on Oct 12 at 10 AM.</p>
           <p class="text-xs text-outline mt-2">2 minutes ago</p>
         </div>
         <button class="text-xs text-primary font-bold shrink-0">Mark Read</button>
@@ -229,7 +229,7 @@
         <span class="material-symbols-outlined text-outline mt-0.5">paid</span>
         <div class="flex-1">
           <p class="font-bold text-sm">Payment processed successfully</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">₹1,16,745 charged · ₹42,000 held in escrow · Ref #OMN-2024-9847</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">₹11,500 charged · ₹3,000 held in escrow · Ref #OMN-2024-9847</p>
           <p class="text-xs text-outline mt-2">10 minutes ago</p>
         </div>
       </div>
@@ -312,9 +312,9 @@
     <div>
       <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Support</h4>
       <ul class="space-y-2 text-sm text-slate-500">
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Help Center</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Terms</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Privacy</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="mailto:support@omnishare.in">Help Center</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="terms.html">Terms</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="privacy.html">Privacy</a></li>
       </ul>
     </div>
     <div>
@@ -335,5 +335,124 @@
     btn.classList.add('active');
     btn.classList.remove('text-outline');
   }
+</script>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const subscriptionTier = user.subscription_tier || 'free';
+        const isVerified = subscriptionTier !== 'free' || !!user.verified;
+
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+
+        const profileName = document.querySelector('main h1.font-headline');
+        if (profileName) {
+          profileName.textContent = user.email.split('@')[0].toUpperCase();
+        }
+
+        const profileMeta = document.querySelector('main p.text-on-primary-fixed\/70');
+        if (profileMeta) {
+          profileMeta.textContent = user.email + ' · Member';
+        }
+
+        document.querySelectorAll('span').forEach(span => {
+          const text = span.textContent.trim();
+          if (text === 'Gold Host') {
+            span.textContent = isVerified ? 'Verified Host' : 'Free Host';
+          }
+          if (text === 'KYC Verified') {
+            span.textContent = isVerified ? 'KYC Verified' : 'Subscription Required';
+          }
+        });
+
+        const kycBanner = document.querySelector('main .bg-emerald-50');
+        if (kycBanner) {
+          const title = kycBanner.querySelector('p.font-bold');
+          const copy = kycBanner.querySelector('p.text-xs');
+          const status = kycBanner.querySelector('span.text-xs.font-bold');
+
+          if (isVerified) {
+            if (title) title.textContent = 'KYC Verified — Full Platform Access';
+            if (copy) copy.textContent = 'Identity verified. You can list items and book rentals without restrictions.';
+            if (status) {
+              status.textContent = 'Active';
+              status.className = 'text-xs font-bold text-emerald-600 uppercase tracking-wider';
+            }
+          } else {
+            if (title) title.textContent = 'Upgrade to OmniShare+ to get verified';
+            if (copy) copy.textContent = 'Free hosts can publish 1 listing. Subscribe to unlock verification and unlimited listings.';
+            if (status) {
+              status.textContent = 'Free';
+              status.className = 'text-xs font-bold text-amber-600 uppercase tracking-wider';
+            }
+          }
+        }
+
+        if (user.demo_subscription_user) {
+          const existing = document.getElementById('subscription-demo-panel');
+          if (!existing) {
+            const hostDashboardBtn = document.querySelector('a[href="owner_portal.html"]');
+            const panel = document.createElement('div');
+            panel.id = 'subscription-demo-panel';
+            panel.className = 'mb-10 p-5 bg-primary/5 border border-primary/20 rounded-xl';
+            panel.innerHTML = `
+              <p class="font-bold text-sm text-primary mb-2">Subscription Sandbox User</p>
+              <p class="text-xs text-on-surface-variant mb-4">Use this account to quickly test Free, Plus, and Pro flows.</p>
+              <div class="flex flex-wrap gap-3">
+                <a href="plans.html" class="px-4 py-2 bg-primary text-white rounded-full text-xs font-bold hover:bg-primary-container transition-colors">View All Subscriptions</a>
+                <a href="plans.html" class="px-4 py-2 bg-surface-container-low rounded-full text-xs font-bold hover:bg-surface-container transition-colors">Switch Plan</a>
+              </div>
+            `;
+
+            if (hostDashboardBtn && hostDashboardBtn.parentElement) {
+              hostDashboardBtn.parentElement.insertAdjacentElement('afterend', panel);
+            }
+          }
+        }
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
+  });
 </script>
 </body></html>

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Omnishare | Discover Editorial Rentals</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -82,20 +81,80 @@
       }
       body { font-family: 'Inter', sans-serif; }
       h1, h2, h3, .price-display { font-family: 'Space Grotesk', sans-serif; }
-    </style>
+      
+      .glass-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+      }
+      
+      .glass-badge-secondary {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+      }
+      
+      .category-tab.active {
+        @apply bg-primary text-white;
+      }
+      
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+      
+      .modal-overlay.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+</style>
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col">
 <!-- Top Navigation Bar (Consistent with Landing Page) -->
 <header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-[0_40px_40px_rgba(23,28,31,0.04)]">
-<nav class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<nav class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto w-full">
 <div class="flex items-center gap-8">
 <a class="text-2xl font-bold tracking-tighter text-[#171c1f] dark:text-slate-100 font-headline" href="landing.html">Omnishare</a>
 <div class="hidden md:flex gap-6 items-center">
-<a class="text-[#0059bb] dark:text-blue-400 font-bold border-b-2 border-[#0059bb] pb-1 font-['Space_Grotesk'] tracking-tight" href="search.html">Cameras</a>
-<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors font-['Space_Grotesk'] tracking-tight" href="#">Lenses</a>
-<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors font-['Space_Grotesk'] tracking-tight" href="#">Lighting</a>
-<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors font-['Space_Grotesk'] tracking-tight" href="#">Audio</a>
-<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors font-['Space_Grotesk'] tracking-tight" href="#">Grip</a>
+<a class="text-[#0059bb] dark:text-blue-400 font-bold border-b-2 border-[#0059bb] pb-1 font-['Space_Grotesk'] tracking-tight" href="search.html">Browse</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors font-['Space_Grotesk'] tracking-tight" href="mailto:support@omnishare.in">Help</a>
 </div>
 </div>
 <div class="flex items-center gap-4">
@@ -104,6 +163,7 @@
 </div>
 </nav>
 </header>
+
 <main class="flex-grow pt-24 pb-12 px-8 max-w-[1600px] mx-auto w-full">
 <div class="flex gap-8">
 <!-- Left Sidebar: Advanced Filters -->
@@ -115,16 +175,28 @@
 <h3 class="text-sm font-semibold uppercase tracking-wider text-outline">Category</h3>
 <div class="space-y-2">
 <label class="flex items-center gap-3 cursor-pointer group">
-<input checked="" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
-<span class="text-sm font-medium group-hover:text-primary transition-colors">Tech &amp; Camera</span>
+<input checked="" data-cat="all" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">All Categories</span>
 </label>
 <label class="flex items-center gap-3 cursor-pointer group">
-<input class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
-<span class="text-sm font-medium group-hover:text-primary transition-colors">High-End Audio</span>
+<input data-cat="cameras" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Cameras</span>
 </label>
 <label class="flex items-center gap-3 cursor-pointer group">
-<input class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
-<span class="text-sm font-medium group-hover:text-primary transition-colors">Editorial Fashion</span>
+<input data-cat="lenses" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Lenses</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input data-cat="lighting" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Lighting</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input data-cat="audio" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Audio</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input data-cat="grip" class="w-5 h-5 rounded-md border-outline-variant text-primary focus:ring-primary/40 bg-surface-container-lowest" type="checkbox"/>
+<span class="text-sm font-medium group-hover:text-primary transition-colors">Grip</span>
 </label>
 </div>
 </div>
@@ -132,10 +204,10 @@
 <div class="space-y-4 p-6 rounded-xl bg-surface-container-low">
 <h3 class="text-sm font-semibold uppercase tracking-wider text-outline">Price (Daily)</h3>
 <div class="space-y-4">
-<input class="w-full accent-primary" type="range"/>
+<input id="maxPriceRange" class="w-full accent-primary" type="range" min="500" max="5000" step="100" value="5000"/>
 <div class="flex justify-between text-xs font-mono text-on-surface-variant">
 <span>₹0</span>
-<span>₹80,000+</span>
+<span id="maxPriceLabel">₹5,000</span>
 </div>
 </div>
 </div>
@@ -148,13 +220,25 @@
 </div>
 </div>
 <!-- Search Reset -->
-<button onclick="document.querySelectorAll('aside input[type=checkbox]').forEach(cb => cb.checked = false); document.querySelector('input[type=range]').value = 0;" class="w-full py-3 text-sm font-bold text-primary border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors">
-                        Clear all filters
-                    </button>
+<button onclick="resetFilters()" class="w-full py-3 text-sm font-bold text-primary border border-primary/20 rounded-xl hover:bg-primary/5 transition-colors">
+Clear all filters
+</button>
 </div>
 </aside>
+
 <!-- Main Content Area -->
 <div class="flex-grow">
+<!-- Category Tabs -->
+<div class="mb-8 flex gap-3 overflow-x-auto pb-4">
+<button class="category-tab px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap bg-primary text-white transition-all" onclick="filterByCategory('all')">All</button>
+<button class="category-tab px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap border border-outline-variant text-on-surface-variant hover:bg-primary/5 transition-all" onclick="filterByCategory('cameras')">Cameras</button>
+<button class="category-tab px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap border border-outline-variant text-on-surface-variant hover:bg-primary/5 transition-all" onclick="filterByCategory('lenses')">Lenses</button>
+<button class="category-tab px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap border border-outline-variant text-on-surface-variant hover:bg-primary/5 transition-all" onclick="filterByCategory('lighting')">Lighting</button>
+<button class="category-tab px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap border border-outline-variant text-on-surface-variant hover:bg-primary/5 transition-all" onclick="filterByCategory('audio')">Audio</button>
+<button class="category-tab px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap border border-outline-variant text-on-surface-variant hover:bg-primary/5 transition-all" onclick="filterByCategory('grip')">Grip</button>
+<button class="px-6 py-2 rounded-full font-bold text-sm whitespace-nowrap bg-green-600 text-white hover:bg-green-700 ml-auto transition-all" onclick="openCreateListing()">+ Create Listing</button>
+</div>
+
 <!-- Sponsored Listings Row (Editorial Bento) -->
 <section class="mb-12">
 <div class="flex items-end justify-between mb-6">
@@ -165,292 +249,472 @@
 <span class="text-xs text-outline italic">Promoted by verified partners</span>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<!-- High-End Sponsored Card 1 -->
-<div class="md:col-span-2 group relative overflow-hidden rounded-xl bg-secondary-container/30 aspect-[16/7] cursor-pointer" onclick="window.location.href='product_detail.html'">
-<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="professional cinema camera on a tripod in a dimly lit studio setting with blue accent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwIyHnLnY2nPvEGRPjwDax5h2B6Dzv3quGOWN0ghCPm1XfFpUXUaFwhyM0gpm_GjgG4n5KYAtPPRI6WA8jhwUVE20rffOTidzOBMY3OF5Q5KBiP1J_sUGVXaeGscMr-YF0aNZC2CfOYc_8N9WoXxsZL-4YcUT3gUCbWgRb619QwOGo7pHZjFZev3Z-BggxXyYXRm1SyhwbRhQAWN0ZU-9BDzw4k6am3Sqt5nhPNbZAwOj0JnHW0teNar0X_md-bFYO44JiDn8zhNE"/>
+<!-- High-End Sponsored Card 1 with Glass Effect -->
+<div class="md:col-span-2 group relative overflow-hidden rounded-xl aspect-[16/7] cursor-pointer shadow-xl" onclick="goToProduct(0)" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwIyHnLnY2nPvEGRPjwDax5h2B6Dzv3quGOWN0ghCPm1XfFpUXUaFwhyM0gpm_GjgG4n5KYAtPPRI6WA8jhwUVE20rffOTidzOBMY3OF5Q5KBiP1J_sUGVXaeGscMr-YF0aNZC2CfOYc_8N9WoXxsZL-4YcUT3gUCbWgRb619QwOGo7pHZjFZev3Z-BggxXyYXRm1SyhwbRhQAWN0ZU-9BDzw4k6am3Sqt5nhPNbZAwOj0JnHW0teNar0X_md-bFYO44JiDn8zhNE"/>
 <div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent"></div>
 <div class="absolute bottom-0 left-0 p-8">
-<span class="bg-primary text-white text-[10px] font-black px-2 py-1 rounded-sm uppercase tracking-widest mb-3 inline-block">Featured</span>
+<span class="glass-badge">Featured</span>
 <h3 class="text-white text-3xl font-black leading-tight mb-2 tracking-tight">RED Komodo 6K Cinema Package</h3>
 <p class="text-white/80 text-sm max-w-md font-medium">Complete editorial kit including Zeiss primes and professional monitoring.</p>
 <div class="mt-4 flex items-center gap-4">
-<span class="text-white font-bold text-2xl price-display">₹42,000 <span class="text-base opacity-70">($500)</span><span class="text-sm font-normal opacity-70">/day</span></span>
+<span class="text-white font-bold text-2xl price-display">₹3,000 <span class="text-base opacity-70">($500)</span><span class="text-sm font-normal opacity-70">/day</span></span>
 <button class="bg-white text-on-surface px-6 py-2 rounded-full font-bold text-sm hover:bg-primary hover:text-white transition-colors">View Gear</button>
 </div>
 </div>
 </div>
-<!-- High-End Sponsored Card 2 -->
-<div class="group relative overflow-hidden rounded-xl bg-secondary-container/30">
-<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="high-end designer clothing hanging on a minimalist brass rail in a bright white editorial studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArkUuUN8sjWLj4VxxcJHjEm3NzHq4jiSx0hlr-x1q28dJErmMQAlObpEAMa9-XFK0XdFIkgSZuKbXDgOvEqr_5jLfS7-Gak8mmFa8bwBkXxWH3KooYY-tHD86iQcs8mwj5Xt3U9GIHmF6KgJ3xOVFYI09OMrh1ghj-JnTj9kFPevQpewU6zryyO-9wcNmN6cb8ofpAMPtJ0mHt-gWHJQrHsWxRWKm2g0YEpkRrptEShUQmvw_4bfW2luwONZIsxPuo12lVNoi3-p0"/>
+<!-- High-End Sponsored Card 2 with Glass Effect -->
+<div class="group relative overflow-hidden rounded-xl cursor-pointer shadow-xl" onclick="goToProduct(1)" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArkUuUN8sjWLj4VxxcJHjEm3NzHq4jiSx0hlr-x1q28dJErmMQAlObpEAMa9-XFK0XdFIkgSZuKbXDgOvEqr_5jLfS7-Gak8mmFa8bwBkXxWH3KooYY-tHD86iQcs8mwj5Xt3U9GIHmF6KgJ3xOVFYI09OMrh1ghj-JnTj9kFPevQpewU6zryyO-9wcNmN6cb8ofpAMPtJ0mHt-gWHJQrHsWxRWKm2g0YEpkRrptEShUQmvw_4bfW2luwONZIsxPuo12lVNoi3-p0"/>
 <div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-transparent"></div>
 <div class="absolute bottom-0 left-0 p-6">
-<span class="bg-white/20 backdrop-blur-md text-white text-[10px] font-black px-2 py-1 rounded-sm uppercase tracking-widest mb-2 inline-block">Trending</span>
-<h3 class="text-white text-xl font-bold leading-tight mb-1">Couture Archive Collection</h3>
-<p class="text-white/70 text-xs font-medium">Limited pieces for editorial shoots.</p>
+<span class="glass-badge-secondary">Trending</span>
+<h3 class="text-white text-xl font-bold leading-tight mb-1">Sony FX30 Cinema Camera</h3>
+<p class="text-white/70 text-xs font-medium">4K professional video with AF system.</p>
 <div class="mt-3">
-<span class="text-white font-bold text-xl price-display">₹31,500 <span class="text-sm opacity-70">($375)</span><span class="text-sm font-normal opacity-70">/day</span></span>
+<span class="text-white font-bold text-xl price-display">₹2,500 <span class="text-sm opacity-70">($425)</span><span class="text-sm font-normal opacity-70">/day</span></span>
 </div>
 </div>
 </div>
 </div>
 </section>
+
 <!-- Search Results Grid -->
 <section>
 <div class="flex items-center justify-between mb-8">
-<h2 class="text-2xl font-black tracking-tighter">124 Items Nearby</h2>
+<h2 class="text-2xl font-black tracking-tighter"><span id="itemCount">Loading items...</span></h2>
 <div class="flex gap-2">
 <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined">grid_view</span></button>
 <button class="p-2 rounded-lg text-outline hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">view_list</span></button>
 </div>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-<!-- Rental Card Item 1 -->
-<div class="group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html'">
-<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="professional studio strobe light with a softbox in a high-end photography studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKQ6hy46JO9QnSimNFXnf8Ch7ogx-V_vs4rBh6lY06al6_1tFRUGcZ-qvY_qgQciDt0YcFbDF9DXo-hPdkHEzPatSTFy65Lq_35XJo1f-eZqjtejZDgoVSv47Sws8Oxwx-Ujsdy37ACsbrUt4mILjBcPfoyHzTSCXLkEYN0VklulnZdvdLDd95XdUMM2G_Vjh36S97rJiS2SyEWTr1p2_n1HB125K7_CLaJW36Wjfa8QLhWmWERk3VhvzEibEMEcVfm9nW1yC5oVI"/>
-<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
-</button>
-<div class="absolute bottom-4 left-4">
-<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Brooklyn, NY</span>
-</div>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between items-start">
-<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Profoto B10X Plus Studio Kit</h3>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-xs font-bold">4.9</span>
-</div>
-</div>
-<p class="text-on-surface-variant text-sm">Professional lighting for commercial photography.</p>
-<div class="pt-2 flex flex-col">
-<span class="text-2xl font-black price-display">₹33,600 <span class="text-sm font-normal text-outline">($400) / day</span></span>
-<div class="flex items-center gap-1 group/fee">
-<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹1,680</span>
-<span class="material-symbols-outlined text-xs text-outline cursor-help">info</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="group flex flex-col">
-<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="vintage style analog synthesizer with wooden side panels and numerous knobs and sliders" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1qIv9i0MSyrzv9lt2Xbl8-pTYEZuI3vC4MrN165sOHQuUbf96sArbtmteZEJZxl4yNepEWRuO10ayqy12yhQg1jjZ_pi2_AUbz19chyvkrdTVWHAyerjDjMshs2JSKTTMcGJw8ANaHdkpLo-Rm1CSPPcpIE9YpDCw8HsLXbFm3IcqoqH0DnD4zF0rU8oRlqPgYpY65yp9hjSgXbqu1pO3TPqPfnz8GaWH65G8u0xLYhdfUDyYFKfyw2I8kP7MO4LGoVv-j-v1tYo"/>
-<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
-<span class="material-symbols-outlined">favorite</span>
-</button>
-<div class="absolute bottom-4 left-4">
-<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Manhattan, NY</span>
-</div>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between items-start">
-<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Sequential Prophet-6 Synthesizer</h3>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-xs font-bold">5.0</span>
-</div>
-</div>
-<p class="text-on-surface-variant text-sm">Classic polyphonic analog synthesizer.</p>
-<div class="pt-2 flex flex-col">
-<span class="text-2xl font-black price-display">₹37,800 <span class="text-sm font-normal text-outline">($450) / day</span></span>
-<div class="flex items-center gap-1">
-<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹1,890</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="group flex flex-col">
-<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="ultra-wide high resolution curved computer monitor on a clean desk with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXLJgkB0FrNt76HjHva4QZzdOqYhIGtTgnXuFKaBbx_n-MGCOZbSKCoN-AwF-2UdmVWwdJ-LZYICTblrtagM6eSGc0MIWa_GCEOPQOiNCaU_ecgyG_3J58kDafqGLcQOdwhvNRwDKbH1elw3Z1JqRvMZffX_TRN5oLud3cPQr500IlhgEIQ_wYDcEFSS7mm14-gY3RKCEjX-8gwvHbIc242disOMX7-aI5VXJWAnHVFT8KbljKEq8K-sukl2kHe0xAbxpyECoTPaQ"/>
-<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
-<span class="material-symbols-outlined">favorite</span>
-</button>
-<div class="absolute bottom-4 left-4">
-<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Long Island City, NY</span>
-</div>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between items-start">
-<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Apple Pro Display XDR</h3>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-xs font-bold">4.8</span>
-</div>
-</div>
-<p class="text-on-surface-variant text-sm">32-inch Retina 6K display for color grading.</p>
-<div class="pt-2 flex flex-col">
-<span class="text-2xl font-black price-display">₹46,200 <span class="text-sm font-normal text-outline">($550) / day</span></span>
-<div class="flex items-center gap-1">
-<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹2,310</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 4 -->
-<div class="group flex flex-col">
-<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="modern black electric guitar leaning against a boutique amplifier in a stylish music room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIYOByjDSUrNH3ymzp3a6e7hbpmepA8FkFi_AvPmOwu6RMszLzdiMA2X00XVjRMwCYEamMbqNXWXnZxCLeTOLlsi-EQlxBikWYPYvk1Os3a9WeJ2NqO-6wphPDXvtR373n4IU7kDui2s1HcWH8Rl0uTwx1rfDxIbly6teSRwT8kUBXNHvQ4Y4R2SSED5idj8OgPMkOPr2DqRv5EnY_Y8qJsdm23G8t_VJhwF2I3LGD_FfvtOkxYlFMDDsYMhJB2lplZkd8wSq16lY"/>
-<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
-<span class="material-symbols-outlined">favorite</span>
-</button>
-<div class="absolute bottom-4 left-4">
-<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Astoria, NY</span>
-</div>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between items-start">
-<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Gibson Les Paul Custom</h3>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-xs font-bold">4.9</span>
-</div>
-</div>
-<p class="text-on-surface-variant text-sm">Ebony finish, 1968 Reissue.</p>
-<div class="pt-2 flex flex-col">
-<span class="text-2xl font-black price-display">₹31,080 <span class="text-sm font-normal text-outline">($370) / day</span></span>
-<div class="flex items-center gap-1">
-<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹1,554</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 5 -->
-<div class="group flex flex-col">
-<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="professional cinema prime lens detail showing focus ring and glass reflections in a studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCcAs5ckQ5mg3F2fN2-5roNrJRaWsWNg6KHfI9CjDraS-sraKjvbQFo1H0iTp5tSBQikvkYjDIVo-tuotgYAbrywZ4xDEgLY_uD3maCjbi9Xr6OCGR1vqz5-Kj80n0nmS3NWGCTEKjW92vhbwU3tu-5m8gg2hMzjzaPXd7Ao86BFec5CksIJzHYDRbC0ci4P3cxLBlifN1WZyte0xbIfYwC-uirP7FQjoPhc-W0rmLe2ZnRjStXHh8f3oYrs93laXCJZyHVNEbBcU"/>
-<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
-<span class="material-symbols-outlined">favorite</span>
-</button>
-<div class="absolute bottom-4 left-4">
-<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Williamsburg, NY</span>
-</div>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between items-start">
-<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Arri Signature Prime 35mm</h3>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-xs font-bold">5.0</span>
-</div>
-</div>
-<p class="text-on-surface-variant text-sm">LPL Mount cinema lens with exceptional bokeh.</p>
-<div class="pt-2 flex flex-col">
-<span class="text-2xl font-black price-display">₹63,000 <span class="text-sm font-normal text-outline">($750) / day</span></span>
-<div class="flex items-center gap-1">
-<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹3,150</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Card 6 -->
-<div class="group flex flex-col">
-<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="pair of luxury designer leather shoes on a pedestal with warm spotlighting in a boutique" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPqnjgJS1Q29swYaA8wXzZSxW60nN_t1qA6MUA3UZpXPoGYQYeswa1ReHLhZFhUga51sDhduVUJufMwxgIObfVnUCswxTdnh5kzFWki96uLMrpmI14CtuzoFBlOZpTw-38dm_TifjXKy5YJsd6QorKe_m3LKIY-5zZlxroNdbSGrLhXzqX9Mz0VCMXke3UQbGsfXP7c1qS1GZhc4gY_sH107r3XAaeD83EMrEtBUnCLDOLkXib2CyDvYB5ufJCZz6HtQ5qGgsTTQQ"/>
-<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
-<span class="material-symbols-outlined">favorite</span>
-</button>
-<div class="absolute bottom-4 left-4">
-<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">SoHo, NY</span>
-</div>
-</div>
-<div class="space-y-1">
-<div class="flex justify-between items-start">
-<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Balenciaga Runway Boots</h3>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-xs font-bold">4.7</span>
-</div>
-</div>
-<p class="text-on-surface-variant text-sm">Size 42, Black leather from SS24 collection.</p>
-<div class="pt-2 flex flex-col">
-<span class="text-2xl font-black price-display">₹30,240 <span class="text-sm font-normal text-outline">($360) / day</span></span>
-<div class="flex items-center gap-1">
-<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹1,512</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Pagination -->
-<div class="mt-16 flex justify-center">
-<nav class="flex items-center gap-2">
-<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">chevron_left</span></button>
-<button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary text-white font-bold">1</button>
-<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container font-bold">2</button>
-<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container font-bold">3</button>
-<span class="px-2">...</span>
-<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container font-bold">12</button>
-<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">chevron_right</span></button>
-</nav>
+<div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Products will be rendered here -->
 </div>
 </section>
 </div>
-<!-- Right Sidebar: Vertical Advertisements -->
-<aside class="hidden xl:block w-64 shrink-0">
-<div class="sticky top-28 space-y-6">
-<div class="p-1 bg-surface-container-low rounded-2xl">
-<div class="relative overflow-hidden rounded-xl aspect-[9/16] bg-black">
-<img class="w-full h-full object-cover opacity-60" data-alt="a stack of high-end design magazines and books on a minimalist wooden chair in a sunlit corner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCD2wq2emn9mRDmTGwTQUi91NhRsRFXiKS07XvzCRdBvn-6-B6aYLcDPd_kgkXD1a07DMmzvorKnsL_M1B_b2txee2tEOzwNkCf7t8dhMXRhwFJtVrztTvtp7W-EIDkUjInwuRa6W6gAnoJDofyRc0emPq4c5UOEMFkmU8bxh-HjnDEp3csJ-jNiD9w46hG5wef-pnovDZp_bRHuczsso2CDK4S54XqT-9f8qh0cvHOWoYb29Pn1V97yw3i-WYNNQuL68bByIZr0U"/>
-<div class="absolute inset-0 p-6 flex flex-col justify-end">
-<span class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-2">Magazine</span>
-<h4 class="text-white text-xl font-black leading-tight mb-4 tracking-tighter">The Modern Collector: Winter Edition</h4>
-<button class="bg-primary text-white py-3 rounded-full font-bold text-xs">Read Now</button>
-</div>
-</div>
-</div>
-<div class="p-6 rounded-2xl bg-primary/5 border border-primary/10">
-<h4 class="text-sm font-bold text-primary mb-2">Omnishare Elite</h4>
-<p class="text-xs text-on-surface-variant leading-relaxed mb-4">Unlock 0% transaction fees and priority equipment access for ₹2,400/mo.</p>
-<a class="text-xs font-bold text-primary underline underline-offset-4" href="#">Learn more</a>
-</div>
-<div class="relative overflow-hidden rounded-2xl bg-surface-container-high aspect-square flex items-center justify-center text-center p-6">
-<div class="space-y-2">
-<span class="material-symbols-outlined text-4xl text-outline-variant">campaign</span>
-<p class="text-[10px] font-bold text-outline uppercase tracking-widest leading-tight">Your Brand Here<br/>Reach 50k Creators</p>
-</div>
-</div>
-</div>
-</aside>
-</div>
 </main>
+
 <!-- Footer -->
 <footer class="w-full mt-auto py-12 bg-slate-50 dark:bg-slate-950">
 <div class="grid grid-cols-2 md:grid-cols-4 gap-8 px-12 max-w-7xl mx-auto">
 <div class="col-span-2 md:col-span-1">
 <div class="text-lg font-bold text-slate-900 dark:text-white mb-4">Omnishare</div>
 <p class="text-sm text-slate-500 dark:text-slate-400 font-['Inter'] leading-relaxed max-w-xs">
-                    The premier marketplace for editorial-grade rentals. Curating the tools for the next generation of creators.
-                </p>
+The premier marketplace for editorial-grade rentals.
+</p>
 </div>
 <div>
 <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 dark:text-white mb-4">Rent</h4>
 <ul class="space-y-2 font-['Inter'] text-sm text-slate-500 dark:text-slate-400">
 <li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="search.html">Browse</a></li>
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Help Center</a></li>
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="mailto:support@omnishare.in">Help Center</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="terms.html">Terms</a></li>
 </ul>
 </div>
 <div>
 <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 dark:text-white mb-4">Company</h4>
 <ul class="space-y-2 font-['Inter'] text-sm text-slate-500 dark:text-slate-400">
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a></li>
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Contact Us</a></li>
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Press</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="privacy.html">Privacy</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="mailto:support@omnishare.in">Contact</a></li>
 </ul>
-</div>
-<div>
-<h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 dark:text-white mb-4">Subscribe</h4>
-<div class="flex">
-<input class="w-full bg-white dark:bg-slate-900 border-none rounded-l-lg px-4 py-2 text-sm focus:ring-1 ring-primary/20" placeholder="Email" type="email"/>
-<button class="bg-primary text-white px-4 rounded-r-lg"><span class="material-symbols-outlined">arrow_forward</span></button>
-</div>
 </div>
 </div>
 <div class="mt-12 pt-8 border-t border-slate-100 dark:border-slate-900 text-center">
 <p class="font-['Inter'] text-sm text-slate-500 dark:text-slate-400">© 2024 Omnishare Editorial Rentals. All rights reserved.</p>
 </div>
 </footer>
-</body></html>
+
+<!-- Create Listing Modal -->
+<div id="createListingModal" class="modal-overlay">
+<div class="modal-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold">Create New Listing</h2>
+<button onclick="closeCreateListing()" class="text-2xl text-gray-500 hover:text-gray-700">&times;</button>
+</div>
+<form id="listingForm" onsubmit="submitListing(event)" class="space-y-4">
+<div>
+<label class="block text-sm font-semibold mb-2">Product Name</label>
+<input type="text" id="productName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2">Category</label>
+<select id="productCategory" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+<option value="cameras">Cameras</option>
+<option value="lenses">Lenses</option>
+<option value="lighting">Lighting</option>
+<option value="audio">Audio</option>
+<option value="grip">Grip</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2">Daily Price (₹)</label>
+<input type="number" id="productPrice" required min="100" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2">Description</label>
+<textarea id="productDesc" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="3"></textarea>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2">Location</label>
+<input type="text" id="productLocation" required placeholder="City, State" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+</div>
+<button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700 transition-all">Create Listing</button>
+</form>
+</div>
+</div>
+
+<script>
+// Product database - initially populated with sample products
+const defaultProducts = [
+  {
+    id: 0,
+    name: "RED Komodo 6K Cinema Package",
+    category: "cameras",
+    price: 3000,
+    rating: 5.0,
+    desc: "Complete editorial kit including Zeiss primes",
+    location: "Brooklyn, NY",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCwIyHnLnY2nPvEGRPjwDax5h2B6Dzv3quGOWN0ghCPm1XfFpUXUaFwhyM0gpm_GjgG4n5KYAtPPRI6WA8jhwUVE20rffOTidzOBMY3OF5Q5KBiP1J_sUGVXaeGscMr-YF0aNZC2CfOYc_8N9WoXxsZL-4YcUT3gUCbWgRb619QwOGo7pHZjFZev3Z-BggxXyYXRm1SyhwbRhQAWN0ZU-9BDzw4k6am3Sqt5nhPNbZAwOj0JnHW0teNar0X_md-bFYO44JiDn8zhNE",
+    sponsored: true
+  },
+  {
+    id: 1,
+    name: "Sony FX30 Cinema Camera",
+    category: "cameras",
+    price: 2500,
+    rating: 4.9,
+    desc: "4K professional video with AF system",
+    location: "Manhattan, NY",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuArkUuUN8sjWLj4VxxcJHjEm3NzHq4jiSx0hlr-x1q28dJErmMQAlObpEAMa9-XFK0XdFIkgSZuKbXDgOvEqr_5jLfS7-Gak8mmFa8bwBkXxWH3KooYY-tHD86iQcs8mwj5Xt3U9GIHmF6KgJ3xOVFYI09OMrh1ghj-JnTj9kFPevQpewU6zryyO-9wcNmN6cb8ofpAMPtJ0mHt-gWHJQrHsWxRWKm2g0YEpkRrptEShUQmvw_4bfW2luwONZIsxPuo12lVNoi3-p0",
+    sponsored: true
+  },
+  {
+    id: 2,
+    name: "Profoto B10X Plus Studio Kit",
+    category: "lighting",
+    price: 2000,
+    rating: 4.9,
+    desc: "Professional lighting for commercial photography",
+    location: "Brooklyn, NY",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAKQ6hy46JO9QnSimNFXnf8Ch7ogx-V_vs4rBh6lY06al6_1tFRUGcZ-qvY_qgQciDt0YcFbDF9DXo-hPdkHEzPatSTFy65Lq_35XJo1f-eZqjtejZDgoVSv47Sws8Oxwx-Ujsdy37ACsbrUt4mILjBcPfoyHzTSCXLkEYN0VklulnZdvdLDd95XdUMM2G_Vjh36S97rJiS2SyEWTr1p2_n1HB125K7_CLaJW36Wjfa8QLhWmWERk3VhvzEibEMEcVfm9nW1yC5oVI",
+    sponsored: false
+  },
+  {
+    id: 3,
+    name: "Sequential Prophet-6 Synthesizer",
+    category: "audio",
+    price: 2200,
+    rating: 5.0,
+    desc: "Classic polyphonic analog synthesizer",
+    location: "Manhattan, NY",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD1qIv9i0MSyrzv9lt2Xbl8-pTYEZuI3vC4MrN165sOHQuUbf96sArbtmteZEJZxl4yNepEWRuO10ayqy12yhQg1jjZ_pi2_AUbz19chyvkrdTVWHAyerjDjMshs2JSKTTMcGJw8ANaHdkpLo-Rm1CSPPcpIE9YpDCw8HsLXbFm3IcqoqH0DnD4zF0rU8oRlqPgYpY65yp9hjSgXbqu1pO3TPqPfnz8GaWH65G8u0xLYhdfUDyYFKfyw2I8kP7MO4LGoVv-j-v1tYo",
+    sponsored: false
+  },
+  {
+    id: 4,
+    name: "Arri Signature Prime 35mm",
+    category: "lenses",
+    price: 2900,
+    rating: 5.0,
+    desc: "LPL Mount cinema lens with exceptional bokeh",
+    location: "Williamsburg, NY",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDCcAs5ckQ5mg3F2fN2-5roNrJRaWsWNg6KHfI9CjDraS-sraKjvbQFo1H0iTp5tSBQikvkYjDIVo-tuotgYAbrywZ4xDEgLY_uD3maCjbi9Xr6OCGR1vqz5-Kj80n0nmS3NWGCTEKjW92vhbwU3tu-5m8gg2hMzjzaPXd7Ao86BFec5CksIJzHYDRbC0ci4P3cxLBlifN1WZyte0xbIfYwC-uirP7FQjoPhc-W0rmLe2ZnRjStXHh8f3oYrs93laXCJZyHVNEbBcU",
+    sponsored: false
+  },
+  {
+    id: 5,
+    name: "Sachtler Fluid Head Tripod System",
+    category: "grip",
+    price: 1800,
+    rating: 4.8,
+    desc: "Professional video tripod with fluid head",
+    location: "Long Island City, NY",
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAXLJgkB0FrNt76HjHva4QZzdOqYhIGtTgnXuFKaBbx_n-MGCOZbSKCoN-AwF-2UdmVWwdJ-LZYICTblrtagM6eSGc0MIWa_GCEOPQOiNCaU_ecgyG_3J58kDafqGLcQOdwhvNRwDKbH1elw3Z1JqRvMZffX_TRN5oLud3cPQr500IlhgEIQ_wYDcEFSS7mm14-gY3RKCEjX-8gwvHbIc242disOMX7-aI5VXJWAnHVFT8KbljKEq8K-sukl2kHe0xAbxpyECoTPaQ",
+    sponsored: false
+  }
+];
+
+let currentCategory = 'all';
+let allProducts = [...defaultProducts];
+let selectedSidebarCategories = ['all'];
+let maxDailyPrice = 5000;
+
+function loadCurrentUser() {
+  const userStr = localStorage.getItem('omni_user');
+  if (!userStr) return null;
+
+  const user = JSON.parse(userStr);
+  const normalizedUser = {
+    subscription_tier: 'free',
+    verified: false,
+    listing_count: 0,
+    ...user
+  };
+
+  if (typeof normalizedUser.listing_count !== 'number') {
+    normalizedUser.listing_count = 0;
+  }
+
+  localStorage.setItem('omni_user', JSON.stringify(normalizedUser));
+  return normalizedUser;
+}
+
+function canCreateListing(user) {
+  if (!user) return true;
+  if (user.subscription_tier !== 'free') return true;
+  return (user.listing_count || 0) < 1;
+}
+
+// Load products from localStorage on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadProductsFromStorage();
+  bindSidebarFilters();
+  renderProducts();
+  setupAuth();
+});
+
+function bindSidebarFilters() {
+  const categoryCheckboxes = document.querySelectorAll('aside input[type="checkbox"][data-cat]');
+  const priceRange = document.getElementById('maxPriceRange');
+  const priceLabel = document.getElementById('maxPriceLabel');
+
+  categoryCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const cat = cb.dataset.cat;
+      if (cat === 'all' && cb.checked) {
+        categoryCheckboxes.forEach(other => {
+          if (other.dataset.cat !== 'all') other.checked = false;
+        });
+      } else if (cat !== 'all' && cb.checked) {
+        const allCb = document.querySelector('aside input[data-cat="all"]');
+        if (allCb) allCb.checked = false;
+      }
+
+      const checked = Array.from(categoryCheckboxes).filter(x => x.checked).map(x => x.dataset.cat);
+      selectedSidebarCategories = checked.length ? checked : ['all'];
+
+      if (!checked.length) {
+        const allCb = document.querySelector('aside input[data-cat="all"]');
+        if (allCb) {
+          allCb.checked = true;
+          selectedSidebarCategories = ['all'];
+        }
+      }
+
+      renderProducts();
+    });
+  });
+
+  if (priceRange) {
+    priceRange.addEventListener('input', () => {
+      maxDailyPrice = parseInt(priceRange.value, 10);
+      if (priceLabel) {
+        priceLabel.textContent = '₹' + maxDailyPrice.toLocaleString('en-IN');
+      }
+      renderProducts();
+    });
+  }
+}
+
+function resetFilters() {
+  const categoryCheckboxes = document.querySelectorAll('aside input[type="checkbox"][data-cat]');
+  categoryCheckboxes.forEach(cb => {
+    cb.checked = cb.dataset.cat === 'all';
+  });
+
+  selectedSidebarCategories = ['all'];
+  maxDailyPrice = 5000;
+
+  const priceRange = document.getElementById('maxPriceRange');
+  const priceLabel = document.getElementById('maxPriceLabel');
+  if (priceRange) priceRange.value = String(maxDailyPrice);
+  if (priceLabel) priceLabel.textContent = '₹' + maxDailyPrice.toLocaleString('en-IN');
+
+  renderProducts();
+}
+
+function loadProductsFromStorage() {
+  const stored = localStorage.getItem('omniProducts');
+  if (stored) {
+    const userProducts = JSON.parse(stored);
+    // Combine with defaults, giving IDs to new products
+    const nextId = Math.max(...defaultProducts.map(p => p.id), 0) + 1;
+    userProducts.forEach((p, i) => {
+      p.id = nextId + i;
+    });
+    allProducts = [...defaultProducts, ...userProducts];
+  } else {
+    allProducts = [...defaultProducts];
+  }
+}
+
+function filterByCategory(cat) {
+  currentCategory = cat;
+  
+  // Update button styles
+  document.querySelectorAll('.category-tab').forEach(b => {
+    b.classList.remove('active', 'bg-primary', 'text-white');
+    b.classList.add('border', 'border-outline-variant', 'text-on-surface-variant');
+  });
+  
+  const buttons = document.querySelectorAll('.category-tab');
+  let activeBtn = buttons[0];
+  if (cat === 'cameras') activeBtn = buttons[1];
+  else if (cat === 'lenses') activeBtn = buttons[2];
+  else if (cat === 'lighting') activeBtn = buttons[3];
+  else if (cat === 'audio') activeBtn = buttons[4];
+  else if (cat === 'grip') activeBtn = buttons[5];
+  
+  activeBtn.classList.add('active', 'bg-primary', 'text-white');
+  activeBtn.classList.remove('border', 'border-outline-variant', 'text-on-surface-variant');
+  
+  renderProducts();
+}
+
+function renderProducts() {
+  const tabFiltered = currentCategory === 'all'
+    ? allProducts
+    : allProducts.filter(p => p.category === currentCategory);
+
+  const sidebarFiltered = selectedSidebarCategories.includes('all')
+    ? tabFiltered
+    : tabFiltered.filter(p => selectedSidebarCategories.includes(p.category));
+
+  const filtered = sidebarFiltered.filter(p => p.price <= maxDailyPrice);
+  
+  const grid = document.getElementById('productsGrid');
+  const count = document.getElementById('itemCount');
+  count.textContent = `${filtered.length} Items Nearby`;
+  
+  grid.innerHTML = filtered.map((product, idx) => `
+    <div class="group flex flex-col cursor-pointer hover:shadow-lg transition-all" onclick="goToProduct(${product.id})">
+      <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${product.image}"/>
+        <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors" onclick="event.stopPropagation();">
+          <span class="material-symbols-outlined">favorite</span>
+        </button>
+        <div class="absolute bottom-4 left-4">
+          <span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">${product.location}</span>
+        </div>
+      </div>
+      <div class="space-y-1">
+        <div class="flex justify-between items-start">
+          <h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">${product.name}</h3>
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="text-xs font-bold">${product.rating.toFixed(1)}</span>
+          </div>
+        </div>
+        <p class="text-on-surface-variant text-sm">${product.desc}</p>
+        <div class="pt-2 flex flex-col">
+          <span class="text-2xl font-black price-display">₹${product.price} <span class="text-sm font-normal text-outline">($${Math.round(product.price / 7)}) / day</span></span>
+          <div class="flex items-center gap-1 group/fee">
+            <span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. fee: ₹${Math.round(product.price * 0.84)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function goToProduct(id) {
+  const product = allProducts.find(p => p.id === id);
+  if (product) {
+    localStorage.setItem('selectedProduct', JSON.stringify(product));
+    window.location.href = 'product_detail.html?id=' + id;
+  }
+}
+
+function openCreateListing() {
+  const user = loadCurrentUser();
+  if (!canCreateListing(user)) {
+    alert('Free hosts can publish 1 listing. Upgrade to OmniShare+ to get verified and add unlimited listings.');
+    window.location.href = 'plans.html';
+    return;
+  }
+  document.getElementById('createListingModal').classList.add('active');
+}
+
+function closeCreateListing() {
+  document.getElementById('createListingModal').classList.remove('active');
+  document.getElementById('listingForm').reset();
+}
+
+function submitListing(event) {
+  event.preventDefault();
+
+  const user = loadCurrentUser();
+  if (!canCreateListing(user)) {
+    alert('Free hosts can publish 1 listing. Upgrade to OmniShare+ to add more listings and get verified.');
+    return;
+  }
+  
+  const newProduct = {
+    name: document.getElementById('productName').value,
+    category: document.getElementById('productCategory').value,
+    price: parseInt(document.getElementById('productPrice').value),
+    desc: document.getElementById('productDesc').value,
+    location: document.getElementById('productLocation').value,
+    rating: 4.8,
+    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAKQ6hy46JO9QnSimNFXnf8Ch7ogx-V_vs4rBh6lY06al6_1tFRUGcZ-qvY_qgQciDt0YcFbDF9DXo-hPdkHEzPatSTFy65Lq_35XJo1f-eZqjtejZDgoVSv47Sws8Oxwx-Ujsdy37ACsbrUt4mILjBcPfoyHzTSCXLkEYN0VklulnZdvdLDd95XdUMM2G_Vjh36S97rJiS2SyEWTr1p2_n1HB125K7_CLaJW36Wjfa8QLhWmWERk3VhvzEibEMEcVfm9nW1yC5oVI",
+    sponsored: false,
+    ownerEmail: user?.email || null,
+    ownerPlan: user?.subscription_tier || 'free',
+    ownerVerified: !!user?.verified
+  };
+  
+  // Get existing user products
+  let userProducts = [];
+  const stored = localStorage.getItem('omniProducts');
+  if (stored) {
+    userProducts = JSON.parse(stored);
+  }
+  
+  // Add new product
+  userProducts.push(newProduct);
+  localStorage.setItem('omniProducts', JSON.stringify(userProducts));
+
+  if (user) {
+    user.listing_count = (user.listing_count || 0) + 1;
+    localStorage.setItem('omni_user', JSON.stringify(user));
+  }
+  
+  // Reload products
+  loadProductsFromStorage();
+  renderProducts();
+  closeCreateListing();
+  
+  // Show notification
+  alert('✅ Listing created successfully! It will persist until you close localhost:3000.');
+}
+
+function setupAuth() {
+  const userStr = localStorage.getItem('omni_user');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    document.querySelectorAll('a').forEach(a => {
+      const text = a.textContent.trim();
+      const href = a.getAttribute('href');
+      
+      if (text === 'Sign In' || href === 'signin.html') {
+        a.textContent = 'My Profile';
+        a.href = 'profile.html';
+      }
+      
+      if (text === 'Join Now' || href === 'signup.html') {
+        a.style.display = 'none';
+      }
+    });
+  }
+}
+
+// Close modal when clicking outside
+document.getElementById('createListingModal')?.addEventListener('click', (e) => {
+  if (e.target.id === 'createListingModal') {
+    closeCreateListing();
+  }
+});
+</script>
+</body>
+</html>

@@ -55,7 +55,7 @@
         <span class="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">Host Dashboard</span>
         <h1 class="font-headline font-bold text-4xl md:text-5xl tracking-tight">Your <span class="text-primary italic">Rental</span> Empire</h1>
       </div>
-      <button onclick="switchTab('create', document.querySelectorAll('.tab-btn')[1])" class="px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 w-fit">
+      <button id="hero-create-listing-btn" onclick="handleCreateListingAction()" class="px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 w-fit">
         <span class="material-symbols-outlined text-base">add</span> Create New Listing
       </button>
     </div>
@@ -132,7 +132,7 @@
                   </div>
                   <div><p class="font-bold text-sm">Profoto B10X Plus Studio Kit</p><p class="text-xs text-outline">Lighting</p></div>
                 </div></td>
-                <td class="p-4 hidden md:table-cell"><span class="font-headline font-bold text-primary">₹33,600</span></td>
+                <td class="p-4 hidden md:table-cell"><span class="font-headline font-bold text-primary">₹2,000</span></td>
                 <td class="p-4"><span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-extrabold uppercase">Pending</span></td>
                 <td class="p-4 text-right"><button class="text-primary text-xs font-bold hover:underline">Edit</button></td>
               </tr>
@@ -143,7 +143,7 @@
                   </div>
                   <div><p class="font-bold text-sm">Apple Pro Display XDR</p><p class="text-xs text-outline">Tech &amp; Camera</p></div>
                 </div></td>
-                <td class="p-4 hidden md:table-cell"><span class="font-headline font-bold text-primary">₹46,200</span></td>
+                <td class="p-4 hidden md:table-cell"><span class="font-headline font-bold text-primary">₹2,600</span></td>
                 <td class="p-4"><span class="px-2 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-extrabold uppercase">Rejected</span></td>
                 <td class="p-4 text-right"><button class="text-primary text-xs font-bold hover:underline">Resubmit</button></td>
               </tr>
@@ -156,7 +156,7 @@
       <div class="space-y-6">
         <h2 class="font-headline font-bold text-xl">Quick Actions</h2>
         <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm space-y-4">
-          <button onclick="switchTab('create', document.querySelectorAll('.tab-btn')[1])" class="w-full flex items-center gap-4 p-4 bg-surface-container-low rounded-xl hover:bg-primary/5 transition-colors group">
+          <button id="quick-create-listing-btn" onclick="handleCreateListingAction()" class="w-full flex items-center gap-4 p-4 bg-surface-container-low rounded-xl hover:bg-primary/5 transition-colors group">
             <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">add_photo_alternate</span>
             <div class="text-left"><p class="font-bold text-sm">Create New Listing</p><p class="text-xs text-on-surface-variant">Share your gear with 50k+ users</p></div>
           </button>
@@ -494,9 +494,9 @@
     <div>
       <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Support</h4>
       <ul class="space-y-2 text-sm text-slate-500">
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Help Center</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Terms</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Privacy</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="mailto:support@omnishare.in">Help Center</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="terms.html">Terms</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="privacy.html">Privacy</a></li>
       </ul>
     </div>
     <div>
@@ -510,6 +510,37 @@
 </footer>
 
 <script>
+  function loadCurrentUser() {
+    const userStr = localStorage.getItem('omni_user');
+    if (!userStr) return null;
+
+    const user = JSON.parse(userStr);
+    const normalizedUser = {
+      subscription_tier: 'free',
+      verified: false,
+      listing_count: 0,
+      ...user
+    };
+
+    if (typeof normalizedUser.listing_count !== 'number') {
+      normalizedUser.listing_count = 0;
+    }
+
+    localStorage.setItem('omni_user', JSON.stringify(normalizedUser));
+    return normalizedUser;
+  }
+
+  function handleCreateListingAction() {
+    const user = loadCurrentUser();
+    if (user && user.subscription_tier === 'free' && (user.listing_count || 0) >= 1) {
+      alert('Free hosts can publish 1 listing. Upgrade to OmniShare+ to get verified and unlock unlimited listings.');
+      window.location.href = 'plans.html';
+      return;
+    }
+
+    switchTab('create', document.querySelectorAll('.tab-btn')[1]);
+  }
+
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => {
@@ -520,6 +551,17 @@
     btn.classList.add('active');
     btn.classList.remove('text-outline');
   }
+  document.addEventListener('DOMContentLoaded', () => {
+    const user = loadCurrentUser();
+    if (user && user.subscription_tier === 'free' && (user.listing_count || 0) >= 1) {
+      const heroBtn = document.getElementById('hero-create-listing-btn');
+      const quickBtn = document.getElementById('quick-create-listing-btn');
+      [heroBtn, quickBtn].forEach(btn => {
+        if (!btn) return;
+        btn.title = 'Upgrade to OmniShare+ for unlimited listings';
+      });
+    }
+  });
   // Dropzone click
   document.getElementById('dropzone').addEventListener('click', () => document.getElementById('file-input').click());
   document.getElementById('file-input').addEventListener('change', function() {
@@ -529,6 +571,57 @@
       const url = URL.createObjectURL(file);
       preview.innerHTML += `<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low"><img src="${url}" class="w-full h-full object-cover"/></div>`;
     });
+  });
+</script>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
   });
 </script>
 </body></html>

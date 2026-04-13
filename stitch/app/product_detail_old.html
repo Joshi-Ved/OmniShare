@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sony A7S III Camera Rig | The Curated Exchange</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#dfe3e7",
+                        "outline": "#717786",
+                        "surface-container": "#eaeef2",
+                        "on-primary-container": "#fefcff",
+                        "inverse-primary": "#adc7ff",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "background": "#f6fafe",
+                        "primary-fixed-dim": "#adc7ff",
+                        "on-surface": "#171c1f",
+                        "surface-container-low": "#f0f4f8",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d8e3fb",
+                        "surface-bright": "#f6fafe",
+                        "inverse-on-surface": "#edf1f5",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e4e9ed",
+                        "secondary": "#545f73",
+                        "primary": "#0059bb",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#586377",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#66768d",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#414754",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "on-primary-fixed-variant": "#004493",
+                        "inverse-surface": "#2c3134",
+                        "surface-tint": "#005bc0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "on-primary-fixed": "#001a41",
+                        "on-background": "#171c1f",
+                        "primary-fixed": "#d8e2ff",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-variant": "#dfe3e7",
+                        "secondary-container": "#d5e0f8",
+                        "outline-variant": "#c1c6d7",
+                        "on-tertiary-container": "#fdfcff",
+                        "tertiary": "#4d5d73",
+                        "surface-dim": "#d6dade",
+                        "primary-container": "#0070ea",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f6fafe",
+                        "error-container": "#ffdad6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Space Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 bg-[#f6fafe]/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-[0_40px_40px_rgba(23,28,31,0.04)]">
+<div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-2xl font-bold tracking-tighter text-[#171c1f] dark:text-slate-100 font-headline" href="landing.html">The Curated Exchange</a>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-[#0059bb] dark:text-blue-400 font-bold border-b-2 border-[#0059bb] pb-1 font-['Space_Grotesk'] tracking-tight transition-colors duration-300" href="search.html">Cameras</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors duration-300 font-['Space_Grotesk'] tracking-tight" href="search.html">Lenses</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors duration-300 font-['Space_Grotesk'] tracking-tight" href="search.html">Lighting</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors duration-300 font-['Space_Grotesk'] tracking-tight" href="search.html">Audio</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#005bc0] dark:hover:text-blue-300 transition-colors duration-300 font-['Space_Grotesk'] tracking-tight" href="search.html">Grip</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 hover:bg-surface-container-high rounded-full transition-all" data-icon="favorite">favorite</button>
+<a class="material-symbols-outlined p-2 hover:bg-surface-container-high rounded-full transition-all relative" data-icon="shopping_bag" href="checkout.html">
+                    shopping_bag
+                    <span class="absolute top-1 right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">1</span>
+</a>
+<div class="h-10 w-10 rounded-full overflow-hidden ml-2 ring-2 ring-primary/20 cursor-pointer">
+<img alt="User profile" data-alt="close-up of a smiling male creative professional in a bright studio environment with soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfMEpaHhPeLp0yEooiRD7ibpUsSkOl6fjaY22MfZ1gQeIToNY_70wEbaIFgxaoixR3NgsTv7g19p_U2O8GsbhgqU8NtKakNm61pOn2h33-TCCMHcZAZA4z7Jvv3l5qI_TAkW1K0ZGhhO4C4YhehXAW_sLXIX8ZDwNwnmReL5bHrwr8C6jNTOax9v0iQGFWbmG9e9l2z9duoEzfAyoV5hQ6ZqVz_2kxwYNziocA6ZfJpQKh8Uh1QTLhpmvIyETClwPpOVwJpaAHUs"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 max-w-[1440px] mx-auto px-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-outline mb-6">
+<a class="hover:text-primary transition-colors" href="landing.html">Home</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="search.html">Cameras</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-on-surface">Sony A7S III Camera Rig</span>
+</nav>
+<!-- Hero Gallery Section -->
+<section class="grid grid-cols-12 gap-6 mb-12 h-[600px]">
+<div class="col-span-8 h-full rounded-xl overflow-hidden group relative">
+<img alt="Sony A7S III Primary View" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="professional cinema camera red komodo on a gimbal with high-end lens and matte box in a moody film studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
+<span class="text-white font-headline text-lg">Main Production Rig</span>
+</div>
+</div>
+<div class="col-span-4 flex flex-col gap-6">
+<div class="flex-1 rounded-xl overflow-hidden group">
+<img alt="Camera Detail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="close-up of cinema camera controls and top handle with intricate mechanical details and brushed metal finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+</div>
+<div class="flex-1 rounded-xl overflow-hidden group relative">
+<img alt="Accessories View" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="professional camera lens array and cinema accessories on a minimalist clean workbench with soft top lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgCGw8z-JdYY3kyiNnHESynVZHmp8l4760yHlTxNVOQIYdPsjBVLqeuAGCtm7-Dr7zn5rfBE6LHrTfXO1J8c5KOCoO8ORYmaDB_NZoVCLLZm4PENx-DrdHG4muN8M96DMzUvgXsevSZu6fZ67SE1UO7Y9eDcFaHAKqXX0suwT583iv2nkg1jX6iBLldMlmcPv8qMGfIGbvPqtC518JRUxiOyDEoln-rtUVeELv9vW62AMKSElAIftB5UDNj1FIGYE_nCY1RHOTBqw"/>
+<button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur text-on-surface px-4 py-2 rounded-full text-xs font-bold font-headline flex items-center gap-2 hover:bg-white transition-all shadow-lg">
+<span class="material-symbols-outlined text-sm">grid_view</span>
+                        Show all photos
+                    </button>
+</div>
+</div>
+</section>
+<!-- Product Content Grid -->
+<div class="grid grid-cols-12 gap-12">
+<!-- Main Content Area -->
+<div class="col-span-12 lg:col-span-8">
+<div class="flex justify-between items-start mb-6">
+<div>
+<div class="flex items-center gap-3 mb-4">
+<span class="bg-secondary-container text-on-secondary-fixed-variant px-3 py-1 rounded-full text-xs font-bold font-label">Featured Listing</span>
+<div class="flex items-center text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-sm font-bold ml-1">4.9 (42 reviews)</span>
+</div>
+</div>
+<h1 class="text-5xl font-bold tracking-tight mb-2">Sony A7S III Camera Rig</h1>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base" data-icon="location_on">location_on</span>
+<span class="text-sm">Brooklyn, New York</span>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base" data-icon="verified_user">verified_user</span>
+<span class="text-sm font-medium">Verified Professional</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="h-14 w-14 rounded-full border-2 border-primary-container p-0.5 cursor-pointer">
+<img alt="Owner Profile" class="w-full h-full object-cover rounded-full" data-alt="portrait of a professional cinematographer in front of production gear with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChSMAiqh2GR0C9Hmcq6QVXUg4aHWL-A5PQkxXkvDi1BHPmF4wfi4k4QVOdzCcR26mZdFLLMtOa9sfDf8fX2lA1GWQXRfEF5BWrPaCe5YZ8XiYY_x-ALd7zhCfKlVt8dM_idjt6RmrGWGhmu712rHZfh8NGGCflgXsexoWHYDYih3tKArZtsb1OOdtA9_6F1XRyb4b6Qi06J68N8RvpEIuaOipfYNIqAAKymEc0vJpgvbHDy8Hdj7kuLds4Uvt0AdAEGKqpVKVEsBQ"/>
+</div>
+<span class="text-xs font-bold mt-2 font-headline">Listed by Julian R.</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-8 mb-12">
+<h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                        The Narrative
+                    </h2>
+<p class="text-on-surface-variant leading-relaxed mb-8 font-body">
+                        The RED KOMODO 6K is a powerhouse in a tiny footprint. This specific package was curated for the solo operator or a lean high-end commercial crew. It includes everything you need to hit the ground running, from high-speed CFast media to a robust V-Mount power solution. Whether you're shooting high-speed music videos or intimate documentary work, the global shutter sensor ensures perfect motion and no jello effects.
+                    </p>
+<div class="mb-8 p-6 bg-surface-container-lowest rounded-xl border border-outline-variant/10">
+<span class="text-xs uppercase tracking-widest text-outline font-bold mb-2 block">Replacement Value</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold font-headline">₹1,50,000</span>
+<span class="text-on-surface-variant text-sm font-medium">/ $3,000 USD</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-1">
+<span class="text-xs uppercase tracking-widest text-outline font-bold">Sensor</span>
+<span class="text-sm font-semibold">6K S35 Global Shutter</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs uppercase tracking-widest text-outline font-bold">Mount</span>
+<span class="text-sm font-semibold">Canon RF (EF Adapter Incl.)</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs uppercase tracking-widest text-outline font-bold">Dynamic Range</span>
+<span class="text-sm font-semibold">16+ Stops</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs uppercase tracking-widest text-outline font-bold">Recording</span>
+<span class="text-sm font-semibold">REDCODE® RAW, ProRes</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs uppercase tracking-widest text-outline font-bold">Frame Rates</span>
+<span class="text-sm font-semibold">6K @ 40fps, 2K @ 120fps</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs uppercase tracking-widest text-outline font-bold">Weight</span>
+<span class="text-sm font-semibold">2.1 lbs (Body only)</span>
+</div>
+</div>
+</div>
+<!-- Trust & Safety Section -->
+<div class="mb-12">
+<h2 class="text-2xl font-bold mb-6">Trust &amp; Reliability</h2>
+<div class="grid md:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex gap-4">
+<div class="bg-primary/10 p-3 rounded-full h-fit">
+<span class="material-symbols-outlined text-primary" data-icon="shield_with_heart" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<div>
+<h3 class="font-bold mb-1">OmniGuard Insurance</h3>
+<p class="text-sm text-on-surface-variant">Every rental is covered by our comprehensive damage and theft protection. Focus on your craft, not the risk.</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm flex gap-4">
+<div class="bg-primary/10 p-3 rounded-full h-fit">
+<span class="material-symbols-outlined text-primary" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<h3 class="font-bold mb-1">Gear Verification</h3>
+<p class="text-sm text-on-surface-variant">This kit has been inspected and verified by our technical team in Brooklyn for performance and cleanliness.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Items -->
+<div class="mb-12">
+<h2 class="text-2xl font-bold mb-6">You might also need</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+<a class="bg-surface-container-lowest rounded-xl p-4 transition-all hover:shadow-lg border border-outline-variant/5 block" href="product_detail.html">
+<div class="h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Sigma Cine Lens" class="w-full h-full object-cover" data-alt="close-up of a high-end cinema prime lens with focus gear and professional markings" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz-9TIdt_ICI2gWPw992MIpTqK6bf0_aW0ypKPbPvBng75O2oomqE3lBB4A2V276TuVJ1pPt_tbalamF8SyJoOMWmEqQCdag7HMGEzCaNN5L18VYpsyhQaxXTIEr4HANrMLx22VO6iRfeLpYUN2fhVJ_y1tUyq-SCwGjyVCN7QhnYrzeGz_WbdbmDqMDZhY-lPNiZEjX2g1WQDO-NbQWN5Vn7cdGkkoUu6Q2EUDGWT1KEhTAz6UvmVG452TEQLO8wvbo1Guq-ry8k"/>
+</div>
+<h4 class="font-bold text-sm">Sigma Cine 18-35mm T2</h4>
+<p class="text-primary font-headline text-xs mt-1">₹7,100 / $85 day</p>
+</a>
+<a class="bg-surface-container-lowest rounded-xl p-4 transition-all hover:shadow-lg border border-outline-variant/5 block" href="product_detail.html">
+<div class="h-32 rounded-lg overflow-hidden mb-4">
+<img alt="Sachtler Flowtech 75" class="w-full h-full object-cover" data-alt="professional carbon fiber camera tripod with fluid head on a minimalist gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpjVq5dGXR7sDruQPpOUha1VK-0QWuuIJxtFLUWAmagJTUrG435faZv0Poh4Oqtc02K4O_0ro1NG7ygtgze6763FfK8w9nF5Cc2PGRhMbMk00eCL31CvTRXJoDf0Yn0FBR3Dd_RjgqCk72QSWhRYBJ8R5GLZw0EEljOwVXYL0KjItqWMfEYnx2v72Hk19ldp7D02AdBVadEu6sbVN5u5moiGzlhQs8_TGY3NvnrEo2WbmfdE0Om7z_CxTGdcLbp92__J-EoUFlOEM"/>
+</div>
+<h4 class="font-bold text-sm">Sachtler Flowtech 75</h4>
+<p class="text-primary font-headline text-xs mt-1">₹3,750 / $45 day</p>
+</a>
+<a class="bg-surface-container-lowest rounded-xl p-4 transition-all hover:shadow-lg border border-outline-variant/5 block" href="product_detail.html">
+<div class="h-32 rounded-lg overflow-hidden mb-4">
+<img alt="SmallHD 702 Touch" class="w-full h-full object-cover" data-alt="professional seven inch camera monitor with sun hood mounted on a camera rig" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4xEpl0OfkcB0JhNvM9eaTuKYXbGlt_aN-u3Kze62tkp0F-sbmyCBP9QckNqbk-VFWHfo5KzBYtYJmhGW-lWOukTN8dzwPSaWvGNU3JTiwE7dKR8Efj1WInNwU8ivaXOimjLqva85mxdwu_VniAyH6foLPxPMp8H7J6fsf_Tvb_jiIbWYBVzU9a6MQAk94Xu37jzIsiUX9vveepY8N_xL5SXrq9ilHU3mptTnwn4oMubjX54LucVNrP5tkmJtqgh-R8jqP7ELpOdo"/>
+</div>
+<h4 class="font-bold text-sm">SmallHD 702 Touch</h4>
+<p class="text-primary font-headline text-xs mt-1">₹2,900 / $35 day</p>
+</a>
+</div>
+</div>
+<!-- Reviews and Ratings Section -->
+<section class="mt-16 border-t border-outline-variant/20 pt-12" id="reviews">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-3xl font-bold font-headline">Community Ratings</h2>
+<button class="text-primary font-bold text-sm flex items-center gap-2 hover:underline" onclick="alert('Review feature is coming soon!')">
+                            Write a Review
+                            <span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
+<!-- Rating Summary -->
+<div class="md:col-span-5 lg:col-span-4">
+<div class="flex items-end gap-3 mb-6">
+<span class="text-6xl font-bold font-headline leading-none">4.9</span>
+<div class="pb-1">
+<div class="flex text-primary mb-1">
+<span class="material-symbols-outlined text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xl" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="text-on-surface-variant text-sm font-medium">42 verified reviews</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold w-12 text-on-surface-variant">5 Star</span>
+<div class="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[92%] rounded-full"></div>
+</div>
+<span class="text-xs font-bold w-8 text-right">38</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold w-12 text-on-surface-variant">4 Star</span>
+<div class="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[8%] rounded-full"></div>
+</div>
+<span class="text-xs font-bold w-8 text-right">4</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold w-12 text-on-surface-variant">3 Star</span>
+<div class="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-0 rounded-full"></div>
+</div>
+<span class="text-xs font-bold w-8 text-right text-outline">0</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold w-12 text-on-surface-variant">2 Star</span>
+<div class="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-0 rounded-full"></div>
+</div>
+<span class="text-xs font-bold w-8 text-right text-outline">0</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold w-12 text-on-surface-variant">1 Star</span>
+<div class="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary w-0 rounded-full"></div>
+</div>
+<span class="text-xs font-bold w-8 text-right text-outline">0</span>
+</div>
+</div>
+</div>
+<!-- User Photos -->
+<div class="md:col-span-7 lg:col-span-8">
+<h3 class="text-sm font-bold uppercase tracking-widest text-outline mb-4">Photos from Renters</h3>
+<div class="grid grid-cols-4 lg:grid-cols-5 gap-3">
+<div class="aspect-square rounded-lg overflow-hidden group cursor-pointer">
+<img alt="Renter setup 1" class="w-full h-full object-cover transition-transform group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group cursor-pointer">
+<img alt="Renter setup 2" class="w-full h-full object-cover transition-transform group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group cursor-pointer">
+<img alt="Renter setup 3" class="w-full h-full object-cover transition-transform group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgCGw8z-JdYY3kyiNnHESynVZHmp8l4760yHlTxNVOQIYdPsjBVLqeuAGCtm7-Dr7zn5rfBE6LHrTfXO1J8c5KOCoO8ORYmaDB_NZoVCLLZm4PENx-DrdHG4muN8M96DMzUvgXsevSZu6fZ67SE1UO7Y9eDcFaHAKqXX0suwT583iv2nkg1jX6iBLldMlmcPv8qMGfIGbvPqtC518JRUxiOyDEoln-rtUVeELv9vW62AMKSElAIftB5UDNj1FIGYE_nCY1RHOTBqw"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group cursor-pointer relative">
+<img alt="Renter setup 4" class="w-full h-full object-cover transition-transform group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz-9TIdt_ICI2gWPw992MIpTqK6bf0_aW0ypKPbPvBng75O2oomqE3lBB4A2V276TuVJ1pPt_tbalamF8SyJoOMWmEqQCdag7HMGEzCaNN5L18VYpsyhQaxXTIEr4HANrMLx22VO6iRfeLpYUN2fhVJ_y1tUyq-SCwGjyVCN7QhnYrzeGz_WbdbmDqMDZhY-lPNiZEjX2g1WQDO-NbQWN5Vn7cdGkkoUu6Q2EUDGWT1KEhTAz6UvmVG452TEQLO8wvbo1Guq-ry8k"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold text-lg">+12</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Review List -->
+<div class="space-y-8">
+<!-- Review Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="h-12 w-12 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="Reviewer 1" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfMEpaHhPeLp0yEooiRD7ibpUsSkOl6fjaY22MfZ1gQeIToNY_70wEbaIFgxaoixR3NgsTv7g19p_U2O8GsbhgqU8NtKakNm61pOn2h33-TCCMHcZAZA4z7Jvv3l5qI_TAkW1K0ZGhhO4C4YhehXAW_sLXIX8ZDwNwnmReL5bHrwr8C6jNTOax9v0iQGFWbmG9e9l2z9duoEzfAyoV5hQ6ZqVz_2kxwYNziocA6ZfJpQKh8Uh1QTLhpmvIyETClwPpOVwJpaAHUs"/>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h4 class="font-bold">Marcus Thorne</h4>
+<span class="flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[12px]" data-icon="verified">verified</span>
+                                                Verified Renter
+                                            </span>
+</div>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<span class="text-xs text-on-surface-variant font-medium">October 2, 2024</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-body">
+                                The global shutter on this Komodo is a game changer for the action sequences we were filming. Julian's kit is meticulously maintained and the inclusion of the RF-EF adapter with the VND filter was a massive life saver on location. Everything was packed perfectly in a custom hard case. 10/10 would rent again.
+                            </p>
+<div class="flex items-center gap-6 pt-4 border-t border-outline-variant/10">
+<button class="flex items-center gap-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+                                    Helpful (12)
+                                </button>
+<button class="flex items-center gap-2 text-xs font-bold text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="flag">flag</span>
+                                    Report
+                                </button>
+</div>
+</div>
+<!-- Review Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="h-12 w-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center text-primary font-bold text-lg font-headline">
+                                        SL
+                                    </div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h4 class="font-bold">Sarah Lin</h4>
+<span class="flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[12px]" data-icon="verified">verified</span>
+                                                Verified Renter
+                                            </span>
+</div>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-base" data-icon="star" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+<span class="text-xs text-on-surface-variant font-medium">September 15, 2024</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-body">
+                                Great experience. Julian was very responsive and flexible with pick-up times in Brooklyn. The camera performed flawlessly for our two-day interview shoot. Only wish there was one more CFast card, but we managed. High quality equipment.
+                            </p>
+<div class="flex items-center gap-6 pt-4 border-t border-outline-variant/10">
+<button class="flex items-center gap-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+                                    Helpful (4)
+                                </button>
+<button class="flex items-center gap-2 text-xs font-bold text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="flag">flag</span>
+                                    Report
+                                </button>
+</div>
+</div>
+<button class="w-full py-4 border-2 border-outline-variant/20 rounded-xl text-sm font-bold hover:bg-surface-container-low transition-colors font-headline">
+                            View All 42 Reviews
+                        </button>
+</div>
+</section>
+</div>
+<!-- Booking Sidebar -->
+<div class="col-span-12 lg:col-span-4">
+<div class="sticky top-28 bg-surface-container-lowest p-8 rounded-xl shadow-[0_40px_40px_rgba(23,28,31,0.04)] border border-outline-variant/10">
+<div class="flex justify-between items-end mb-8">
+<div>
+<span class="text-4xl font-bold font-headline">₹3,000</span>
+<span class="text-on-surface-variant font-medium"> / $245 day</span>
+</div>
+<div class="flex items-center text-primary gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="event_available">event_available</span>
+<span class="text-xs font-bold uppercase tracking-wider">Available Now</span>
+</div>
+</div>
+<div class="space-y-4 mb-8">
+<div class="flex flex-col gap-2">
+<label class="text-xs font-bold uppercase tracking-widest text-outline">Date Range</label>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg border border-outline-variant/20 cursor-pointer">
+<span class="text-sm font-medium">Oct 12 - Oct 15</span>
+<span class="material-symbols-outlined text-primary" data-icon="calendar_month">calendar_month</span>
+</div>
+</div>
+</div>
+<div class="space-y-3 mb-8 bg-surface-container-low p-4 rounded-xl">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Subtotal (3 days)</span>
+<div class="text-right">
+<p class="font-semibold">₹9,000.00</p>
+<p class="text-[10px] text-on-surface-variant">$735.00 USD</p>
+</div>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Platform Fee (3%)</span>
+<div class="text-right">
+<p class="font-semibold">₹1,845.00</p>
+<p class="text-[10px] text-on-surface-variant">$22.05 USD</p>
+</div>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Security Deposit</span>
+<div class="text-right">
+<p class="font-semibold">₹3,000.00</p>
+<p class="text-[10px] text-on-surface-variant">$500.00 USD</p>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 my-2 pt-2 flex justify-between items-center">
+<span class="font-bold text-lg">Total Due</span>
+<div class="text-right">
+<p class="font-bold text-lg text-primary">₹11,500.00</p>
+<p class="text-xs font-medium text-primary/70">$1,257.05 USD</p>
+</div>
+</div>
+</div>
+<a class="block w-full text-center bg-gradient-to-r from-primary to-primary-container text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:opacity-80 transition-all mb-4" href="checkout.html">
+                        Continue to Checkout
+                    </a>
+<p class="text-[10px] text-center text-on-surface-variant uppercase tracking-widest font-bold">Secure SSL encrypted booking</p>
+<div class="mt-8 pt-8 border-t border-outline-variant/20 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" data-icon="chat_bubble">chat_bubble</span>
+<a class="text-sm font-bold text-on-surface hover:text-primary transition-colors" href="mailto:owner@omnishare.in">Message Owner</a>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline" data-icon="ios_share">ios_share</span>
+<a class="text-sm font-bold text-on-surface hover:text-primary transition-colors" href="javascript:navigator.clipboard.writeText(window.location.href);alert('Link copied!')">Share Listing</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-24 bg-[#f0f4f8] dark:bg-slate-900">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 w-full max-w-[1440px] mx-auto">
+<div class="mb-8 md:mb-0">
+<a class="font-['Space_Grotesk'] font-bold text-2xl text-[#171c1f] dark:text-white" href="landing.html">The Curated Exchange</a>
+<p class="text-slate-500 dark:text-slate-400 mt-2 text-sm max-w-xs font-body">Elevating the rental experience through editorial curation and technical excellence.</p>
+</div>
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<nav class="flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-[#171c1f] dark:hover:text-white transition-colors" href="privacy.html">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-[#171c1f] dark:hover:text-white transition-colors" href="terms.html">Terms of Service</a>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-[#171c1f] dark:hover:text-white transition-colors" href="mailto:support@omnishare.in">Contact Us</a>
+</nav>
+</div>
+</div>
+<div class="px-12 pb-8 flex flex-col md:flex-row justify-between items-center opacity-60">
+<span class="text-xs font-['Inter'] tracking-wide">© 2024 The Curated Exchange. Editorial Rental Excellence.</span>
+<div class="flex gap-4 mt-4 md:mt-0">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="language">language</span>
+<span class="text-xs font-bold font-headline uppercase">International</span>
+</div>
+<span class="text-xs font-bold font-headline">INR / USD</span>
+</div>
+</div>
+</footer>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
+  });
+</script>
+</body></html>

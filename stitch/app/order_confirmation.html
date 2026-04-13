@@ -81,11 +81,11 @@
       <div class="p-8">
         <div class="flex gap-6 pb-8 border-b border-outline-variant/15">
           <div class="w-24 h-24 rounded-xl overflow-hidden shrink-0">
-            <img alt="Red Komodo 6K Cinema Package" class="w-full h-full object-cover"
+            <img alt="Sony A7S III Camera Rig" class="w-full h-full object-cover"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
           </div>
           <div class="flex-1">
-            <h2 class="font-headline font-bold text-xl mb-1">Red Komodo 6K Cinema Package</h2>
+            <h2 class="font-headline font-bold text-xl mb-1">Sony A7S III Camera Rig</h2>
             <p class="text-sm text-on-surface-variant mb-4">Listed by Julian R. · Brooklyn, NY</p>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div>
@@ -107,15 +107,15 @@
         <!-- Financial Summary -->
         <div class="py-8 border-b border-outline-variant/15 space-y-3 text-sm">
           <h3 class="font-headline font-bold text-base mb-4">Payment Breakdown</h3>
-          <div class="flex justify-between"><span class="text-on-surface-variant">Rental (3 days @ ₹20,500)</span><span class="font-semibold">₹61,500</span></div>
+          <div class="flex justify-between"><span class="text-on-surface-variant">Rental (3 days @ ₹3,000)</span><span class="font-semibold">₹9,000</span></div>
           <div class="flex justify-between"><span class="text-on-surface-variant">Delivery Fee (15%)</span><span class="font-semibold">₹9,225</span></div>
           <div class="flex justify-between"><span class="text-on-surface-variant">Transaction Fee (18%)</span><span class="font-semibold">₹11,070</span></div>
           <div class="flex justify-between"><span class="text-on-surface-variant">OmniGuard Insurance</span><span class="font-semibold">₹2,520</span></div>
-          <div class="flex justify-between text-outline text-xs"><span>Security Deposit (Escrowed)</span><span>₹42,000</span></div>
+          <div class="flex justify-between text-outline text-xs"><span>Security Deposit (Escrowed)</span><span>₹3,000</span></div>
           <div class="pt-3 border-t border-outline-variant/15 flex justify-between items-center">
             <span class="font-headline font-bold text-base">Total Charged</span>
             <div class="text-right">
-              <p class="font-headline font-bold text-xl text-primary">₹1,16,745</p>
+              <p class="font-headline font-bold text-xl text-primary">₹11,500</p>
               <p class="text-xs text-primary/70">≈ $1,397 USD</p>
             </div>
           </div>
@@ -156,7 +156,7 @@
                 <span class="material-symbols-outlined text-primary mt-0.5">shield_with_heart</span>
                 <div>
                   <p class="font-bold text-sm">OmniGuard Active</p>
-                  <p class="text-xs text-on-surface-variant">Coverage up to ₹2,50,000 · Policy #OG-8847</p>
+                  <p class="text-xs text-on-surface-variant">Coverage up to ₹1,50,000 · Policy #OG-8847</p>
                 </div>
               </div>
             </div>
@@ -180,7 +180,7 @@
         </div>
         <div class="flex items-start gap-4">
           <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">3</div>
-          <div><p class="text-white font-semibold text-sm">Return and deposit release</p><p class="text-white/70 text-xs mt-0.5">Upon verified return, your ₹42,000 deposit is released within 24 hours.</p></div>
+          <div><p class="text-white font-semibold text-sm">Return and deposit release</p><p class="text-white/70 text-xs mt-0.5">Upon verified return, your ₹3,000 deposit is released within 24 hours.</p></div>
         </div>
       </div>
     </div>
@@ -202,10 +202,61 @@
   <div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto">
     <p class="font-headline font-bold text-slate-900">OmniShare</p>
     <div class="flex gap-8 mt-4 md:mt-0 text-xs uppercase tracking-widest text-slate-400">
-      <a class="hover:text-primary transition-colors" href="#">Privacy</a>
-      <a class="hover:text-primary transition-colors" href="#">Terms</a>
-      <a class="hover:text-primary transition-colors" href="#">Support</a>
+      <a class="hover:text-primary transition-colors" href="privacy.html">Privacy</a>
+      <a class="hover:text-primary transition-colors" href="terms.html">Terms</a>
+      <a class="hover:text-primary transition-colors" href="mailto:support@omnishare.in">Support</a>
     </div>
   </div>
 </footer>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
+  });
+</script>
 </body></html>

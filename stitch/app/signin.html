@@ -5,8 +5,7 @@
 <title>Sign In | OmniShare</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<!-- Clerk JS -->
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2ltcGxlLWhlcnJpbmctNC5jbGVyay5hY2NvdW50cy5kZXYk" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" type="text/javascript"></script>
+
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
   tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#f6fafe","surface-container":"#eaeef2","surface-container-low":"#f0f4f8","surface-container-lowest":"#ffffff","surface-container-high":"#e4e9ed","outline":"#717786","outline-variant":"#c1c6d7","on-surface":"#171c1f","on-surface-variant":"#414754","primary":"#0059bb","primary-container":"#0070ea","primary-fixed":"#d8e2ff","on-primary":"#ffffff","on-primary-container":"#fefcff","secondary":"#545f73","secondary-container":"#d5e0f8","on-secondary":"#ffffff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"fontFamily":{"headline":["Space Grotesk"],"body":["Inter"]}}}}
@@ -65,24 +64,27 @@
       <h1 class="font-headline font-bold text-3xl mb-2">Welcome back</h1>
       <p class="text-on-surface-variant mb-8">Sign in to continue to your account.</p>
 
-      <!-- Clerk mount point -->
-      <div id="clerk-signin"></div>
-
-      <!-- Fallback (shown while Clerk loads or if blocked) -->
-      <div id="fallback-signin" class="fallback-form hidden">
-        <div class="space-y-4">
+      <div id="fallback-signin" class="fallback-form">
+        <div class="space-y-4" id="mock-signin-form">
+          <div id="error-msg" class="hidden text-error text-xs font-bold text-center bg-error-container p-2 rounded-lg">Invalid credentials!</div>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Email</label>
-            <input type="email" placeholder="you@example.com"/>
+            <input type="email" id="email" placeholder="you@example.com"/>
           </div>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Password</label>
-            <input type="password" placeholder="••••••••"/>
+            <input type="password" id="password" placeholder="••••••••"/>
           </div>
-          <a href="landing.html" class="block w-full py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-base hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+          <button onclick="handleLogin()" class="block w-full py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-base hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
             Sign In
-          </a>
-          <div class="text-center">
+          </button>
+          <div class="text-center mt-2">
+            <span class="text-xs text-outline block mb-1">Demo Accounts:</span>
+            <span class="text-xs text-primary font-bold block">Host: ved@omni.com (ved123)</span>
+            <span class="text-xs text-primary font-bold block">Renter: arnav@omni.com (arnav123)</span>
+            <span class="text-xs text-primary font-bold block">Basic Subscription Tester: basic@omni.com (basic123)</span>
+          </div>
+          <div class="text-center mt-4">
             <a href="signup.html" class="text-sm text-primary font-bold hover:underline underline-offset-2">No account? Create one →</a>
           </div>
         </div>
@@ -100,17 +102,92 @@
 </div>
 
 <script>
-  window.addEventListener('load', async () => {
-    try {
-      await window.Clerk.load();
-      const signIn = window.Clerk.mountSignIn(document.getElementById('clerk-signin'), {
-        afterSignInUrl: 'landing.html',
-        signUpUrl: 'signup.html'
+  function handleLogin() {
+    const email = document.getElementById('email').value.trim();
+    const pass = document.getElementById('password').value;
+    const err = document.getElementById('error-msg');
+    
+    if (email === 'ved@omni.com' && pass === 'ved123') {
+      localStorage.setItem('omni_user', JSON.stringify({
+        email: email,
+        role: 'host',
+        subscription_tier: 'free',
+        verified: false,
+        listing_count: 0
+      }));
+      window.location.href = 'profile.html';
+    } else if (email === 'arnav@omni.com' && pass === 'arnav123') {
+      localStorage.setItem('omni_user', JSON.stringify({
+        email: email,
+        role: 'renter',
+        subscription_tier: 'free',
+        verified: false,
+        listing_count: 0
+      }));
+      window.location.href = 'profile.html';
+    } else if (email === 'basic@omni.com' && pass === 'basic123') {
+      localStorage.setItem('omni_user', JSON.stringify({
+        email: email,
+        role: 'host',
+        subscription_tier: 'free',
+        verified: false,
+        listing_count: 0,
+        demo_subscription_user: true
+      }));
+      window.location.href = 'profile.html';
+    } else {
+      err.classList.remove('hidden');
+    }
+  }
+</script>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
       });
-    } catch(e) {
-      // Clerk blocked or unavailable — show fallback
-      document.getElementById('clerk-signin').classList.add('hidden');
-      document.getElementById('fallback-signin').classList.remove('hidden');
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
     }
   });
 </script>

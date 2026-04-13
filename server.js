@@ -38,6 +38,10 @@ app.post('/api/create-order', async (req, res) => {
 app.get('/api/admin/metrics', (req, res) => {
     res.json({
         totalRevenue: 3450000,
+        marketingRevenue: 480000,
+        convenienceFeeRevenue: 620000,
+        transactionRevenue: 1850000,
+        subscriptionRevenue: 700000,
         activeRentals: 42,
         pendingKYC: 15,
         newSignupsToday: 8

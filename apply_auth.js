@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Subscription Plans | OmniShare</title><meta http-equiv="refresh" content="0; url=plans.html"/><meta name="robots" content="noindex"/><style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f6fafe;}</style></head><body><p>Redirecting to <a href="plans.html">Subscription Plans</a>...</p><script>window.location.replace("plans.html");</script>
+const fs = require('fs');
+const path = require('path');
+
+const directoryPath = path.join(__dirname, 'stitch', 'app');
+
+const authScript = `
 <!-- Global Auth Script -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -49,4 +54,23 @@
     }
   });
 </script>
-</body></html>
+</body>`;
+
+fs.readdir(directoryPath, (err, files) => {
+  if (err) return console.error('Unable to scan directory: ' + err); 
+  files.forEach((file) => {
+    if (file.endsWith('.html')) {
+      const filePath = path.join(directoryPath, file);
+      let content = fs.readFileSync(filePath, 'utf8');
+      
+      // Remove previously injected script if any to avoid duplication
+      content = content.replace(/<!-- Global Auth Script -->[\s\S]*?<\/script>\s*<\/body>/, '</body>');
+      
+      if (content.includes('</body>')) {
+        content = content.replace('</body>', authScript);
+        fs.writeFileSync(filePath, content, 'utf8');
+        console.log('Injected auth script into', file);
+      }
+    }
+  });
+});

@@ -3,6 +3,8 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Admin Hub | OmniShare</title>
+<meta name="robots" content="noindex,nofollow"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.tailwindcss.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -48,29 +50,46 @@
 </head>
 <body class="bg-surface-container-low text-on-surface min-h-screen flex">
 
+<!-- ── Admin Auth Guard ────────────────────────────────────────── -->
+<script>
+  // Simple session-based guard. Replace with Clerk JWT check in production.
+  (function() {
+    const isAdmin = sessionStorage.getItem('omnishare_admin_auth') === 'true';
+    if (!isAdmin) {
+      const pwd = prompt('Admin access required. Enter admin password:');
+      if (pwd !== 'admin2024') {
+        alert('Access denied. Redirecting to sign in.');
+        window.location.href = 'signin.html';
+      } else {
+        sessionStorage.setItem('omnishare_admin_auth', 'true');
+      }
+    }
+  })();
+</script>
+
 <!-- ── Sidebar ────────────────────────────────────────────── -->
 <aside class="w-64 shrink-0 hidden lg:flex flex-col bg-surface-container-lowest border-r border-outline-variant/20 min-h-screen fixed z-30">
   <div class="p-6 border-b border-outline-variant/15">
     <a href="landing.html" class="font-headline font-bold text-xl text-on-surface">OmniShare</a>
     <span class="ml-2 px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded-full uppercase">Admin</span>
   </div>
-  <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-    <a href="search.html" onclick="switchSection('revenue',this)" class="active flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-surface-container transition-colors">
+  <nav class="flex-1 p-4 space-y-1 overflow-y-auto" id="sidebar">
+    <a href="javascript:void(0)" onclick="switchSection('revenue',this)" class="active flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">bar_chart</span>Revenue
     </a>
-    <a href="search.html" onclick="switchSection('kyc',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+    <a href="javascript:void(0)" onclick="switchSection('kyc',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">verified_user</span>KYC Verification
     </a>
-    <a href="search.html" onclick="switchSection('users',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+    <a href="javascript:void(0)" onclick="switchSection('users',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">group</span>Users
     </a>
-    <a href="search.html" onclick="switchSection('listings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+    <a href="javascript:void(0)" onclick="switchSection('listings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">storefront</span>Listings
     </a>
-    <a href="search.html" onclick="switchSection('bookings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+    <a href="javascript:void(0)" onclick="switchSection('bookings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">calendar_month</span>Bookings
     </a>
-    <a href="search.html" onclick="switchSection('settings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+    <a href="javascript:void(0)" onclick="switchSection('settings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">settings</span>Settings
     </a>
   </nav>
@@ -79,7 +98,7 @@
       <div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">A</div>
       <div><p class="font-bold text-sm">Admin</p><p class="text-xs text-outline">super@omnishare.in</p></div>
     </div>
-    <a href="landing.html" class="mt-3 flex items-center gap-2 px-4 py-2 text-xs font-bold text-error hover:bg-error-container/20 rounded-xl transition-colors">
+    <a href="javascript:void(0)" onclick="sessionStorage.removeItem('omnishare_admin_auth');window.location.href='signin.html';" class="mt-3 flex items-center gap-2 px-4 py-2 text-xs font-bold text-error hover:bg-error-container/20 rounded-xl transition-colors">
       <span class="material-symbols-outlined text-sm">logout</span>Sign Out
     </a>
   </div>
@@ -118,9 +137,9 @@
         <p class="text-xs text-emerald-600 font-bold mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm">trending_up</span><span id="kpi-today-pct">+0%</span> vs yesterday</p>
       </div>
       <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
-        <p class="text-xs font-bold uppercase tracking-wider text-outline mb-2">Platform Commission</p>
+        <p class="text-xs font-bold uppercase tracking-wider text-outline mb-2">Transaction Revenue</p>
         <p class="font-headline font-bold text-3xl" id="kpi-commission">₹0</p>
-        <p class="text-xs text-on-surface-variant mt-2">18% of all transactions</p>
+        <p class="text-xs text-on-surface-variant mt-2">Rental commissions and take rate</p>
       </div>
       <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
         <p class="text-xs font-bold uppercase tracking-wider text-outline mb-2">Active Bookings</p>
@@ -150,27 +169,27 @@
         <!-- Stream bars -->
         <div class="space-y-5" id="stream-bars">
           <div>
-            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Rental Commissions</span><span class="font-headline font-bold text-primary" id="bar-rentals-val">₹0</span></div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Marketing Revenue</span><span class="font-headline font-bold text-primary" id="bar-marketing-val">₹0</span></div>
             <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
-              <div class="h-full bg-primary rounded-full bar-fill" id="bar-rentals" style="width:0%"></div>
+              <div class="h-full bg-primary rounded-full bar-fill" id="bar-marketing" style="width:0%"></div>
             </div>
           </div>
           <div>
-            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Subscriptions</span><span class="font-headline font-bold text-emerald-600" id="bar-subs-val">₹0</span></div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Convenience Fee Revenue</span><span class="font-headline font-bold text-emerald-600" id="bar-convenience-val">₹0</span></div>
             <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
-              <div class="h-full bg-emerald-500 rounded-full bar-fill" id="bar-subs" style="width:0%"></div>
+              <div class="h-full bg-emerald-500 rounded-full bar-fill" id="bar-convenience" style="width:0%"></div>
             </div>
           </div>
           <div>
-            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Insurance Premiums</span><span class="font-headline font-bold text-amber-600" id="bar-ins-val">₹0</span></div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Transaction Revenue</span><span class="font-headline font-bold text-amber-600" id="bar-transaction-val">₹0</span></div>
             <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
-              <div class="h-full bg-amber-500 rounded-full bar-fill" id="bar-ins" style="width:0%"></div>
+              <div class="h-full bg-amber-500 rounded-full bar-fill" id="bar-transaction" style="width:0%"></div>
             </div>
           </div>
           <div>
-            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Delivery Fees</span><span class="font-headline font-bold text-purple-600" id="bar-del-val">₹0</span></div>
+            <div class="flex justify-between text-sm mb-1.5"><span class="font-medium">Subscriptions</span><span class="font-headline font-bold text-purple-600" id="bar-subs-val">₹0</span></div>
             <div class="w-full bg-surface-container rounded-full h-3 overflow-hidden">
-              <div class="h-full bg-purple-500 rounded-full bar-fill" id="bar-del" style="width:0%"></div>
+              <div class="h-full bg-purple-500 rounded-full bar-fill" id="bar-subs" style="width:0%"></div>
             </div>
           </div>
           <div>
@@ -380,9 +399,9 @@ function switchSection(name, link) {
 
 // ── Revenue Data Sets ──────────────────────────────────────
 const revenueData = {
-  today: { rentals:3400, subs:1200, ins:560, del:450, penalty:120, total:5730 },
-  week:  { rentals:28600, subs:8400, ins:3250, del:3800, penalty:720, total:44770 },
-  month: { rentals:98000, subs:31200, ins:11400, del:13500, penalty:2900, total:157000 }
+  today: { marketing:840, convenience:1320, transaction:3400, subs:1200, penalty:120, total:6880 },
+  week:  { marketing:6200, convenience:11100, transaction:28600, subs:8400, penalty:720, total:55020 },
+  month: { marketing:19800, convenience:34500, transaction:98000, subs:31200, penalty:2900, total:186400 }
 };
 let currentData = revenueData.week;
 let txCount = 0;
@@ -397,10 +416,10 @@ function updateChart() {
   currentData = revenueData[period];
   const max = currentData.total;
   const bars = [
-    ['rentals', currentData.rentals, '#0059bb'],
-    ['subs',    currentData.subs,    '#10b981'],
-    ['ins',     currentData.ins,     '#f59e0b'],
-    ['del',     currentData.del,     '#8b5cf6'],
+    ['marketing', currentData.marketing, '#0059bb'],
+    ['convenience', currentData.convenience, '#10b981'],
+    ['transaction', currentData.transaction, '#f59e0b'],
+    ['subs', currentData.subs, '#8b5cf6'],
     ['penalty', currentData.penalty, '#ef4444'],
   ];
   bars.forEach(([k,v]) => {
@@ -436,10 +455,10 @@ function animateGauge(id, offset, label) {
 
 // ── Simulated WebSocket: Live Transaction Feed ────────────
 const txTypes = [
-  { icon:'local_shipping', label:'Rental Booking', color:'text-primary', stream:'rentals' },
-  { icon:'workspace_premium', label:'Subscription', color:'text-emerald-600', stream:'subs' },
-  { icon:'shield_with_heart', label:'Insurance Premium', color:'text-amber-600', stream:'ins' },
-  { icon:'directions_car', label:'Delivery Fee', color:'text-purple-600', stream:'del' },
+  { icon:'campaign', label:'Marketing Placement', color:'text-primary', stream:'marketing' },
+  { icon:'payments', label:'Convenience Fee', color:'text-emerald-600', stream:'convenience' },
+  { icon:'receipt_long', label:'Transaction Revenue', color:'text-amber-600', stream:'transaction' },
+  { icon:'workspace_premium', label:'Subscription', color:'text-purple-600', stream:'subs' },
   { icon:'warning', label:'Late Return Penalty', color:'text-red-500', stream:'penalty' },
 ];
 const items = ['Sony FX3','DJI Mavic 3','Canon RF 50mm','Profoto B10','Gibson Les Paul','Gibson Les Paul','Apple M3 MacBook','Nikon Z8','DJI Ronin','Zoom H6','OmniShare+ Monthly','OmniShare Pro Annual'];
@@ -452,7 +471,9 @@ function addTransaction() {
   const item = items[Math.floor(Math.random() * items.length)];
   txCount++;
   todayRevenue += amount;
-  commissionTotal += Math.round(amount * 0.18);
+  if (t.stream === 'transaction') {
+    commissionTotal += amount;
+  }
 
   const feed = document.getElementById('tx-feed');
   const row = document.createElement('div');
@@ -595,5 +616,56 @@ function autoVerifyAll() {
 }
 
 renderKycQueue();
+</script>
+
+<!-- Global Auth Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userStr = localStorage.getItem('omni_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      document.querySelectorAll('a').forEach(a => {
+        const text = a.textContent.trim();
+        const href = a.getAttribute('href');
+        
+        if (text === 'Sign In' || href === 'signin.html') {
+          a.textContent = 'My Profile';
+          a.href = 'profile.html';
+        }
+        
+        if (text === 'Join Now' || text === 'Get Started' || text === 'Create Account' || href === 'signup.html') {
+          a.style.display = 'none';
+        }
+        
+        if (user.role === 'renter' && (text === 'List an Item' || href === 'owner_portal.html')) {
+          a.style.display = 'none';
+        }
+      });
+
+      // Simple profile customization
+      if (window.location.pathname.includes('profile.html') || window.location.href.includes('profile.html')) {
+        const h1s = document.querySelectorAll('h1');
+        h1s.forEach(h1 => {
+          if (h1.textContent.includes('Welcome') || h1.textContent.includes('Julian')) {
+            h1.textContent = 'Welcome, ' + user.email.split('@')[0].toUpperCase();
+          }
+        });
+        
+        // Add logout button
+        const header = document.querySelector('header .flex.items-center.gap-4') || document.querySelector('nav .flex.items-center.gap-6');
+        if (header && !document.getElementById('logout-btn')) {
+          const btn = document.createElement('button');
+          btn.id = 'logout-btn';
+          btn.textContent = 'Log Out';
+          btn.className = 'text-error font-medium hover:text-error/80 transition-colors ml-4';
+          btn.onclick = () => {
+            localStorage.removeItem('omni_user');
+            window.location.href = 'landing.html';
+          };
+          header.appendChild(btn);
+        }
+      }
+    }
+  });
 </script>
 </body></html>
