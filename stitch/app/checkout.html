@@ -649,7 +649,7 @@
         },
         prefill: {
           name: 'Alex Member',
-          email: 'alex@example.com',
+          email: 'guest.test@omnishare.local',
           contact: '9999999999'
         },
         theme: {
@@ -688,8 +688,8 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               listing_id: listingId,
-              renter_name: 'Alex Renter',
-              renter_email: 'alex@example.com',
+              renter_name: 'Guest Test User',
+              renter_email: 'guest.test@omnishare.local',
               start_date: today.toISOString().slice(0, 10),
               end_date: end.toISOString().slice(0, 10)
             })
@@ -706,8 +706,8 @@
           });
       },
       "prefill": {
-          "name": "Alex Renter",
-          "email": "alex@example.com",
+          "name": "Guest Test User",
+          "email": "guest.test@omnishare.local",
           "contact": "9999999999"
       },
       "theme": {

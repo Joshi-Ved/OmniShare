@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rewards Inbox | OmniShare</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: 'class',
+    theme: { extend: { colors: {
+      'surface-bright': '#f6fafe', 'surface-container': '#eaeef2', 'background': '#f6fafe', 'on-primary-fixed': '#001a41',
+      'surface-variant': '#dfe3e7', 'on-secondary-container': '#586377', 'outline': '#717786', 'on-surface': '#171c1f',
+      'surface-container-low': '#f0f4f8', 'secondary-container': '#d5e0f8', 'on-secondary': '#ffffff', 'surface-container-highest': '#dfe3e7',
+      'secondary': '#545f73', 'outline-variant': '#c1c6d7', 'primary-fixed': '#d8e2ff', 'surface': '#f6fafe',
+      'on-primary-container': '#fefcff', 'tertiary': '#4d5d73', 'on-primary': '#ffffff', 'error': '#ba1a1a',
+      'secondary-fixed': '#d8e3fb', 'on-surface-variant': '#414754', 'on-error': '#ffffff', 'inverse-primary': '#adc7ff',
+      'surface-container-lowest': '#ffffff', 'surface-container-high': '#e4e9ed', 'primary': '#0059bb', 'surface-tint': '#005bc0',
+      'on-background': '#171c1f', 'primary-container': '#0070ea', 'primary-fixed-dim': '#adc7ff', 'on-primary-fixed-variant': '#004493'
+    }, borderRadius: { DEFAULT: '0.25rem', lg: '0.5rem', xl: '0.75rem', full: '9999px' }, fontFamily: { headline: ['Space Grotesk'], body: ['Inter'], label: ['Inter'] } } },
+  };
+</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;display:inline-block;line-height:1;}
+  body{font-family:'Inter',sans-serif;}
+  h1,h2,h3,.font-headline{font-family:'Space Grotesk',sans-serif;}
+  .reward-card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;}
+  .reward-card:hover{transform:translateY(-2px);box-shadow:0 16px 38px -18px rgba(23,28,31,.18);}
+</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<header class="sticky top-0 z-40 bg-[#f6fafe]/80 backdrop-blur-xl border-b border-outline-variant/20">
+  <div class="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between gap-4">
+    <div>
+      <a href="landing.html" class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline">OmniShare</a>
+      <p class="text-xs text-outline mt-1 uppercase tracking-[0.18em]">Rewards Inbox</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <a id="back-to-profile" href="profile.html" class="px-4 py-2 rounded-full border border-outline-variant text-sm font-bold hover:bg-surface-container-low transition-colors">Back to Profile</a>
+      <a href="owner_portal.html" class="px-4 py-2 rounded-full bg-primary text-white text-sm font-bold hover:bg-primary-container transition-colors">List an Item</a>
+    </div>
+  </div>
+</header>
+<main class="flex-grow">
+  <section class="relative overflow-hidden">
+    <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-primary/10 blur-3xl"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-secondary-container/50 blur-3xl"></div>
+    <div class="max-w-[1200px] mx-auto px-6 py-10 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_0.9fr] gap-6 items-stretch">
+        <div class="bg-surface-container-lowest rounded-3xl border border-outline-variant/10 p-8 shadow-sm">
+          <p class="text-xs font-black uppercase tracking-[0.2em] text-primary mb-3">Private mail from admin</p>
+          <h1 class="font-headline font-black text-4xl md:text-5xl tracking-tight mb-4">Your rewards and messages</h1>
+          <p class="text-on-surface-variant max-w-2xl text-sm md:text-base leading-relaxed">When an admin sends you a reward mail, it appears here with the subject, body, and coin amount. You can read it, mark it as opened, and claim the coins into your balance.</p>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <span class="px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-wider" id="summary-count">0 messages</span>
+            <span class="px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black uppercase tracking-wider" id="summary-coins">₹0 pending coins</span>
+            <span class="px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant text-xs font-black uppercase tracking-wider" id="summary-balance">Balance ₹0</span>
+          </div>
+        </div>
+        <div class="bg-gradient-to-br from-primary to-primary-container rounded-3xl p-8 text-white shadow-xl shadow-primary/20 flex flex-col justify-between">
+          <div>
+            <p class="text-white/60 text-xs font-black uppercase tracking-[0.2em] mb-3">Wallet</p>
+            <h2 class="font-headline font-black text-3xl mb-2" id="wallet-balance">₹0</h2>
+            <p class="text-white/75 text-sm">Claimed coins are added to your wallet balance. Pending rewards stay visible until you claim them.</p>
+          </div>
+          <div class="mt-8 grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-white/10 rounded-2xl p-4">
+              <p class="text-white/60 text-[10px] font-black uppercase tracking-widest">Unread</p>
+              <p class="text-2xl font-black mt-1" id="unread-count">0</p>
+            </div>
+            <div class="bg-white/10 rounded-2xl p-4">
+              <p class="text-white/60 text-[10px] font-black uppercase tracking-widest">Total Earned</p>
+              <p class="text-2xl font-black mt-1" id="earned-count">₹0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-[1200px] mx-auto px-6 pb-16">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div>
+        <p class="text-xs font-black uppercase tracking-[0.2em] text-outline mb-2">Inbox</p>
+        <h2 class="font-headline font-black text-2xl">Reward mail feed</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-outline" id="active-email"></span>
+      </div>
+    </div>
+
+    <div class="space-y-4" id="reward-feed">
+      <div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 shadow-sm">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-outline">hourglass_empty</span>
+          <div>
+            <p class="font-bold text-sm">Loading rewards...</p>
+            <p class="text-xs text-on-surface-variant mt-0.5">Fetching admin mail and coin rewards.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="w-full py-8 border-t border-outline-variant/20 bg-surface-container-lowest">
+  <div class="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-outline uppercase tracking-[0.18em]">
+    <p>OmniShare rewards inbox</p>
+    <div class="flex items-center gap-4">
+      <a href="profile.html" class="hover:text-primary transition-colors">Profile</a>
+      <a href="admin.html" class="hover:text-primary transition-colors">Admin</a>
+      <a href="search.html" class="hover:text-primary transition-colors">Browse</a>
+    </div>
+  </div>
+</footer>
+<script>
+  let rewardsEmail = new URLSearchParams(window.location.search).get('email') || 'both.test@omnishare.local';
+  const backToProfile = document.getElementById('back-to-profile');
+  backToProfile.href = 'profile.html';
+  document.getElementById('active-email').textContent = rewardsEmail;
+
+  function formatCoins(value) {
+    return `₹${Number(value || 0).toLocaleString('en-IN')}`;
+  }
+
+  function formatDate(value) {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value || '';
+    return date.toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function renderRewardCard(notification) {
+    const card = document.createElement('article');
+    card.className = `reward-card bg-surface-container-lowest rounded-2xl p-6 border ${notification.is_claimed ? 'border-outline-variant/10' : 'border-primary/15'} shadow-sm`;
+
+    const row = document.createElement('div');
+    row.className = 'flex flex-col md:flex-row md:items-start gap-5';
+
+    const icon = document.createElement('div');
+    icon.className = `w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${notification.is_claimed ? 'bg-emerald-50 text-emerald-700' : 'bg-primary/10 text-primary'}`;
+    icon.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1;">mail</span>';
+
+    const body = document.createElement('div');
+    body.className = 'flex-1';
+
+    const top = document.createElement('div');
+    top.className = 'flex flex-col md:flex-row md:items-start justify-between gap-3';
+
+    const titleWrap = document.createElement('div');
+    const subject = document.createElement('h3');
+    subject.className = 'font-headline font-bold text-xl';
+    subject.textContent = notification.title;
+    const source = document.createElement('p');
+    source.className = 'text-xs font-black uppercase tracking-widest text-outline mt-1';
+    source.textContent = notification.source;
+    titleWrap.append(subject, source);
+
+    const meta = document.createElement('div');
+    meta.className = 'text-right';
+    const date = document.createElement('p');
+    date.className = 'text-xs text-outline';
+    date.textContent = formatDate(notification.created_at);
+    const chip = document.createElement('span');
+    chip.className = 'inline-flex mt-2 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-wider';
+    chip.textContent = `${notification.coin_amount || 0} coins`;
+    meta.append(date, chip);
+
+    top.append(titleWrap, meta);
+
+    const message = document.createElement('p');
+    message.className = 'text-sm text-on-surface-variant leading-relaxed mt-4';
+    message.textContent = notification.message;
+
+    const actions = document.createElement('div');
+    actions.className = 'flex flex-wrap items-center gap-3 mt-5';
+
+    if (notification.is_claimed) {
+      const claimed = document.createElement('span');
+      claimed.className = 'px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black uppercase tracking-wider';
+      claimed.textContent = 'Claimed';
+      actions.appendChild(claimed);
+    } else {
+      const claimButton = document.createElement('button');
+      claimButton.className = 'px-4 py-2 rounded-full bg-primary text-white text-sm font-bold hover:bg-primary-container transition-colors';
+      claimButton.textContent = 'Claim Coins';
+      claimButton.addEventListener('click', async () => {
+        claimButton.disabled = true;
+        claimButton.textContent = 'Claiming...';
+        try {
+          const response = await fetch(`/api/users/notifications/${notification.id}/claim`, { method: 'POST' });
+          if (!response.ok) throw new Error('Unable to claim rewards');
+          await loadRewardsInbox();
+        } catch (error) {
+          alert(error.message);
+          claimButton.disabled = false;
+          claimButton.textContent = 'Claim Coins';
+        }
+      });
+      actions.appendChild(claimButton);
+    }
+
+    const readButton = document.createElement('button');
+    readButton.className = 'px-4 py-2 rounded-full border border-outline-variant text-sm font-bold hover:bg-surface-container-low transition-colors';
+    readButton.textContent = notification.is_opened ? 'Opened' : 'Mark Opened';
+    readButton.disabled = Boolean(notification.is_opened);
+    readButton.addEventListener('click', async () => {
+      try {
+        await fetch(`/api/users/notifications/${notification.id}/open`, { method: 'POST' });
+        await loadRewardsInbox();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+    actions.appendChild(readButton);
+
+    body.append(top, message, actions);
+    row.append(icon, body);
+    card.appendChild(row);
+    return card;
+  }
+
+  async function loadRewardsInbox() {
+    const feed = document.getElementById('reward-feed');
+    try {
+      document.getElementById('active-email').textContent = rewardsEmail;
+      backToProfile.href = `profile.html?email=${encodeURIComponent(rewardsEmail)}`;
+
+      if (!rewardsEmail) {
+        throw new Error('No rewards email configured');
+      }
+
+      const response = await fetch(`/api/users/rewards?email=${encodeURIComponent(rewardsEmail)}`);
+      if (!response.ok) throw new Error('Unable to load rewards');
+      const payload = await response.json();
+
+      document.getElementById('wallet-balance').textContent = formatCoins(payload.loyalty_coins || 0);
+      document.getElementById('summary-balance').textContent = `Balance ${formatCoins(payload.loyalty_coins || 0)}`;
+      document.getElementById('summary-coins').textContent = `${formatCoins(payload.pending_coins || 0)} pending coins`;
+      document.getElementById('summary-count').textContent = `${payload.notifications.length} messages`;
+      document.getElementById('summary-coins').classList.toggle('hidden', false);
+      document.getElementById('unread-count').textContent = String(payload.unread_count || 0);
+      document.getElementById('earned-count').textContent = formatCoins(payload.total_earned || 0);
+
+      feed.innerHTML = '';
+      if (!payload.notifications || payload.notifications.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 shadow-sm';
+        empty.innerHTML = '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline">mail</span><div><p class="font-bold text-sm">No admin mail yet</p><p class="text-xs text-on-surface-variant mt-0.5">When an admin sends a reward mail, it will appear here.</p></div></div>';
+        feed.appendChild(empty);
+        return;
+      }
+
+      payload.notifications.forEach((notification) => {
+        feed.appendChild(renderRewardCard(notification));
+      });
+    } catch (error) {
+      feed.innerHTML = '<div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/10 shadow-sm"><p class="font-bold text-sm">Rewards unavailable</p><p class="text-xs text-on-surface-variant mt-0.5">The inbox could not be loaded right now.</p></div>';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', loadRewardsInbox);
+</script>
+</body></html>

@@ -67,6 +67,14 @@ function generateRef(prefix) {
     return `${prefix}${Date.now()}${Math.floor(Math.random() * 1000)}`;
 }
 
+function normalizeEmail(value) {
+    return String(value || '').trim().toLowerCase();
+}
+
+function createRewardId() {
+    return `rw_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+}
+
 function daysBetweenInclusive(startDate, endDate) {
     const start = new Date(`${startDate}T00:00:00`);
     const end = new Date(`${endDate}T00:00:00`);
@@ -83,6 +91,156 @@ async function ensureColumn(tableName, columnName, columnDefinition) {
     if (!exists) {
         await runSql(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${columnDefinition}`);
     }
+}
+
+async function ensureRewardProfile(email) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    const existing = await getSql('SELECT email, loyalty_coins, total_earned, updated_at FROM user_rewards WHERE email = ?', [normalizedEmail]);
+    if (existing) {
+        return existing;
+    }
+
+    const now = new Date().toISOString();
+    await runSql(
+        'INSERT INTO user_rewards (email, loyalty_coins, total_earned, updated_at) VALUES (?, ?, ?, ?)',
+        [normalizedEmail, 0, 0, now]
+    );
+
+    return {
+        email: normalizedEmail,
+        loyalty_coins: 0,
+        total_earned: 0,
+        updated_at: now,
+    };
+}
+
+async function createRewardNotification({ email, title, message, coinAmount = 0, source = 'system', reference = '' }) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    const now = new Date().toISOString();
+    const notification = {
+        id: createRewardId(),
+        email: normalizedEmail,
+        title: String(title || 'Reward update').trim(),
+        message: String(message || '').trim(),
+        source: String(source || 'system').trim(),
+        coin_amount: Math.max(0, Math.round(Number(coinAmount) || 0)),
+        is_read: 0,
+        is_opened: 0,
+        is_claimed: 0,
+        reference: String(reference || '').trim(),
+        created_at: now,
+        updated_at: now,
+        claimed_at: null,
+    };
+
+    await runSql(
+        'INSERT INTO user_reward_notifications (id, email, title, message, source, coin_amount, is_read, is_opened, is_claimed, reference, created_at, updated_at, claimed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            notification.id,
+            notification.email,
+            notification.title,
+            notification.message,
+            notification.source,
+            notification.coin_amount,
+            notification.is_read,
+            notification.is_opened,
+            notification.is_claimed,
+            notification.reference,
+            notification.created_at,
+            notification.updated_at,
+            notification.claimed_at,
+        ]
+    );
+
+    return notification;
+}
+
+async function awardCoins({ email, amount, title, message, source, reference }) {
+    const normalizedEmail = normalizeEmail(email);
+    const coinAmount = Math.max(0, Math.round(Number(amount) || 0));
+    if (!normalizedEmail || coinAmount <= 0) {
+        return null;
+    }
+
+    await ensureRewardProfile(normalizedEmail);
+    return createRewardNotification({
+        email: normalizedEmail,
+        title,
+        message,
+        coinAmount,
+        source,
+        reference,
+    });
+}
+
+async function getRewardSummary(email) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    const profile = await ensureRewardProfile(normalizedEmail);
+    const notifications = await allSql(
+        'SELECT id, email, title, message, source, coin_amount, is_read, is_opened, is_claimed, reference, created_at, updated_at, claimed_at FROM user_reward_notifications WHERE email = ? ORDER BY datetime(created_at) DESC',
+        [normalizedEmail]
+    );
+
+    const pendingCoins = notifications.reduce((total, notification) => total + (notification.is_claimed ? 0 : Number(notification.coin_amount) || 0), 0);
+    const unreadCount = notifications.filter((notification) => !notification.is_read).length;
+
+    return {
+        profile,
+        notifications,
+        pendingCoins,
+        unreadCount,
+    };
+}
+
+async function claimRewardNotification(notificationId) {
+    const notification = await getSql(
+        'SELECT id, email, coin_amount, is_claimed FROM user_reward_notifications WHERE id = ?',
+        [notificationId]
+    );
+
+    if (!notification) {
+        return { error: 'Notification not found', status: 404 };
+    }
+
+    if (notification.is_claimed) {
+        const summary = await getRewardSummary(notification.email);
+        return { notification, summary, alreadyClaimed: true };
+    }
+
+    const coinAmount = Math.max(0, Math.round(Number(notification.coin_amount) || 0));
+    const now = new Date().toISOString();
+
+    await runSql('BEGIN TRANSACTION');
+    try {
+        await ensureRewardProfile(notification.email);
+        await runSql(
+            'UPDATE user_rewards SET loyalty_coins = loyalty_coins + ?, total_earned = total_earned + ?, updated_at = ? WHERE email = ?',
+            [coinAmount, coinAmount, now, notification.email]
+        );
+        await runSql(
+            'UPDATE user_reward_notifications SET is_read = 1, is_opened = 1, is_claimed = 1, claimed_at = ?, updated_at = ? WHERE id = ?',
+            [now, now, notificationId]
+        );
+        await runSql('COMMIT');
+    } catch (error) {
+        await runSql('ROLLBACK').catch(() => undefined);
+        throw error;
+    }
+
+    const summary = await getRewardSummary(notification.email);
+    return { notification, summary, coinAmount };
 }
 
 function formatDateLabel(value) {
@@ -156,6 +314,35 @@ async function initializeDatabase() {
         )
     `);
 
+    await runSql(`
+        CREATE TABLE IF NOT EXISTS user_rewards (
+            email TEXT PRIMARY KEY,
+            loyalty_coins INTEGER NOT NULL DEFAULT 0,
+            total_earned INTEGER NOT NULL DEFAULT 0,
+            updated_at TEXT NOT NULL
+        )
+    `);
+
+    await runSql(`
+        CREATE TABLE IF NOT EXISTS user_reward_notifications (
+            id TEXT PRIMARY KEY,
+            email TEXT NOT NULL,
+            title TEXT NOT NULL,
+            message TEXT NOT NULL,
+            source TEXT NOT NULL,
+            coin_amount INTEGER NOT NULL DEFAULT 0,
+            is_read INTEGER NOT NULL DEFAULT 0,
+            is_opened INTEGER NOT NULL DEFAULT 0,
+            is_claimed INTEGER NOT NULL DEFAULT 0,
+            reference TEXT DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            claimed_at TEXT
+        )
+    `);
+    await runSql('CREATE INDEX IF NOT EXISTS idx_reward_notifications_email ON user_reward_notifications(email)');
+    await runSql('CREATE INDEX IF NOT EXISTS idx_reward_notifications_created_at ON user_reward_notifications(created_at DESC)');
+
     await ensureColumn('erp_bookings', 'listing_id', "TEXT DEFAULT ''");
     await ensureColumn('erp_listings', 'description', "TEXT DEFAULT ''");
     await ensureColumn('erp_listings', 'host_email', "TEXT DEFAULT ''");
@@ -163,6 +350,17 @@ async function initializeDatabase() {
     await ensureColumn('erp_listings', 'deposit', 'INTEGER DEFAULT 0');
     await ensureColumn('erp_listings', 'image_url', "TEXT DEFAULT ''");
     await ensureColumn('erp_listings', 'created_at', "TEXT DEFAULT ''");
+    await ensureColumn('user_rewards', 'total_earned', 'INTEGER DEFAULT 0');
+    await ensureColumn('user_rewards', 'updated_at', "TEXT DEFAULT ''");
+    await ensureColumn('user_reward_notifications', 'source', "TEXT DEFAULT 'system'");
+    await ensureColumn('user_reward_notifications', 'coin_amount', 'INTEGER DEFAULT 0');
+    await ensureColumn('user_reward_notifications', 'is_read', 'INTEGER DEFAULT 0');
+    await ensureColumn('user_reward_notifications', 'is_opened', 'INTEGER DEFAULT 0');
+    await ensureColumn('user_reward_notifications', 'is_claimed', 'INTEGER DEFAULT 0');
+    await ensureColumn('user_reward_notifications', 'reference', "TEXT DEFAULT ''");
+    await ensureColumn('user_reward_notifications', 'created_at', "TEXT DEFAULT ''");
+    await ensureColumn('user_reward_notifications', 'updated_at', "TEXT DEFAULT ''");
+    await ensureColumn('user_reward_notifications', 'claimed_at', 'TEXT');
 }
 
 async function seedErpDataIfEmpty() {
@@ -242,7 +440,10 @@ app.post('/api/admin/kyc-webhook', (req, res) => {
 app.post('/api/reviews/submit', async (req, res) => {
     try {
         const { listing_id, listing_title, host_email, reviewer_name, reviewer_email, rating, comment } = req.body;
-        if (!listing_id || !listing_title || !host_email || !reviewer_name || !reviewer_email || !rating || !comment) {
+        const reviewerName = String(reviewer_name || '').trim();
+        const reviewerEmail = normalizeEmail(reviewer_email);
+
+        if (!listing_id || !listing_title || !host_email || !reviewerName || !reviewerEmail || !rating || !comment) {
             return res.status(400).json({ success: false, error: 'Missing required review fields' });
         }
 
@@ -256,8 +457,8 @@ app.post('/api/reviews/submit', async (req, res) => {
             listing_id,
             listing_title,
             host_email: String(host_email).toLowerCase(),
-            reviewer_name,
-            reviewer_email: String(reviewer_email).toLowerCase(),
+            reviewer_name: reviewerName,
+            reviewer_email: reviewerEmail,
             rating: parsedRating,
             comment,
             created_at: new Date().toISOString(),
@@ -267,6 +468,15 @@ app.post('/api/reviews/submit', async (req, res) => {
             'INSERT INTO listing_reviews (id, listing_id, listing_title, host_email, reviewer_name, reviewer_email, rating, comment, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [review.id, review.listing_id, review.listing_title, review.host_email, review.reviewer_name, review.reviewer_email, review.rating, review.comment, review.created_at]
         );
+
+        await awardCoins({
+            email: reviewerEmail,
+            amount: 20,
+            title: 'Review bonus earned',
+            message: `Thanks for reviewing ${listing_title}. You earned 20 loyalty coins.`,
+            source: 'review_submitted',
+            reference: review.id,
+        });
 
         return res.json({ success: true, message: 'Review submitted and shared with admin and listing owner', routed_to_admin: true, routed_to_host: true, review });
     } catch (error) {
@@ -315,7 +525,7 @@ app.post('/api/listings', async (req, res) => {
         const category = String(req.body.category || '').trim();
         const condition = String(req.body.condition || 'Excellent').trim();
         const host = String(req.body.host || '').trim();
-        const hostEmail = String(req.body.host_email || '').trim().toLowerCase();
+        const hostEmail = normalizeEmail(req.body.host_email);
         const pricePerDay = Number(req.body.price_per_day || 0);
         const deposit = Number(req.body.deposit || 0);
         const imageUrl = String(req.body.image_url || '').trim();
@@ -354,7 +564,8 @@ app.post('/api/listings', async (req, res) => {
 });
 
 app.get('/api/host/listings', async (req, res) => {
-    const email = String(req.query.email || '').toLowerCase();
+    const email = normalizeEmail(req.query.email);
+
     if (!email) {
         return res.status(400).json({ success: false, error: 'email query parameter is required' });
     }
@@ -369,10 +580,13 @@ app.get('/api/host/listings', async (req, res) => {
 
 app.post('/api/bookings/create', async (req, res) => {
     const listingId = String(req.body.listing_id || '').trim();
-    const renterName = String(req.body.renter_name || 'Guest Renter').trim();
-    const renterEmail = String(req.body.renter_email || 'guest@example.com').trim().toLowerCase();
+    let renterName = String(req.body.renter_name || 'Guest Renter').trim();
+    let renterEmail = normalizeEmail(req.body.renter_email || 'guest@example.com');
     const startDate = String(req.body.start_date || '').trim();
     const endDate = String(req.body.end_date || '').trim();
+
+    if (!renterName) renterName = 'Guest Renter';
+    if (!renterEmail) renterEmail = 'guest@example.com';
 
     if (!listingId) {
         return res.status(400).json({ success: false, error: 'listing_id is required' });
@@ -408,6 +622,15 @@ app.post('/api/bookings/create', async (req, res) => {
         );
         await runSql('UPDATE erp_listings SET status = ?, updated_at = ? WHERE id = ?', ['sold_out', createdAt, listing.id]);
         await runSql('COMMIT');
+
+        await awardCoins({
+            email: renterEmail,
+            amount: 50,
+            title: 'Booking bonus unlocked',
+            message: `Your booking for ${listing.title} earned 50 loyalty coins. Claim them from your profile.`,
+            source: 'booking_created',
+            reference: bookingId,
+        });
 
         return res.status(201).json({
             success: true,
@@ -490,7 +713,10 @@ app.post('/api/admin/bookings/:id/action', async (req, res) => {
         const now = new Date().toISOString();
         await runSql('UPDATE erp_bookings SET status = ?, end_date = ?, updated_at = ? WHERE id = ?', [nextStatus, nextEndDate, now, id]);
 
+        let rewardHostEmail = '';
         if (booking.listing_id) {
+            const listingRow = await getSql('SELECT host_email, title FROM erp_listings WHERE id = ?', [booking.listing_id]);
+            rewardHostEmail = normalizeEmail(listingRow?.host_email || '');
             if (nextStatus === 'active') {
                 await runSql('UPDATE erp_listings SET status = ?, updated_at = ? WHERE id = ?', ['sold_out', now, booking.listing_id]);
             }
@@ -499,6 +725,17 @@ app.post('/api/admin/bookings/:id/action', async (req, res) => {
             }
             if (action === 'reject') {
                 await runSql('UPDATE erp_listings SET status = ?, updated_at = ? WHERE id = ?', ['available', now, booking.listing_id]);
+            }
+
+            if ((nextStatus === 'returned' || nextStatus === 'closed') && rewardHostEmail) {
+                await awardCoins({
+                    email: rewardHostEmail,
+                    amount: 150,
+                    title: 'Completed rental bonus',
+                    message: `Your listing ${booking.listing} completed successfully. You earned 150 loyalty coins.`,
+                    source: 'booking_completed',
+                    reference: booking.id,
+                });
             }
         }
 
@@ -534,7 +771,127 @@ app.post('/api/admin/listings/:id/action', async (req, res) => {
         else return res.status(400).json({ success: false, error: 'Unsupported listing action' });
 
         await runSql('UPDATE erp_listings SET status = ?, updated_at = ? WHERE id = ?', [nextStatus, new Date().toISOString(), id]);
+
+        if (nextStatus === 'available' && (action === 'approve' || action === 'relist' || action === 'mark-available')) {
+            await awardCoins({
+                email: listing.host_email,
+                amount: 25,
+                title: 'Listing approved bonus',
+                message: `Your listing ${listing.title} was approved. You earned 25 loyalty coins.`,
+                source: 'listing_approved',
+                reference: listing.id,
+            });
+        }
         return res.json({ success: true, message: `Listing ${id} updated` });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/users/rewards', async (req, res) => {
+    try {
+        const email = normalizeEmail(req.query.email);
+        if (!email) {
+            return res.status(400).json({ success: false, error: 'email query parameter is required' });
+        }
+
+        const summary = await getRewardSummary(email);
+        return res.json({
+            success: true,
+            email,
+            loyalty_coins: summary.profile.loyalty_coins,
+            total_earned: summary.profile.total_earned,
+            pending_coins: summary.pendingCoins,
+            unread_count: summary.unreadCount,
+            notifications: summary.notifications,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/users/notifications', async (req, res) => {
+    try {
+        const email = normalizeEmail(req.query.email);
+        if (!email) {
+            return res.status(400).json({ success: false, error: 'email query parameter is required' });
+        }
+
+        const summary = await getRewardSummary(email);
+        return res.json({ success: true, count: summary.notifications.length, results: summary.notifications });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/users/notifications/:id/read', async (req, res) => {
+    try {
+        const notificationId = req.params.id;
+        const notification = await getSql('SELECT id FROM user_reward_notifications WHERE id = ?', [notificationId]);
+        if (!notification) {
+            return res.status(404).json({ success: false, error: 'Notification not found' });
+        }
+
+        await runSql('UPDATE user_reward_notifications SET is_read = 1, updated_at = ? WHERE id = ?', [new Date().toISOString(), notificationId]);
+        return res.json({ success: true, message: 'Notification marked as read' });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/users/notifications/:id/open', async (req, res) => {
+    try {
+        const notificationId = req.params.id;
+        const notification = await getSql('SELECT id FROM user_reward_notifications WHERE id = ?', [notificationId]);
+        if (!notification) {
+            return res.status(404).json({ success: false, error: 'Notification not found' });
+        }
+
+        await runSql('UPDATE user_reward_notifications SET is_opened = 1, is_read = 1, updated_at = ? WHERE id = ?', [new Date().toISOString(), notificationId]);
+        return res.json({ success: true, message: 'Notification opened' });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/users/notifications/:id/claim', async (req, res) => {
+    try {
+        const result = await claimRewardNotification(req.params.id);
+        if (result?.error) {
+            return res.status(result.status || 400).json({ success: false, error: result.error });
+        }
+
+        return res.json({
+            success: true,
+            message: result.alreadyClaimed ? 'Notification already claimed' : 'Reward claimed successfully',
+            coin_amount: result.notification.coin_amount,
+            loyalty_coins: result.summary.profile.loyalty_coins,
+            total_earned: result.summary.profile.total_earned,
+            pending_coins: result.summary.pendingCoins,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/admin/rewards/award', async (req, res) => {
+    try {
+        const email = normalizeEmail(req.body.email);
+        const amount = Number(req.body.coin_amount || req.body.amount || 0);
+        if (!email || !Number.isFinite(amount) || amount <= 0) {
+            return res.status(400).json({ success: false, error: 'email and positive coin_amount are required' });
+        }
+
+        const notification = await awardCoins({
+            email,
+            amount,
+            title: String(req.body.title || 'Reward credited').trim(),
+            message: String(req.body.message || `You earned ${Math.round(amount)} loyalty coins.`).trim(),
+            source: String(req.body.source || 'admin_award').trim(),
+            reference: String(req.body.reference || '').trim(),
+        });
+
+        return res.status(201).json({ success: true, message: 'Reward notification created', notification });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }

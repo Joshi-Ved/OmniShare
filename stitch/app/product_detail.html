@@ -639,6 +639,24 @@ const reviewForm = document.getElementById('listing-review-form');
 const reviewSubmitBtn = document.getElementById('review-submit-btn');
 const reviewSubmitMsg = document.getElementById('review-submit-msg');
 const communityReviewList = document.getElementById('community-review-list');
+const reviewerIdentity = {
+    name: 'Guest Test User',
+    email: 'guest.test@omnishare.local'
+};
+
+function initHardcodedReviewer() {
+    const nameInput = document.getElementById('reviewer-name');
+    const emailInput = document.getElementById('reviewer-email');
+    if (nameInput) {
+        nameInput.value = reviewerIdentity.name;
+        nameInput.readOnly = true;
+    }
+    if (emailInput) {
+        emailInput.value = reviewerIdentity.email;
+        emailInput.readOnly = true;
+    }
+    if (reviewSubmitBtn) reviewSubmitBtn.disabled = false;
+}
 
 function addReviewCard(review) {
     const card = document.createElement('div');
@@ -690,8 +708,8 @@ if (reviewForm) {
             listing_id: reviewForm.dataset.listingId,
             listing_title: reviewForm.dataset.listingTitle,
             host_email: reviewForm.dataset.hostEmail,
-            reviewer_name: formData.get('reviewer_name'),
-            reviewer_email: formData.get('reviewer_email'),
+            reviewer_name: reviewerIdentity.name || formData.get('reviewer_name'),
+            reviewer_email: reviewerIdentity.email || formData.get('reviewer_email'),
             rating: formData.get('rating'),
             comment: formData.get('comment'),
         };
@@ -722,6 +740,7 @@ if (reviewForm) {
     });
 }
 
+initHardcodedReviewer();
 loadListingContext();
 </script>
 </body></html>

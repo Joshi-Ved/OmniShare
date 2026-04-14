@@ -59,11 +59,11 @@
       </div>
       <div class="flex-1">
         <div class="flex flex-wrap items-center gap-3 mb-2">
-          <h1 class="font-headline font-bold text-3xl text-on-primary-fixed">Marcus Sterling</h1>
+          <h1 id="profile-name" class="font-headline font-bold text-3xl text-on-primary-fixed">Marcus Sterling</h1>
           <span class="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full uppercase tracking-wider">Gold Host</span>
           <span class="px-3 py-1 bg-white/40 text-on-primary-fixed text-xs font-bold rounded-full">KYC Verified</span>
         </div>
-        <p class="text-on-primary-fixed/70 text-sm mb-4">m.sterling@studio.com · Member since January 2023</p>
+        <p id="profile-email" class="text-on-primary-fixed/70 text-sm mb-4">m.sterling@studio.com · Member since January 2023</p>
         <div class="flex flex-wrap gap-6 text-sm">
           <div class="text-center">
             <p class="font-headline font-bold text-2xl text-on-primary-fixed">4.9</p>
@@ -78,7 +78,7 @@
             <p class="text-on-primary-fixed/60 text-xs uppercase tracking-wider">Listings</p>
           </div>
           <div class="text-center">
-            <p class="font-headline font-bold text-2xl text-on-primary-fixed">₹1,240</p>
+            <p class="font-headline font-bold text-2xl text-on-primary-fixed" id="loyalty-balance">₹1,240</p>
             <p class="text-on-primary-fixed/60 text-xs uppercase tracking-wider">Loyalty Coins</p>
           </div>
         </div>
@@ -86,6 +86,9 @@
       <div class="flex flex-col gap-3">
         <a href="owner_portal.html" class="px-6 py-3 bg-primary text-white rounded-full font-headline font-bold text-sm hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 text-center">
           Host Dashboard
+        </a>
+        <a id="rewards-inbox-link" href="notifications.html" class="px-6 py-3 bg-white/30 text-on-primary-fixed rounded-full font-headline font-bold text-sm hover:bg-white/50 transition-colors text-center">
+          Rewards Inbox
         </a>
         <button class="px-6 py-3 bg-white/30 text-on-primary-fixed rounded-full font-headline font-bold text-sm hover:bg-white/50 transition-colors text-center">
           Edit Profile
@@ -215,30 +218,12 @@
   <!-- Tab: Notifications -->
   <div class="tab-content" id="tab-notifications">
     <h2 class="font-headline font-bold text-xl mb-6">Notifications</h2>
-    <div class="space-y-3">
-      <div class="flex items-start gap-4 p-5 bg-primary/5 border border-primary/15 rounded-xl">
-        <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">notifications_active</span>
+    <div class="space-y-3" id="reward-notifications">
+      <div class="flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl" id="reward-loading">
+        <span class="material-symbols-outlined text-outline mt-0.5">hourglass_empty</span>
         <div class="flex-1">
-          <p class="font-bold text-sm">Booking confirmed by Julian R.</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">Your Red Komodo 6K booking is confirmed. Pickup on Oct 12 at 10 AM.</p>
-          <p class="text-xs text-outline mt-2">2 minutes ago</p>
-        </div>
-        <button class="text-xs text-primary font-bold shrink-0">Mark Read</button>
-      </div>
-      <div class="flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl">
-        <span class="material-symbols-outlined text-outline mt-0.5">paid</span>
-        <div class="flex-1">
-          <p class="font-bold text-sm">Payment processed successfully</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">₹1,16,745 charged · ₹42,000 held in escrow · Ref #OMN-2024-9847</p>
-          <p class="text-xs text-outline mt-2">10 minutes ago</p>
-        </div>
-      </div>
-      <div class="flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl">
-        <span class="material-symbols-outlined text-emerald-600 mt-0.5" style="font-variation-settings:'FILL' 1;">stars</span>
-        <div class="flex-1">
-          <p class="font-bold text-sm">You earned 120 Loyalty Coins</p>
-          <p class="text-xs text-on-surface-variant mt-0.5">Bonus coins awarded for completing your Profoto B10X rental. Total balance: ₹1,240.</p>
-          <p class="text-xs text-outline mt-2">2 days ago</p>
+          <p class="font-bold text-sm">Loading rewards...</p>
+          <p class="text-xs text-on-surface-variant mt-0.5">Fetching your coin balance and reward notifications.</p>
         </div>
       </div>
     </div>
@@ -328,6 +313,13 @@
 </footer>
 
 <script>
+  const hardcodedProfile = {
+    name: 'Both Test User',
+    email: 'both.test@omnishare.local'
+  };
+  let rewardEmail = new URLSearchParams(window.location.search).get('email') || hardcodedProfile.email;
+  const rewardsInboxLink = document.getElementById('rewards-inbox-link');
+
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.add('text-outline'); b.classList.remove('text-on-surface'); });
@@ -335,5 +327,129 @@
     btn.classList.add('active');
     btn.classList.remove('text-outline');
   }
+
+  function formatCoins(value) {
+    return `₹${Number(value || 0).toLocaleString('en-IN')}`;
+  }
+
+  function renderNotificationItem(notification) {
+    const wrapper = document.createElement('div');
+    wrapper.className = `flex items-start gap-4 p-5 rounded-xl border ${notification.is_claimed ? 'bg-surface-container-lowest border-outline-variant/10' : 'bg-primary/5 border-primary/15'}`;
+
+    const icon = document.createElement('span');
+    icon.className = `material-symbols-outlined mt-0.5 ${notification.is_claimed ? 'text-emerald-600' : 'text-primary'}`;
+    icon.style.fontVariationSettings = "'FILL' 1";
+    icon.textContent = notification.is_claimed ? 'stars' : 'notifications_active';
+
+    const content = document.createElement('div');
+    content.className = 'flex-1';
+
+    const title = document.createElement('p');
+    title.className = 'font-bold text-sm';
+    title.textContent = notification.title;
+
+    const message = document.createElement('p');
+    message.className = 'text-xs text-on-surface-variant mt-0.5';
+    message.textContent = notification.message;
+
+    const meta = document.createElement('p');
+    meta.className = 'text-xs text-outline mt-2';
+    meta.textContent = `${new Date(notification.created_at).toLocaleString() || notification.created_at} · ${notification.source}`;
+
+    content.append(title, message, meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'flex flex-col items-end gap-2 shrink-0';
+
+    if (Number(notification.coin_amount || 0) > 0) {
+      const coinChip = document.createElement('span');
+      coinChip.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-wider';
+      coinChip.textContent = `${notification.coin_amount} coins`;
+      actions.appendChild(coinChip);
+    }
+
+    if (notification.is_claimed) {
+      const claimed = document.createElement('span');
+      claimed.className = 'text-xs font-bold text-emerald-700';
+      claimed.textContent = 'Claimed';
+      actions.appendChild(claimed);
+    } else if (Number(notification.coin_amount || 0) > 0) {
+      const claimButton = document.createElement('button');
+      claimButton.className = 'text-xs text-primary font-bold shrink-0';
+      claimButton.textContent = 'Claim';
+      claimButton.addEventListener('click', async () => {
+        claimButton.disabled = true;
+        claimButton.textContent = 'Claiming...';
+        try {
+          const response = await fetch(`/api/users/notifications/${notification.id}/claim`, { method: 'POST' });
+          if (!response.ok) throw new Error('Unable to claim reward');
+          await loadRewards();
+        } catch (error) {
+          alert(error.message);
+          claimButton.disabled = false;
+          claimButton.textContent = 'Claim';
+        }
+      });
+      actions.appendChild(claimButton);
+    } else {
+      const readButton = document.createElement('button');
+      readButton.className = 'text-xs text-primary font-bold shrink-0';
+      readButton.textContent = 'Mark Read';
+      readButton.addEventListener('click', async () => {
+        try {
+          await fetch(`/api/users/notifications/${notification.id}/read`, { method: 'POST' });
+          await loadRewards();
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+      actions.appendChild(readButton);
+    }
+
+    wrapper.append(icon, content, actions);
+    return wrapper;
+  }
+
+  async function loadRewards() {
+    const balanceNode = document.getElementById('loyalty-balance');
+    const notificationsNode = document.getElementById('reward-notifications');
+    try {
+      const response = await fetch(`/api/users/rewards?email=${encodeURIComponent(rewardEmail)}`);
+      if (!response.ok) {
+        throw new Error('Unable to load rewards');
+      }
+
+      const payload = await response.json();
+      balanceNode.textContent = formatCoins(payload.loyalty_coins || 0);
+
+      notificationsNode.innerHTML = '';
+      if (!payload.notifications || payload.notifications.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl';
+        emptyState.innerHTML = '<span class="material-symbols-outlined text-outline mt-0.5">mail</span><div class="flex-1"><p class="font-bold text-sm">No reward notifications yet</p><p class="text-xs text-on-surface-variant mt-0.5">Earn coins by booking rentals, submitting reviews, and completing rentals.</p></div>';
+        notificationsNode.appendChild(emptyState);
+        return;
+      }
+
+      payload.notifications.forEach((notification) => {
+        notificationsNode.appendChild(renderNotificationItem(notification));
+      });
+    } catch (error) {
+      notificationsNode.innerHTML = '<div class="flex items-start gap-4 p-5 bg-surface-container-lowest border border-outline-variant/10 rounded-xl"><span class="material-symbols-outlined text-outline mt-0.5">error</span><div class="flex-1"><p class="font-bold text-sm">Rewards unavailable</p><p class="text-xs text-on-surface-variant mt-0.5">The reward feed could not be loaded right now.</p></div></div>';
+    }
+  }
+
+  async function initHardcodedProfile() {
+    if (rewardEmail) {
+      rewardsInboxLink.href = `notifications.html?email=${encodeURIComponent(rewardEmail)}`;
+    }
+
+    document.getElementById('profile-name').textContent = hardcodedProfile.name;
+    document.getElementById('profile-email').textContent = `${rewardEmail} · Member since January 2023`;
+
+    await loadRewards();
+  }
+
+  document.addEventListener('DOMContentLoaded', initHardcodedProfile);
 </script>
 </body></html>

@@ -739,12 +739,31 @@
 
   <div id="section-settings" class="section-block p-8 hidden">
     <h2 class="font-headline font-bold text-2xl mb-4">Platform Settings</h2>
-    <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 space-y-6">
       <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Platform Commission (%)</label><input type="number" value="18" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-48"/></div>
       <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">OmniShare+ Monthly Price (₹)</label><input type="number" value="199" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-48"/></div>
       <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">OmniShare Pro Monthly Price (₹)</label><input type="number" value="299" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-48"/></div>
       <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">DigiLocker API Key</label><input type="text" value="digi_••••••••••••" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-96"/></div>
       <button class="px-8 py-3 bg-primary text-white rounded-full font-headline font-bold hover:bg-primary-container transition-colors">Save Settings</button>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 space-y-5">
+        <div>
+          <h3 class="font-headline font-bold text-lg mb-1">Reward Mail Composer</h3>
+          <p class="text-sm text-on-surface-variant">Send a mail, subject, and coin bonus directly to a member's inbox page.</p>
+        </div>
+        <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">User Email</label><input id="reward-email" type="email" placeholder="member@example.com" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Coin Amount</label><input id="reward-amount" type="number" value="25" min="1" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
+          <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Mail Source</label><input id="reward-source" type="text" value="admin_mail" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
+        </div>
+        <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Mail Subject</label><input id="reward-title" type="text" value="Bonus awarded" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
+        <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Mail Body</label><textarea id="reward-message" rows="3" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full">Thanks for being an active OmniShare member. You earned loyalty coins.</textarea></div>
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="issueReward()" class="px-8 py-3 bg-primary text-white rounded-full font-headline font-bold hover:bg-primary-container transition-colors">Send Mail & Coins</button>
+          <span id="reward-status" class="text-sm text-outline"></span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -775,6 +794,33 @@ let commissionTotal = 0;
 let verifiedToday = 0;
 
 function fmt(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+async function issueReward() {
+  const email = document.getElementById('reward-email').value.trim();
+  const amount = Number(document.getElementById('reward-amount').value || 0);
+  const source = document.getElementById('reward-source').value.trim();
+  const title = document.getElementById('reward-title').value.trim();
+  const message = document.getElementById('reward-message').value.trim();
+  const status = document.getElementById('reward-status');
+
+  if (!email || !amount || amount <= 0) {
+    status.textContent = 'Enter a valid email and coin amount.';
+    return;
+  }
+
+  status.textContent = 'Sending reward...';
+  try {
+    const response = await fetch('/api/admin/rewards/award', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, amount, source, title, message })
+    });
+    if (!response.ok) throw new Error('Reward could not be sent');
+    status.textContent = 'Reward sent successfully.';
+  } catch (error) {
+    status.textContent = error.message;
+  }
+}
 
 function updateChart() {
   const period = document.getElementById('chart-period').value;
