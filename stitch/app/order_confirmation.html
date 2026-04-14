@@ -40,8 +40,8 @@
   <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
     <a class="text-2xl font-bold tracking-tighter text-[#171c1f] font-headline" href="landing.html">OmniShare</a>
     <div class="flex items-center gap-4">
-      <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="tracking.html">My Bookings</a>
-      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container active:scale-95" href="search.html">Browse More</a>
+      <a id="navTrackingLink" class="text-slate-500 hover:text-primary transition-colors font-medium" href="tracking.html">My Bookings</a>
+      <a id="navBrowseLink" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container active:scale-95" href="search.html">Browse More</a>
     </div>
   </div>
 </header>
@@ -54,8 +54,8 @@
       <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-emerald-50 mb-6 pop-in">
         <span class="material-symbols-outlined text-5xl text-emerald-600" style="font-variation-settings:'FILL' 1;">check_circle</span>
       </div>
-      <h1 class="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4 fade-up delay-1">Booking Confirmed!</h1>
-      <p class="text-on-surface-variant text-lg max-w-md mx-auto leading-relaxed fade-up delay-2">
+      <h1 id="successTitle" class="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4 fade-up delay-1">Booking Confirmed!</h1>
+      <p id="successSubtitle" class="text-on-surface-variant text-lg max-w-md mx-auto leading-relaxed fade-up delay-2">
         Your rental has been secured. The owner has been notified and will confirm shortly.
       </p>
       <div class="inline-flex items-center gap-2 mt-4 px-5 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-bold fade-up delay-3">
@@ -68,12 +68,12 @@
     <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden mb-8 fade-up delay-2">
       <div class="bg-gradient-to-r from-primary to-primary-container p-6 flex justify-between items-center">
         <div>
-          <p class="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Booking Reference</p>
-          <p class="text-white font-headline font-bold text-2xl tracking-wider">#OMN-2024-9847</p>
+          <p id="referenceLabel" class="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Booking Reference</p>
+          <p id="referenceCode" class="text-white font-headline font-bold text-2xl tracking-wider">#OMN-2024-9847</p>
         </div>
         <div class="bg-white/15 rounded-xl p-4 text-center">
           <p class="text-white/70 text-xs font-bold uppercase tracking-widest mb-1">Status</p>
-          <p class="text-white font-headline font-bold">Pending Confirm</p>
+          <p id="confirmationStatus" class="text-white font-headline font-bold">Pending Confirm</p>
         </div>
       </div>
 
@@ -85,27 +85,27 @@
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
           </div>
           <div class="flex-1">
-            <h2 class="font-headline font-bold text-xl mb-1">Red Komodo 6K Cinema Package</h2>
-            <p class="text-sm text-on-surface-variant mb-4">Listed by Julian R. · Brooklyn, NY</p>
+            <h2 id="itemTitle" class="font-headline font-bold text-xl mb-1">Red Komodo 6K Cinema Package</h2>
+            <p id="itemSubtitle" class="text-sm text-on-surface-variant mb-4">Listed by Julian R. · Brooklyn, NY</p>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div>
-                <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">Start Date</span>
-                <span class="font-semibold">Oct 12, 2024</span>
+                <span id="metaLabelOne" class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">Start Date</span>
+                <span id="metaValueOne" class="font-semibold">Oct 12, 2024</span>
               </div>
               <div>
-                <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">End Date</span>
-                <span class="font-semibold">Oct 15, 2024</span>
+                <span id="metaLabelTwo" class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">End Date</span>
+                <span id="metaValueTwo" class="font-semibold">Oct 15, 2024</span>
               </div>
               <div>
-                <span class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">Duration</span>
-                <span class="font-semibold">3 Days</span>
+                <span id="metaLabelThree" class="text-outline text-xs font-bold uppercase tracking-wider block mb-1">Duration</span>
+                <span id="metaValueThree" class="font-semibold">3 Days</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Financial Summary -->
-        <div class="py-8 border-b border-outline-variant/15 space-y-3 text-sm">
+        <div id="financialSummary" class="py-8 border-b border-outline-variant/15 space-y-3 text-sm">
           <h3 class="font-headline font-bold text-base mb-4">Payment Breakdown</h3>
           <div class="flex justify-between"><span class="text-on-surface-variant">Rental (3 days @ ₹20,500)</span><span class="font-semibold">₹61,500</span></div>
           <div class="flex justify-between"><span class="text-on-surface-variant">Delivery Fee (15%)</span><span class="font-semibold">₹9,225</span></div>
@@ -122,7 +122,7 @@
         </div>
 
         <!-- QR & Handover Info -->
-        <div class="pt-8">
+        <div id="handoverSection" class="pt-8">
           <h3 class="font-headline font-bold text-base mb-6">Handover Information</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-surface-container-low rounded-xl p-6 flex flex-col items-center justify-center text-center">
@@ -166,10 +166,10 @@
     </div>
 
     <!-- Next Steps -->
-    <div class="bg-primary-container rounded-xl p-8 relative overflow-hidden mb-8">
+    <div id="nextStepsCard" class="bg-primary-container rounded-xl p-8 relative overflow-hidden mb-8">
       <div class="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-      <h3 class="font-headline font-bold text-on-primary-container text-xl mb-6">What Happens Next?</h3>
-      <div class="space-y-4">
+      <h3 id="nextStepsHeading" class="font-headline font-bold text-on-primary-container text-xl mb-6">What Happens Next?</h3>
+      <div id="nextStepsList" class="space-y-4">
         <div class="flex items-start gap-4">
           <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">1</div>
           <div><p class="text-white font-semibold text-sm">Owner confirms your booking</p><p class="text-white/70 text-xs mt-0.5">Usually within 2–4 hours. You'll get an email notification.</p></div>
@@ -187,10 +187,10 @@
 
     <!-- Actions -->
     <div class="flex flex-col sm:flex-row gap-4">
-      <a href="tracking.html" class="flex-1 py-4 text-center border-2 border-outline-variant/30 rounded-full font-headline font-bold hover:bg-surface-container-low transition-colors">
+      <a id="primaryAction" href="tracking.html" class="flex-1 py-4 text-center border-2 border-outline-variant/30 rounded-full font-headline font-bold hover:bg-surface-container-low transition-colors">
         View My Bookings
       </a>
-      <a href="search.html" class="flex-1 py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+      <a id="secondaryAction" href="search.html" class="flex-1 py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
         Continue Browsing
       </a>
     </div>
@@ -202,10 +202,71 @@
   <div class="flex flex-col md:flex-row justify-between items-center px-12 max-w-7xl mx-auto">
     <p class="font-headline font-bold text-slate-900">OmniShare</p>
     <div class="flex gap-8 mt-4 md:mt-0 text-xs uppercase tracking-widest text-slate-400">
-      <a class="hover:text-primary transition-colors" href="#">Privacy</a>
-      <a class="hover:text-primary transition-colors" href="#">Terms</a>
-      <a class="hover:text-primary transition-colors" href="#">Support</a>
+      <a class="hover:text-primary transition-colors" href="privacy.html">Privacy</a>
+      <a class="hover:text-primary transition-colors" href="terms.html">Terms</a>
+      <a class="hover:text-primary transition-colors" href="search.html">Support</a>
     </div>
   </div>
 </footer>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const flow = params.get("flow");
+    const tier = (params.get("tier") || "plus").toLowerCase();
+
+    if (flow !== "membership") {
+      return;
+    }
+
+    const planConfig = {
+      "free-trial": { name: "OmniShare Free Trial", price: "₹0", cycle: "14-day trial", badge: "Trial Active" },
+      plus: { name: "OmniShare Plus Membership", price: "₹1,999", cycle: "Monthly", badge: "Active" },
+      pro: { name: "OmniShare Pro Membership", price: "₹4,999", cycle: "Monthly", badge: "Active" }
+    };
+
+    const selected = planConfig[tier] || planConfig.plus;
+    const now = new Date();
+    const trialEnd = new Date(now);
+    trialEnd.setDate(now.getDate() + 14);
+    const nextBilling = new Date(now);
+    nextBilling.setMonth(now.getMonth() + 1);
+
+    const readableNow = now.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    const readableTrialEnd = trialEnd.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    const readableNextBilling = nextBilling.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    const memberRef = "#MEM-" + now.getFullYear() + "-" + String(Math.floor(1000 + Math.random() * 9000));
+
+    document.title = "Membership Confirmed | OmniShare";
+    document.getElementById("successTitle").textContent = "Membership Activated!";
+    document.getElementById("successSubtitle").textContent = "Your membership is now active and ready to use across OmniShare.";
+    document.getElementById("referenceLabel").textContent = "Membership Reference";
+    document.getElementById("referenceCode").textContent = memberRef;
+    document.getElementById("confirmationStatus").textContent = selected.badge;
+
+    document.getElementById("itemTitle").textContent = selected.name;
+    document.getElementById("itemSubtitle").textContent = "Managed by OmniShare Billing";
+    document.getElementById("metaLabelOne").textContent = "Activated On";
+    document.getElementById("metaValueOne").textContent = readableNow;
+    document.getElementById("metaLabelTwo").textContent = tier === "free-trial" ? "Trial Ends" : "Next Billing";
+    document.getElementById("metaValueTwo").textContent = tier === "free-trial" ? readableTrialEnd : readableNextBilling;
+    document.getElementById("metaLabelThree").textContent = "Plan Cycle";
+    document.getElementById("metaValueThree").textContent = selected.cycle;
+
+    document.getElementById("financialSummary").innerHTML = tier === "free-trial"
+      ? '<h3 class="font-headline font-bold text-base mb-4">Billing Summary</h3><div class="flex justify-between"><span class="text-on-surface-variant">Free Trial Charge</span><span class="font-semibold">₹0</span></div><div class="flex justify-between"><span class="text-on-surface-variant">Next Charge (after trial)</span><span class="font-semibold">₹1,999</span></div><div class="pt-3 border-t border-outline-variant/15 flex justify-between items-center"><span class="font-headline font-bold text-base">Total Charged Today</span><div class="text-right"><p class="font-headline font-bold text-xl text-primary">₹0</p><p class="text-xs text-primary/70">No payment due now</p></div></div>'
+      : '<h3 class="font-headline font-bold text-base mb-4">Billing Summary</h3><div class="flex justify-between"><span class="text-on-surface-variant">Membership Plan</span><span class="font-semibold">' + selected.price + '</span></div><div class="flex justify-between"><span class="text-on-surface-variant">GST (18%)</span><span class="font-semibold">' + (tier === "pro" ? "₹900" : "₹360") + '</span></div><div class="pt-3 border-t border-outline-variant/15 flex justify-between items-center"><span class="font-headline font-bold text-base">Total Charged</span><div class="text-right"><p class="font-headline font-bold text-xl text-primary">' + (tier === "pro" ? "₹5,899" : "₹2,359") + '</p><p class="text-xs text-primary/70">Recurring monthly</p></div></div>';
+
+    document.getElementById("handoverSection").classList.add("hidden");
+    document.getElementById("nextStepsHeading").textContent = "Your Membership Is Live";
+    document.getElementById("nextStepsList").innerHTML = '<div class="flex items-start gap-4"><div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">1</div><div><p class="text-white font-semibold text-sm">Access premium member listings</p><p class="text-white/70 text-xs mt-0.5">Search exclusive inventory and priority availability.</p></div></div><div class="flex items-start gap-4"><div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">2</div><div><p class="text-white font-semibold text-sm">Use member pricing benefits</p><p class="text-white/70 text-xs mt-0.5">Your discounts and benefits apply automatically at checkout.</p></div></div><div class="flex items-start gap-4"><div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xs shrink-0 mt-0.5">3</div><div><p class="text-white font-semibold text-sm">Manage billing anytime</p><p class="text-white/70 text-xs mt-0.5">Update or cancel your plan from your profile settings.</p></div></div>';
+
+    const navTrackingLink = document.getElementById("navTrackingLink");
+    navTrackingLink.textContent = "My Plan";
+    navTrackingLink.href = "profile.html";
+    document.getElementById("primaryAction").textContent = "Manage Membership";
+    document.getElementById("primaryAction").href = "profile.html";
+    document.getElementById("secondaryAction").textContent = "Explore Listings";
+    document.getElementById("secondaryAction").href = "search.html";
+  })();
+</script>
 </body></html>

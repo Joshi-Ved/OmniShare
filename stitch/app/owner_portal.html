@@ -175,6 +175,17 @@
           <p class="font-headline font-bold text-amber-800 mb-1">Gold Host Status</p>
           <p class="text-xs text-amber-700">24 completed bookings · 4.9★ rating · Achieved Jan 2024</p>
         </div>
+
+        <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h3 class="font-headline font-bold text-base">Listing Review Inbox</h3>
+            <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-extrabold uppercase tracking-wider" id="host-reviews-count">0 reviews</span>
+          </div>
+          <p class="text-xs text-on-surface-variant mb-4">These reviews are routed to you and admin after each listing rating submission.</p>
+          <div class="space-y-3" id="host-review-list">
+            <p class="text-xs text-outline">No reviews received yet.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -189,16 +200,16 @@
           <h3 class="font-headline font-bold text-base">Basic Information</h3>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Listing Title</label>
-            <input type="text" placeholder="e.g. Sony FX6 Full-Frame Cinema Camera" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            <input id="create-title" type="text" placeholder="e.g. Sony FX6 Full-Frame Cinema Camera" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
           </div>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Description</label>
-            <textarea rows="4" placeholder="Describe the item, what's included, condition, and any special terms..." class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 resize-none"></textarea>
+            <textarea id="create-description" rows="4" placeholder="Describe the item, what's included, condition, and any special terms..." class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 resize-none"></textarea>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Category</label>
-              <select class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20">
+              <select id="create-category" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20">
                 <optgroup label="📷 Photography">
                   <option value="camera-body">Camera Body</option>
                   <option value="cinema-camera">Cinema Camera</option>
@@ -254,7 +265,7 @@
             </div>
             <div>
               <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Insurance Plan</label>
-              <select class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20">
+              <select id="create-condition" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20">
                 <option value="basic">Basic — up to ₹10,000 coverage</option>
                 <option value="standard" selected>Standard — up to ₹50,000 coverage (₹100/day)</option>
                 <option value="premium">Premium — up to ₹2,00,000 coverage (₹250/day)</option>
@@ -269,12 +280,12 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Daily Price (₹)</label>
-              <input type="number" placeholder="e.g. 1000" min="100" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+              <input id="create-price" type="number" placeholder="e.g. 1000" min="100" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
               <p class="text-xs text-outline mt-1.5">Your payout = Daily Price × 0.88 (12% host fee)</p>
             </div>
             <div>
               <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Security Deposit (₹)</label>
-              <input type="number" placeholder="e.g. 2000" min="0" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+              <input id="create-deposit" type="number" placeholder="e.g. 2000" min="0" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
               <p class="text-xs text-outline mt-1.5">Held in escrow, refunded after return</p>
             </div>
           </div>
@@ -291,7 +302,7 @@
           <h3 class="font-headline font-bold text-base">Location &amp; Availability</h3>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Pickup Location</label>
-            <input type="text" placeholder="47 Wythe Ave, Brooklyn, NY" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
+            <input id="create-location" type="text" placeholder="47 Wythe Ave, Brooklyn, NY" class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20"/>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -321,10 +332,11 @@
           <button onclick="switchTab('overview', document.querySelectorAll('.tab-btn')[0])" class="flex-1 py-4 bg-surface-container-high rounded-full font-headline font-bold text-lg hover:bg-surface-container-highest transition-colors">
             Cancel
           </button>
-          <button class="flex-1 py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+            <button id="create-submit" type="button" class="flex-1 py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
             Submit for Review
           </button>
         </div>
+        <p id="create-submit-msg" class="text-sm text-outline px-1"></p>
       </div>
     </div>
   </div>
@@ -494,9 +506,9 @@
     <div>
       <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Support</h4>
       <ul class="space-y-2 text-sm text-slate-500">
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Help Center</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Terms</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Privacy</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="search.html">Help Center</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="terms.html">Terms</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="privacy.html">Privacy</a></li>
       </ul>
     </div>
     <div>
@@ -530,5 +542,101 @@
       preview.innerHTML += `<div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low"><img src="${url}" class="w-full h-full object-cover"/></div>`;
     });
   });
+
+  async function submitListingForReview() {
+    const submitBtn = document.getElementById('create-submit');
+    const submitMsg = document.getElementById('create-submit-msg');
+    const payload = {
+      title: document.getElementById('create-title')?.value?.trim(),
+      description: document.getElementById('create-description')?.value?.trim(),
+      category: document.getElementById('create-category')?.value,
+      condition: document.getElementById('create-condition')?.value === 'premium' ? 'Excellent' : 'Good',
+      price_per_day: Number(document.getElementById('create-price')?.value || 0),
+      deposit: Number(document.getElementById('create-deposit')?.value || 0),
+      image_url: '',
+      host: 'Julian R.',
+      host_email: 'julian.r@lens.co'
+    };
+
+    submitMsg.textContent = '';
+    submitMsg.className = 'text-sm text-outline px-1';
+
+    if (!payload.title || !payload.category || !payload.price_per_day) {
+      submitMsg.textContent = 'Please fill title, category, and daily price.';
+      submitMsg.className = 'text-sm text-error px-1';
+      return;
+    }
+
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      const response = await fetch('/api/listings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Could not submit listing');
+      }
+
+      submitMsg.textContent = `Submitted: ${data.listing.title} (${data.listing.id}) is now pending admin approval.`;
+      submitMsg.className = 'text-sm text-emerald-600 px-1';
+      document.getElementById('create-title').value = '';
+      document.getElementById('create-description').value = '';
+      document.getElementById('create-price').value = '';
+      document.getElementById('create-deposit').value = '';
+    } catch (error) {
+      submitMsg.textContent = error.message;
+      submitMsg.className = 'text-sm text-error px-1';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit for Review';
+    }
+  }
+
+  document.getElementById('create-submit')?.addEventListener('click', submitListingForReview);
+
+  async function loadHostReviews() {
+    const hostEmail = 'julian.r@lens.co';
+    const listEl = document.getElementById('host-review-list');
+    const countEl = document.getElementById('host-reviews-count');
+
+    if (!listEl || !countEl) return;
+
+    try {
+      const response = await fetch(`/api/host/listing-reviews?email=${encodeURIComponent(hostEmail)}`);
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Could not load host reviews');
+      }
+
+      countEl.textContent = `${data.count} reviews`;
+      if (!data.results.length) {
+        listEl.innerHTML = '<p class="text-xs text-outline">No reviews received yet.</p>';
+        return;
+      }
+
+      listEl.innerHTML = data.results.slice(0, 5).map((r) => {
+        const created = new Date(r.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        const tone = Number(r.rating) <= 2 ? 'text-red-600 bg-red-50' : Number(r.rating) === 3 ? 'text-amber-700 bg-amber-50' : 'text-emerald-700 bg-emerald-50';
+        return `
+          <div class="p-3 rounded-xl bg-surface-container-low border border-outline-variant/10">
+            <div class="flex items-center justify-between mb-1">
+              <p class="font-bold text-sm truncate pr-2">${r.listing_title}</p>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${tone}">${r.rating}/5</span>
+            </div>
+            <p class="text-xs text-on-surface-variant mb-1">${r.comment}</p>
+            <p class="text-[11px] text-outline">by ${r.reviewer_name} · ${created}</p>
+          </div>`;
+      }).join('');
+    } catch (error) {
+      listEl.innerHTML = `<p class="text-xs text-error">${error.message}</p>`;
+    }
+  }
+
+  loadHostReviews();
 </script>
 </body></html>

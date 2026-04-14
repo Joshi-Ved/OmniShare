@@ -117,7 +117,7 @@
 <span class="material-symbols-outlined text-sm">chevron_right</span>
 <a class="hover:text-primary transition-colors" href="#">Cameras</a>
 <span class="material-symbols-outlined text-sm">chevron_right</span>
-<span class="text-on-surface">Red Komodo 6K Cinema Package</span>
+<span id="product-breadcrumb-title" class="text-on-surface">Red Komodo 6K Cinema Package</span>
 </nav>
 <!-- Hero Gallery Section -->
 <section class="grid grid-cols-12 gap-6 mb-12 h-[600px]">
@@ -153,11 +153,11 @@
 <span class="text-sm font-bold ml-1">4.9 (42 reviews)</span>
 </div>
 </div>
-<h1 class="text-5xl font-bold tracking-tight mb-2">Red Komodo 6K Cinema Package</h1>
+<h1 id="product-title" class="text-5xl font-bold tracking-tight mb-2">Red Komodo 6K Cinema Package</h1>
 <div class="flex items-center gap-4 text-on-surface-variant">
 <div class="flex items-center gap-1">
 <span class="material-symbols-outlined text-base" data-icon="location_on">location_on</span>
-<span class="text-sm">Brooklyn, New York</span>
+<span id="product-location" class="text-sm">Brooklyn, New York</span>
 </div>
 <span class="text-outline-variant">|</span>
 <div class="flex items-center gap-1">
@@ -170,7 +170,7 @@
 <div class="h-14 w-14 rounded-full border-2 border-primary-container p-0.5 cursor-pointer">
 <img alt="Owner Profile" class="w-full h-full object-cover rounded-full" data-alt="portrait of a professional cinematographer in front of production gear with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChSMAiqh2GR0C9Hmcq6QVXUg4aHWL-A5PQkxXkvDi1BHPmF4wfi4k4QVOdzCcR26mZdFLLMtOa9sfDf8fX2lA1GWQXRfEF5BWrPaCe5YZ8XiYY_x-ALd7zhCfKlVt8dM_idjt6RmrGWGhmu712rHZfh8NGGCflgXsexoWHYDYih3tKArZtsb1OOdtA9_6F1XRyb4b6Qi06J68N8RvpEIuaOipfYNIqAAKymEc0vJpgvbHDy8Hdj7kuLds4Uvt0AdAEGKqpVKVEsBQ"/>
 </div>
-<span class="text-xs font-bold mt-2 font-headline">Listed by Julian R.</span>
+<span id="product-host" class="text-xs font-bold mt-2 font-headline">Listed by Julian R.</span>
 </div>
 </div>
 <div class="bg-surface-container-low rounded-xl p-8 mb-12">
@@ -270,7 +270,7 @@
 <section class="mt-16 border-t border-outline-variant/20 pt-12" id="reviews">
 <div class="flex items-center justify-between mb-8">
 <h2 class="text-3xl font-bold font-headline">Community Ratings</h2>
-<button class="text-primary font-bold text-sm flex items-center gap-2 hover:underline" onclick="alert('Review feature is coming soon!')">
+<button class="text-primary font-bold text-sm flex items-center gap-2 hover:underline" onclick="document.getElementById('review-form-panel').scrollIntoView({behavior:'smooth',block:'start'})">
                             Write a Review
                             <span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
 </button>
@@ -349,8 +349,47 @@
 </div>
 </div>
 </div>
+<!-- Submit Review Panel -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm p-6 mb-10" id="review-form-panel">
+<div class="flex items-center justify-between mb-4 gap-3">
+<h3 class="font-headline font-bold text-xl">Rate This Listing</h3>
+<span class="text-[11px] px-3 py-1 rounded-full bg-primary/10 text-primary font-bold uppercase tracking-wider">Sent to Admin + Host</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-5">Your review is shared with platform admin and the listing owner for quality tracking.</p>
+<form class="space-y-4" id="listing-review-form" data-listing-id="red-komodo-6k" data-listing-title="Red Komodo 6K Cinema Package" data-host-email="julian.r@lens.co">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-outline mb-2 block" for="reviewer-name">Your Name</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20" id="reviewer-name" name="reviewer_name" placeholder="e.g. Marcus Sterling" required type="text"/>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-outline mb-2 block" for="reviewer-email">Email</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20" id="reviewer-email" name="reviewer_email" placeholder="name@email.com" required type="email"/>
+</div>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-outline mb-2 block" for="review-rating">Rating</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20" id="review-rating" name="rating" required>
+<option value="">Select rating</option>
+<option value="5">5 - Excellent</option>
+<option value="4">4 - Good</option>
+<option value="3">3 - Average</option>
+<option value="2">2 - Poor</option>
+<option value="1">1 - Very Poor</option>
+</select>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-outline mb-2 block" for="review-comment">Review</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 resize-none" id="review-comment" name="comment" placeholder="Describe your rental experience" required rows="4"></textarea>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-6 py-3 bg-primary text-white rounded-full font-headline font-bold text-sm hover:bg-primary-container transition-colors" id="review-submit-btn" type="submit">Submit Review</button>
+<p class="text-xs text-outline" id="review-submit-msg"></p>
+</div>
+</form>
+</div>
 <!-- Review List -->
-<div class="space-y-8">
+<div class="space-y-8" id="community-review-list">
 <!-- Review Card 1 -->
 <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm">
 <div class="flex justify-between items-start mb-4">
@@ -442,12 +481,12 @@
 <div class="sticky top-28 bg-surface-container-lowest p-8 rounded-xl shadow-[0_40px_40px_rgba(23,28,31,0.04)] border border-outline-variant/10">
 <div class="flex justify-between items-end mb-8">
 <div>
-<span class="text-4xl font-bold font-headline">₹20,500</span>
+<span id="listing-price" class="text-4xl font-bold font-headline">₹20,500</span>
 <span class="text-on-surface-variant font-medium"> / $245 day</span>
 </div>
 <div class="flex items-center text-primary gap-1">
 <span class="material-symbols-outlined text-sm" data-icon="event_available">event_available</span>
-<span class="text-xs font-bold uppercase tracking-wider">Available Now</span>
+<span id="listing-availability" class="text-xs font-bold uppercase tracking-wider">Available Now</span>
 </div>
 </div>
 <div class="space-y-4 mb-8">
@@ -489,7 +528,7 @@
 </div>
 </div>
 </div>
-<a class="block w-full text-center bg-gradient-to-r from-primary to-primary-container text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:opacity-80 transition-all mb-4" href="checkout.html">
+<a id="listing-checkout-link" class="block w-full text-center bg-gradient-to-r from-primary to-primary-container text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:opacity-80 transition-all mb-4" href="checkout.html">
                         Continue to Checkout
                     </a>
 <p class="text-[10px] text-center text-on-surface-variant uppercase tracking-widest font-bold">Secure SSL encrypted booking</p>
@@ -533,4 +572,156 @@
 </div>
 </div>
 </footer>
+<script>
+const listingParams = new URLSearchParams(window.location.search);
+const requestedListingId = listingParams.get('listing');
+
+function renderListingContext(listing) {
+    const title = listing.title || 'Listing';
+    const location = listing.category || 'Marketplace';
+    const host = listing.host || 'Host';
+    const pricePerDay = Number(listing.price_per_day || 0);
+    const isSoldOut = listing.status === 'sold_out';
+
+    document.title = `${title} | The Curated Exchange`;
+    document.getElementById('product-breadcrumb-title').textContent = title;
+    document.getElementById('product-title').textContent = title;
+    document.getElementById('product-location').textContent = location;
+    document.getElementById('product-host').textContent = `Listed by ${host}`;
+    document.getElementById('listing-price').textContent = pricePerDay > 0 ? `₹${pricePerDay.toLocaleString('en-IN')}` : '₹20,500';
+
+    const availabilityEl = document.getElementById('listing-availability');
+    const checkoutLink = document.getElementById('listing-checkout-link');
+    if (isSoldOut) {
+        availabilityEl.textContent = 'Sold Out';
+        checkoutLink.textContent = 'Sold Out';
+        checkoutLink.href = '#';
+        checkoutLink.classList.remove('from-primary', 'to-primary-container', 'hover:scale-[1.02]');
+        checkoutLink.classList.add('bg-slate-400', 'cursor-not-allowed', 'pointer-events-none', 'shadow-none');
+    } else {
+        availabilityEl.textContent = 'Available Now';
+        checkoutLink.textContent = 'Continue to Checkout';
+        checkoutLink.href = `checkout.html?listing=${encodeURIComponent(listing.id)}`;
+    }
+
+    if (reviewForm) {
+        reviewForm.dataset.listingId = listing.id;
+        reviewForm.dataset.listingTitle = title;
+        reviewForm.dataset.hostEmail = listing.host_email || 'owner@omnishare.local';
+    }
+}
+
+async function loadListingContext() {
+    try {
+        if (requestedListingId) {
+            const response = await fetch(`/api/listings/${encodeURIComponent(requestedListingId)}`);
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.error || 'Listing not found');
+            renderListingContext(data.listing);
+            return;
+        }
+
+        const response = await fetch('/api/listings/public?status=available');
+        const data = await response.json();
+        if (!response.ok || !data.success || !data.results?.length) return;
+        renderListingContext(data.results[0]);
+    } catch (error) {
+        const checkoutLink = document.getElementById('listing-checkout-link');
+        if (checkoutLink) {
+            checkoutLink.textContent = 'Unavailable';
+            checkoutLink.href = '#';
+            checkoutLink.classList.add('bg-slate-400', 'cursor-not-allowed', 'pointer-events-none');
+        }
+    }
+}
+
+const reviewForm = document.getElementById('listing-review-form');
+const reviewSubmitBtn = document.getElementById('review-submit-btn');
+const reviewSubmitMsg = document.getElementById('review-submit-msg');
+const communityReviewList = document.getElementById('community-review-list');
+
+function addReviewCard(review) {
+    const card = document.createElement('div');
+    card.className = 'bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/10 shadow-sm';
+
+    const safeName = review.reviewer_name || 'Guest User';
+    const safeComment = review.comment || '';
+    const safeRating = Number(review.rating) || 0;
+    const createdLabel = new Date(review.created_at || Date.now()).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
+    const stars = '★★★★★'.slice(0, safeRating) + '☆☆☆☆☆'.slice(0, 5 - safeRating);
+
+    card.innerHTML = `
+        <div class="flex justify-between items-start mb-4">
+            <div class="flex gap-4">
+                <div class="h-12 w-12 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center text-primary font-bold text-lg font-headline">
+                    ${safeName[0] ? safeName[0].toUpperCase() : 'U'}
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <h4 class="font-bold">${safeName}</h4>
+                        <span class="flex items-center gap-1 bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">New Review</span>
+                    </div>
+                    <div class="text-primary text-sm font-bold">${stars}</div>
+                </div>
+            </div>
+            <span class="text-xs text-on-surface-variant font-medium">${createdLabel}</span>
+        </div>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-body">${safeComment}</p>
+        <div class="flex items-center gap-6 pt-4 border-t border-outline-variant/10">
+            <span class="text-xs font-bold text-primary">Shared with Admin and Host</span>
+        </div>`;
+
+    communityReviewList.prepend(card);
+}
+
+if (reviewForm) {
+    reviewForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        reviewSubmitMsg.textContent = '';
+        reviewSubmitBtn.disabled = true;
+        reviewSubmitBtn.textContent = 'Submitting...';
+
+        const formData = new FormData(reviewForm);
+        const payload = {
+            listing_id: reviewForm.dataset.listingId,
+            listing_title: reviewForm.dataset.listingTitle,
+            host_email: reviewForm.dataset.hostEmail,
+            reviewer_name: formData.get('reviewer_name'),
+            reviewer_email: formData.get('reviewer_email'),
+            rating: formData.get('rating'),
+            comment: formData.get('comment'),
+        };
+
+        try {
+            const response = await fetch('/api/reviews/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Unable to submit review');
+            }
+
+            addReviewCard(result.review);
+            reviewForm.reset();
+            reviewSubmitMsg.textContent = 'Review submitted and routed to admin + listing owner.';
+            reviewSubmitMsg.className = 'text-xs text-emerald-600';
+        } catch (error) {
+            reviewSubmitMsg.textContent = error.message;
+            reviewSubmitMsg.className = 'text-xs text-error';
+        } finally {
+            reviewSubmitBtn.disabled = false;
+            reviewSubmitBtn.textContent = 'Submit Review';
+        }
+    });
+}
+
+loadListingContext();
+</script>
 </body></html>

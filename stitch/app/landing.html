@@ -96,6 +96,72 @@
         .editorial-shadow {
             box-shadow: 0 20px 40px -10px rgba(23, 28, 31, 0.04);
         }
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 700ms ease, transform 700ms ease;
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .float-slow {
+            animation: floatSlow 9s ease-in-out infinite;
+        }
+        .float-slower {
+            animation: floatSlow 12s ease-in-out infinite reverse;
+        }
+        .pulse-soft {
+            animation: pulseSoft 8s ease-in-out infinite;
+        }
+        .lift-hover {
+            transition: transform 300ms ease, box-shadow 300ms ease;
+        }
+        .lift-hover:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 50px -16px rgba(23, 28, 31, 0.12);
+        }
+        .hero-slide {
+            opacity: 0;
+            transform: scale(1.02);
+            transition: opacity 700ms ease, transform 700ms ease;
+            pointer-events: none;
+        }
+        .hero-slide.is-active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+        .hero-carousel-dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.35);
+            transition: all 250ms ease;
+        }
+        .hero-carousel-dot.is-active {
+            width: 1.5rem;
+            background: rgba(255,255,255,0.95);
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -18px, 0); }
+        }
+        @keyframes pulseSoft {
+            0%, 100% { opacity: 0.28; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.08); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .reveal,
+            .float-slow,
+            .float-slower,
+            .pulse-soft {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+                opacity: 1 !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
@@ -111,16 +177,25 @@
 </div>
 </div>
 <div class="flex items-center gap-6">
-<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="profile.html">Sign In</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="signin.html">Sign In</a>
 <a class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 active:scale-95 text-center" href="subscription.html">Join Now</a>
+</div>
+</div>
+<div class="md:hidden px-6 pb-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+<a class="shrink-0 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold" href="search.html">Browse</a>
+<a class="shrink-0 px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-semibold" href="subscription.html">How it Works</a>
+<a class="shrink-0 px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant text-sm font-semibold" href="owner_portal.html">List an Item</a>
 </div>
 </div>
 </nav>
 <main class="pt-24">
 <!-- Hero Section -->
 <section class="relative px-8 py-20 overflow-hidden">
+<div class="absolute -top-16 right-4 md:right-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl float-slow pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-tertiary-fixed/40 blur-3xl pulse-soft pointer-events-none"></div>
 <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-<div class="lg:col-span-7 z-10">
+<div class="lg:col-span-7 z-10 reveal" style="transition-delay: 80ms;">
 <h1 class="font-headline text-display-lg text-6xl md:text-7xl font-extrabold tracking-tighter leading-[0.9] text-on-surface mb-8">
                     The Curated <br/> <span class="text-primary italic">Exchange</span>
 </h1>
@@ -128,34 +203,65 @@
                     Access premium equipment, luxury essentials, and unique lifestyle items starting from ₹30,000 / $360. Editorial quality, shared daily.
                 </p>
 <!-- Search Bar -->
-<div class="bg-surface-container-lowest p-2 rounded-full editorial-shadow flex items-center max-w-2xl group transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/20">
+<form id="hero-search-form" class="bg-surface-container-lowest p-2 rounded-full editorial-shadow flex items-center max-w-2xl group transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/20 lift-hover" action="search.html" method="get">
 <div class="flex-1 flex items-center px-6 gap-3">
-<span class="material-symbols-outlined text-outline">search</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-body-md py-3" placeholder="What are you looking for?" type="text"/>
+<input id="hero-search-query" class="bg-transparent border-none focus:ring-0 w-full text-body-md py-3 text-on-surface placeholder:text-on-surface-variant/90" name="q" placeholder="What are you looking for?" type="text"/>
 </div>
 <div class="h-10 w-[1px] bg-outline-variant/30 hidden md:block"></div>
 <div class="hidden md:flex flex-1 items-center px-6 gap-3">
-<span class="material-symbols-outlined text-outline">location_on</span>
-<input class="bg-transparent border-none focus:ring-0 w-full text-body-md py-3" placeholder="Location" type="text"/>
+<span class="material-symbols-outlined text-primary">location_on</span>
+<input id="hero-search-location" class="bg-transparent border-none focus:ring-0 w-full text-body-md py-3 text-on-surface placeholder:text-on-surface-variant/90" name="location" placeholder="Location" type="text"/>
 </div>
-<a class="bg-primary text-on-primary h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300 hover:bg-primary-container active:scale-95 shrink-0" href="search.html">
-<span class="material-symbols-outlined">arrow_forward</span>
-</a>
+<button aria-label="Search listings" class="bg-primary text-on-primary h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300 hover:bg-primary-container active:scale-95 shrink-0" type="submit">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6" aria-hidden="true">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M3 12h18"></path>
+<path d="M12 3c2.5 2.7 4 5.8 4 9s-1.5 6.3-4 9c-2.5-2.7-4-5.8-4-9s1.5-6.3 4-9z"></path>
+</svg>
+</button>
+</form>
+</div>
+<div class="lg:col-span-5 relative reveal" style="transition-delay: 180ms;">
+<div class="relative">
+<div id="hero-showcase" class="relative rounded-xl overflow-hidden aspect-[4/5] editorial-shadow transform rotate-2 lift-hover">
+<div class="hero-slide is-active absolute inset-0">
+<img alt="Professional cinema camera kit on a table" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent"></div>
+</div>
+<div class="hero-slide absolute inset-0">
+<img alt="Luxury wristwatch on a premium surface" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=80"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent"></div>
+</div>
+<div class="hero-slide absolute inset-0">
+<img alt="Creator desk with premium camera gear and styling tools" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent"></div>
+</div>
+<button type="button" id="hero-carousel-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/88 text-primary border border-white/70 shadow-lg backdrop-blur-sm hover:bg-white transition-colors flex items-center justify-center" aria-label="Previous slide">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5" aria-hidden="true">
+<path d="M15 18l-6-6 6-6"></path>
+</svg>
+</button>
+<button type="button" id="hero-carousel-next" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white/88 text-primary border border-white/70 shadow-lg backdrop-blur-sm hover:bg-white transition-colors flex items-center justify-center" aria-label="Next slide">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5" aria-hidden="true">
+<path d="M9 18l6-6-6-6"></path>
+</svg>
+</button>
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 rounded-full bg-black/25 backdrop-blur px-3 py-2">
+<div id="hero-carousel-dots" class="flex items-center gap-2"></div>
 </div>
 </div>
-<div class="lg:col-span-5 relative">
-<div class="rounded-xl overflow-hidden aspect-[4/5] editorial-shadow transform rotate-2">
-<img alt="Close-up of premium designer sunglasses and high-end camera equipment" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9UbxSohADVJFNgFgN8KxTZ5g6Pa1Wrq9eo8gk13NamuWcjTt1s5izMnW27KtpgPRPq__hY-qNKzHaGtcksayq3_q87WZ92pJbzvwhbYIUDoExDY6yriQYsCL5nruaLgJ9MFKrwvompgYOKmBb1Fy0KohQFUWkslGu-yP9CZ21ZxEbDiZ7HZY2NxZFzzptz9cvsDJFpipo-QL-2h8LJoaCcHk5vLBKjuMnd6teDgJeoY3BQt41Lv9YFlbgL3RioXojkRPXE3csgeU"/>
+<div class="absolute -bottom-8 -left-8 bg-surface-container-lowest p-6 rounded-xl editorial-shadow max-w-[220px] transform -rotate-3 border border-outline-variant/10 float-slower">
+<div id="hero-review-stars" class="flex gap-2 mb-3">
+<svg class="w-4 h-4 fill-current text-primary" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25l2.93 5.94 6.56.95-4.74 4.62 1.12 6.53L12 17.98 6.13 20.29l1.12-6.53-4.74-4.62 6.56-.95L12 2.25z"></path></svg>
+<svg class="w-4 h-4 fill-current text-primary" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25l2.93 5.94 6.56.95-4.74 4.62 1.12 6.53L12 17.98 6.13 20.29l1.12-6.53-4.74-4.62 6.56-.95L12 2.25z"></path></svg>
+<svg class="w-4 h-4 fill-current text-primary" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25l2.93 5.94 6.56.95-4.74 4.62 1.12 6.53L12 17.98 6.13 20.29l1.12-6.53-4.74-4.62 6.56-.95L12 2.25z"></path></svg>
+<svg class="w-4 h-4 fill-current text-primary" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25l2.93 5.94 6.56.95-4.74 4.62 1.12 6.53L12 17.98 6.13 20.29l1.12-6.53-4.74-4.62 6.56-.95L12 2.25z"></path></svg>
+<svg class="w-4 h-4 fill-current text-primary" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.25l2.93 5.94 6.56.95-4.74 4.62 1.12 6.53L12 17.98 6.13 20.29l1.12-6.53-4.74-4.62 6.56-.95L12 2.25z"></path></svg>
 </div>
-<div class="absolute -bottom-8 -left-8 bg-surface-container-lowest p-6 rounded-xl editorial-shadow max-w-[200px] transform -rotate-3 border border-outline-variant/10">
-<div class="flex gap-2 mb-3">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<p id="hero-review-label" class="text-label-sm font-bold uppercase tracking-widest text-outline mb-1">Top Rated</p>
+<p id="hero-review-text" class="text-body-md font-semibold">"Impeccable gear, effortless process."</p>
+<p id="hero-review-author" class="mt-3 text-xs font-semibold text-on-surface-variant">- Maya, Studio Producer</p>
 </div>
-<p class="text-label-sm font-bold uppercase tracking-widest text-outline mb-1">Top Rated</p>
-<p class="text-body-md font-semibold">"Impeccable gear, effortless process."</p>
 </div>
 </div>
 </div>
@@ -163,7 +269,7 @@
 <!-- Featured Rentals (Bento Style) -->
 <section class="px-8 py-24 bg-surface-container-low">
 <div class="max-w-7xl mx-auto">
-<div class="flex justify-between items-end mb-16">
+<div class="flex justify-between items-end mb-16 reveal">
 <div class="max-w-xl">
 <h2 class="font-headline text-4xl font-extrabold tracking-tighter mb-4">Featured Listings</h2>
 <p class="text-on-surface-variant">The most coveted items in our ecosystem, hand-selected for quality and reliability.</p>
@@ -174,8 +280,8 @@
 </div>
 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 <!-- Large Feature -->
-<div class="md:col-span-2 md:row-span-2 group cursor-pointer" onclick="window.location.href='product_detail.html'">
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow h-full flex flex-col">
+<div class="md:col-span-2 md:row-span-2 group cursor-pointer reveal" style="transition-delay: 100ms;" onclick="window.location.href='product_detail.html'">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow h-full flex flex-col lift-hover">
 <div class="relative overflow-hidden aspect-[16/10]">
 <img alt="Professional cinema camera setup" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzzy1G4e8H4Sc8884vYNjGMWGAmSf_CqKY7FlPLrGB_N8wFRjyo9H0XURNOqyjZO3TPj_78-6OnnS5Fty21gwo1VS-hrZwkxX2UwQk_STgdZepg3Xgs5qqniGU6zCQm63Fc_ms-q1LmE3r9aDmcCuy5vhpDYhgGvagSj8H0a9mf2ZZT9OlsJ2pTudpOsArjxNoN1BRWedzK8lq_KdydkO_f-uEElV6LiLOT5iV1aQlEGvHbXxa3KrXBAI7rtu_c-zRjhWDrlYDosc"/>
 <div class="absolute top-4 left-4 bg-primary-container text-on-primary-container text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">Editorial Choice</div>
@@ -199,8 +305,8 @@
 </div>
 </div>
 <!-- Sponsored Item -->
-<div class="group cursor-pointer" onclick="window.location.href='product_detail.html'">
-<div class="bg-secondary-container/30 rounded-xl overflow-hidden editorial-shadow h-full flex flex-col">
+<div class="group cursor-pointer reveal" style="transition-delay: 180ms;" onclick="window.location.href='product_detail.html'">
+<div class="bg-secondary-container/30 rounded-xl overflow-hidden editorial-shadow h-full flex flex-col lift-hover">
 <div class="relative aspect-square">
 <img alt="Red vintage luxury sports car" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVCG12C-0nOiDEiTfmwHfu7KZhZYaY_7owyK8qGucBWtaA89fkR8ZM1HE5NW08xSIOMw4KJ5WdFMnpCc4SzPgGJyhX4GS_RmqU8XV6XztyhpbAVNlP_1Pdq7DzU131HWoJpIVjXpYKfbSWHvp2cmGJTKUp589vGX13jLj2tj_0EV0lbFcb7kd0L7o2F_w5l8hhs5ve9zeyuCL_M_I2UMVo-r1dKrOpsdKGP_7B0BBomASEyaF-kSfus_mQBfp6FQlsZrgvsKOWArU"/>
 <div class="absolute top-4 right-4 bg-surface-container-lowest/80 backdrop-blur text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Featured</div>
@@ -216,8 +322,8 @@
 </div>
 </div>
 <!-- Standard Item -->
-<div class="group cursor-pointer" onclick="window.location.href='product_detail.html'">
-<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow h-full flex flex-col">
+<div class="group cursor-pointer reveal" style="transition-delay: 260ms;" onclick="window.location.href='product_detail.html'">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden editorial-shadow h-full flex flex-col lift-hover">
 <div class="relative aspect-square">
 <img alt="Modern minimalist luxury wristwatch" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJWaRzn8MoU5L-hXmPDFdwodCjgVqeXXUwXlzp3dQaOArx5P4DfpMsi_zIkroy8uPXma8A8gqjT6bpm5WxLEilUJzZa4e8n7mMFMvYUPUfL1ePz4fZtdDr12iuN8_E19zKAtyHyjwdwP23Z5Vc_jFMndwefBtIsKmnc1H5-K6gaiOLDUW6-6rHSqZVGt5F3pbP9uA8dbG3S3xMhm-0dBCoF-QxziyR_UOIRW3D0rEK0DpTzRWhVtlrrfqgjWYusWc8sGNa5z5cbCU"/>
 </div>
@@ -232,8 +338,8 @@
 </div>
 </div>
 <!-- Sidebar/Inline Ad -->
-<div class="md:col-span-2 mt-4">
-<div class="bg-surface-container-lowest rounded-xl p-8 flex items-center gap-8 border border-primary/10 h-full">
+<div class="md:col-span-2 mt-4 reveal" style="transition-delay: 340ms;">
+<div class="bg-surface-container-lowest rounded-xl p-8 flex items-center gap-8 border border-primary/10 h-full lift-hover">
 <div class="flex-1">
 <p class="text-label-sm font-bold text-primary uppercase tracking-widest mb-2">Partner Spotlight</p>
 <h3 class="font-headline text-2xl font-bold mb-3">Insure your gear for up to ₹8,40,000</h3>
@@ -252,7 +358,7 @@
 <section class="px-8 py-32">
 <div class="max-w-7xl mx-auto">
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-<div>
+<div class="reveal">
 <h2 class="font-headline text-5xl font-extrabold tracking-tighter mb-8 leading-tight">Renting Redefined: <br/>Simple &amp; Sophisticated.</h2>
 <div class="space-y-12">
 <div class="flex gap-6">
@@ -278,8 +384,8 @@
 </div>
 </div>
 </div>
-<div class="relative">
-<div class="bg-surface-container-high rounded-xl aspect-square relative overflow-hidden">
+<div class="relative reveal" style="transition-delay: 120ms;">
+<div class="bg-surface-container-high rounded-xl aspect-square relative overflow-hidden lift-hover">
 <img alt="Modern workspace" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA821Dxb_XFkQeT2KIZn4EZoElGicgY4V9hb2r36gwfESCE8bIg9YeMHNdTxJhMDSYbzrkmCwxw-Uwp23jUDjfPSHP_TW8kj_JYMHsN4-ACF1MXKVUyIDccSPeII58-U9pwFy0c-N1fR2j7LCPgv7XPuu87R_FURoEjgLEp_EILWcZ8E3PNfKxnnYN6kQnbtCN28NoqYqrA1pSKnTuf9lX6j1P85D_nXAsviIk7T8Z0kgVzMhiaKaWQBpmFHyw0B-8TT9z1Af_E2VU"/>
 <div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
 </div>
@@ -295,7 +401,7 @@
 <!-- Secure Banner -->
 <section class="px-8 py-20">
 <div class="max-w-7xl mx-auto">
-<div class="bg-primary-container rounded-3xl p-12 md:p-20 relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center gap-12">
+<div class="bg-primary-container rounded-3xl p-12 md:p-20 relative overflow-hidden text-center md:text-left flex flex-col md:flex-row items-center gap-12 reveal">
 <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
 <div class="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -ml-48 -mb-48"></div>
 <div class="flex-1 relative z-10">
@@ -333,7 +439,7 @@
                 The premier marketplace for editorial-grade rentals. Curating the tools for the next generation of creators.
             </p>
 <p class="font-body text-xs text-slate-400 mt-6 uppercase tracking-widest">
-                © 2024 OmniStream Editorial Rentals.
+                © 2026 OmniStream Editorial Rentals.
             </p>
 </div>
 <div>
@@ -348,8 +454,8 @@
 <h5 class="text-slate-900 dark:text-white font-bold text-xs uppercase tracking-widest mb-6">Support</h5>
 <ul class="space-y-4 font-body text-sm text-slate-500 dark:text-slate-400">
 <li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="checkout.html">Help Center</a></li>
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Terms of Service</a></li>
-<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="terms.html">Terms of Service</a></li>
+<li><a class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors" href="privacy.html">Privacy Policy</a></li>
 </ul>
 </div>
 <div>
@@ -365,4 +471,129 @@
 </div>
 </div>
 </footer>
+<script>
+    (function setupHeroShowcase() {
+        const showcase = document.getElementById('hero-showcase');
+        if (!showcase) return;
+
+        const slides = Array.from(showcase.querySelectorAll('.hero-slide'));
+        const dotsWrap = document.getElementById('hero-carousel-dots');
+        const prevButton = document.getElementById('hero-carousel-prev');
+        const nextButton = document.getElementById('hero-carousel-next');
+        const reviewStars = document.getElementById('hero-review-stars');
+        const reviewLabel = document.getElementById('hero-review-label');
+        const reviewText = document.getElementById('hero-review-text');
+        const reviewAuthor = document.getElementById('hero-review-author');
+        if (!slides.length || !dotsWrap || !prevButton || !nextButton) return;
+
+        const reviewData = [
+            {
+                label: 'Top Rated',
+                rating: 5,
+                text: '"Impeccable gear, effortless process."',
+                author: '- Maya, Studio Producer'
+            },
+            {
+                label: 'Creator Favorite',
+                rating: 5,
+                text: '"The booking flow was fast, polished, and the inventory felt curated."',
+                author: '- Arjun, Commercial Director'
+            },
+            {
+                label: 'Trusted Choice',
+                rating: 4,
+                text: '"Premium listings, reliable owners, and a beautiful rental experience."',
+                author: '- Nina, Brand Photographer'
+            }
+        ];
+
+        let activeIndex = 0;
+        let timer = null;
+
+        function renderStars(count) {
+            return Array.from({ length: 5 }, (_, index) => `
+                <svg class="w-4 h-4 ${index < count ? 'fill-current text-primary' : 'fill-current text-primary/20'}" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2.25l2.93 5.94 6.56.95-4.74 4.62 1.12 6.53L12 17.98 6.13 20.29l1.12-6.53-4.74-4.62 6.56-.95L12 2.25z"></path>
+                </svg>
+            `).join('');
+        }
+
+        function renderDots() {
+            dotsWrap.innerHTML = slides.map((_, index) => `<button type="button" class="hero-carousel-dot${index === activeIndex ? ' is-active' : ''}" aria-label="Go to slide ${index + 1}"></button>`).join('');
+            Array.from(dotsWrap.querySelectorAll('button')).forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    setActiveSlide(index);
+                    restartTimer();
+                });
+            });
+        }
+
+        function setActiveSlide(index) {
+            activeIndex = (index + slides.length) % slides.length;
+            slides.forEach((slide, slideIndex) => {
+                slide.classList.toggle('is-active', slideIndex === activeIndex);
+            });
+            const activeReview = reviewData[activeIndex] || reviewData[0];
+            if (reviewStars) reviewStars.innerHTML = renderStars(activeReview.rating);
+            if (reviewLabel) reviewLabel.textContent = activeReview.label;
+            if (reviewText) reviewText.textContent = activeReview.text;
+            if (reviewAuthor) reviewAuthor.textContent = activeReview.author;
+            renderDots();
+        }
+
+        function restartTimer() {
+            if (timer) window.clearInterval(timer);
+            timer = window.setInterval(() => setActiveSlide(activeIndex + 1), 4500);
+        }
+
+        prevButton.addEventListener('click', () => {
+            setActiveSlide(activeIndex - 1);
+            restartTimer();
+        });
+
+        nextButton.addEventListener('click', () => {
+            setActiveSlide(activeIndex + 1);
+            restartTimer();
+        });
+
+        setActiveSlide(0);
+        restartTimer();
+    })();
+
+    (function setupScrollReveals() {
+        const elements = document.querySelectorAll('.reveal');
+        if (!elements.length) return;
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+
+        elements.forEach((element) => observer.observe(element));
+    })();
+
+    (function setupHeroSearch() {
+        const form = document.getElementById('hero-search-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function onSubmit(event) {
+            event.preventDefault();
+            const queryInput = document.getElementById('hero-search-query');
+            const locationInput = document.getElementById('hero-search-location');
+            const query = queryInput ? queryInput.value.trim() : '';
+            const location = locationInput ? locationInput.value.trim() : '';
+
+            const params = new URLSearchParams();
+            if (query) params.set('q', query);
+            if (location) params.set('location', location);
+
+            const target = params.toString() ? `search.html?${params.toString()}` : 'search.html';
+            window.location.href = target;
+        });
+    })();
+</script>
 </body></html>

@@ -57,9 +57,9 @@
   <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-outline mb-10">
     <a class="hover:text-primary transition-colors" href="landing.html">Home</a>
     <span class="material-symbols-outlined text-sm">chevron_right</span>
-    <a class="hover:text-primary transition-colors" href="product_detail.html">Listing</a>
+    <a id="checkout-breadcrumb-parent" class="hover:text-primary transition-colors" href="product_detail.html">Listing</a>
     <span class="material-symbols-outlined text-sm">chevron_right</span>
-    <span class="text-on-surface">Checkout</span>
+    <span id="checkout-breadcrumb-current" class="text-on-surface">Checkout</span>
   </nav>
 
   <!-- Step Indicators -->
@@ -86,21 +86,21 @@
 
       <!-- ── STEP 1: Review Items ── -->
       <div id="step-1">
-        <h1 class="font-headline text-3xl font-bold mb-8 tracking-tight">Review Your Rental</h1>
+        <h1 id="checkout-heading" class="font-headline text-3xl font-bold mb-8 tracking-tight">Review Your Rental</h1>
 
         <!-- Item card -->
-        <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm mb-6">
+        <div id="checkout-item-card" class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm mb-6">
           <div class="flex gap-6">
             <div class="w-28 h-28 rounded-xl overflow-hidden shrink-0 bg-surface-container-low">
-              <img alt="Red Komodo 6K Cinema Package" class="w-full h-full object-cover"
+              <img id="checkout-item-image" alt="Red Komodo 6K Cinema Package" class="w-full h-full object-cover"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
             </div>
             <div class="flex-1">
               <div class="flex justify-between items-start">
                 <div>
-                  <h3 class="font-headline font-bold text-lg">Red Komodo 6K Cinema Package</h3>
-                  <p class="text-sm text-on-surface-variant mt-1">Listed by Julian R. • Brooklyn, NY</p>
-                  <div class="flex items-center gap-1 mt-2">
+                  <h3 id="checkout-item-title" class="font-headline font-bold text-lg">Red Komodo 6K Cinema Package</h3>
+                  <p id="checkout-item-subtitle" class="text-sm text-on-surface-variant mt-1">Listed by Julian R. • Brooklyn, NY</p>
+                  <div id="checkout-rating" class="flex items-center gap-1 mt-2">
                     <span class="material-symbols-outlined text-sm text-yellow-500" style="font-variation-settings:'FILL' 1;">star</span>
                     <span class="text-xs font-bold">4.9</span>
                     <span class="text-xs text-outline ml-1">42 reviews</span>
@@ -123,7 +123,7 @@
         </div>
 
         <!-- Insurance Toggle -->
-        <div class="bg-surface-container-low rounded-xl p-6 mb-6">
+        <div id="checkout-insurance" class="bg-surface-container-low rounded-xl p-6 mb-6">
           <div class="flex justify-between items-center mb-4">
             <h3 class="font-headline font-bold">OmniGuard Insurance</h3>
             <span class="text-xs font-bold text-primary uppercase tracking-wider">Recommended</span>
@@ -148,7 +148,7 @@
           </div>
         </div>
 
-        <button onclick="goStep(2)" class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+        <button id="step1-continue-btn" onclick="goStep(2)" class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-lg hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
           Continue to Delivery
         </button>
       </div>
@@ -220,7 +220,7 @@
       <!-- ── STEP 3: Payment ── -->
       <div id="step-3" class="hidden">
         <h1 class="font-headline text-3xl font-bold mb-8 tracking-tight">Payment Method</h1>
-        <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm space-y-6">
+        <div id="checkout-payment" class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm space-y-6">
           <div class="space-y-3">
             <label class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl cursor-pointer border-2 border-primary">
               <input type="radio" name="payment" value="razorpay" checked class="accent-primary"/>
@@ -277,30 +277,30 @@
     <!-- ── Right: Order Summary (sticky & live) ── -->
     <div class="lg:col-span-5">
       <div class="sticky top-28 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm">
-        <h2 class="font-headline font-bold text-xl mb-6">Order Summary</h2>
+        <h2 id="summary-heading" class="font-headline font-bold text-xl mb-6">Order Summary</h2>
 
-        <div class="flex gap-4 pb-6 border-b border-outline-variant/15 mb-6">
+        <div id="summary-item-card" class="flex gap-4 pb-6 border-b border-outline-variant/15 mb-6">
           <div class="w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-surface-container-low">
-            <img alt="Red Komodo 6K" class="w-full h-full object-cover"
+            <img id="summary-item-image" alt="Red Komodo 6K" class="w-full h-full object-cover"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIskJIWfxJ9YwovMdmjteZhPBDDBoUzcfJmiD-ah39uqfbveZatrMnXrB_fo5P03ESfP5r58CGfSmdkFKHKLktdEU1wrlYnLR1a5UgarKTgl1VApnc7bhRVzvwnb6gzSc9v3JNs_okCPXeoosGCB3GSQG1nneLgQ5eF0XQBmd3L3KiHZHO8CV2A5u7nhBG-sM78zcTn8KMr9Aw7bmPNHqPh_Y-1IWgQtEnMMwD7VtESzD0o5xbcuC1giVKubPuWVt6XgXfG4x_MI"/>
           </div>
           <div>
-            <h3 class="font-headline font-bold text-sm leading-tight">Red Komodo 6K Cinema Package</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Oct 12 – Oct 15 · 3 days</p>
+            <h3 id="summary-item-title" class="font-headline font-bold text-sm leading-tight">Red Komodo 6K Cinema Package</h3>
+            <p id="summary-item-subtitle" class="text-xs text-on-surface-variant mt-1">Oct 12 – Oct 15 · 3 days</p>
           </div>
         </div>
 
         <!-- Live-updating line items -->
-        <div class="space-y-3 text-sm mb-6">
-          <div class="flex justify-between">
+        <div id="summary-line-items" class="space-y-3 text-sm mb-6">
+          <div class="flex justify-between" id="summary-subtotal-row">
             <span class="text-on-surface-variant">Subtotal (3 days × ₹1,000)</span>
             <span class="font-semibold" id="sum-subtotal">₹3,000</span>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between" id="summary-delivery-row">
             <span class="text-on-surface-variant" id="sum-del-label">Delivery Fee (15%)</span>
             <span class="font-semibold" id="sum-delivery">₹450</span>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between" id="summary-tx-row">
             <span class="text-on-surface-variant">Transaction Fee (18%)</span>
             <span class="font-semibold" id="sum-txfee">₹540</span>
           </div>
@@ -308,7 +308,7 @@
             <span class="text-on-surface-variant" id="sum-ins-label">Insurance (Standard, 3 days)</span>
             <span class="font-semibold" id="sum-insurance">₹300</span>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between" id="summary-deposit-row">
             <span class="text-on-surface-variant">Security Deposit (Escrowed)</span>
             <span class="font-semibold" id="sum-deposit">₹1,500</span>
           </div>
@@ -321,7 +321,7 @@
           </div>
         </div>
 
-        <div class="bg-surface-container-low rounded-xl p-4">
+        <div id="summary-note" class="bg-surface-container-low rounded-xl p-4">
           <div class="flex items-start gap-3">
             <span class="material-symbols-outlined text-primary text-lg mt-0.5">info</span>
             <p class="text-xs text-on-surface-variant leading-relaxed">Security deposit is held in escrow and fully refunded upon verified return of the item.</p>
@@ -354,9 +354,9 @@
     <div>
       <h4 class="font-bold text-xs uppercase tracking-widest text-slate-900 mb-4">Support</h4>
       <ul class="space-y-2 text-sm text-slate-500">
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Help Center</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Terms of Service</a></li>
-        <li><a class="hover:text-blue-600 transition-colors" href="#">Privacy Policy</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="search.html">Help Center</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="terms.html">Terms of Service</a></li>
+        <li><a class="hover:text-blue-600 transition-colors" href="privacy.html">Privacy Policy</a></li>
       </ul>
     </div>
     <div>
@@ -374,9 +374,13 @@
 
 <script>
   // ── Pricing constants ──────────────────────────────────
-  const DAILY_RATE    = 1000;   // ₹1,000/day
-  const DAYS          = 3;
-  const SUBTOTAL      = DAILY_RATE * DAYS;    // ₹3,000
+  const checkoutParams = new URLSearchParams(window.location.search);
+  const isMembershipFlow = checkoutParams.get('flow') === 'membership';
+  const membershipTier = checkoutParams.get('tier') || 'plus';
+  const rentalListingId = checkoutParams.get('listing');
+  let DAILY_RATE      = 1000;   // ₹1,000/day
+  let DAYS            = 3;
+  let SUBTOTAL        = DAILY_RATE * DAYS;    // ₹3,000
   const TX_RATE       = 0.18;                 // 18%
   const DEL_STD_RATE  = 0.15;                 // 15%
   const DEL_EXP_RATE  = 0.30;                 // 30%
@@ -387,11 +391,175 @@
   document.getElementById('del-std-fee').textContent = fmt(SUBTOTAL * DEL_STD_RATE);
   document.getElementById('del-exp-fee').textContent = fmt(SUBTOTAL * DEL_EXP_RATE);
 
+  async function applyRentalListing() {
+    if (!rentalListingId || isMembershipFlow) return;
+
+    const stepButton = document.getElementById('step1-continue-btn');
+    try {
+      const response = await fetch(`/api/listings/${encodeURIComponent(rentalListingId)}`);
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'Listing unavailable');
+
+      const listing = data.listing;
+      DAILY_RATE = Math.max(1, Number(listing.price_per_day || DAILY_RATE));
+      SUBTOTAL = DAILY_RATE * DAYS;
+
+      document.getElementById('checkout-item-title').textContent = listing.title;
+      document.getElementById('checkout-item-subtitle').textContent = `Listed by ${listing.host} • ${listing.category}`;
+      document.getElementById('summary-item-title').textContent = listing.title;
+      document.getElementById('summary-item-subtitle').textContent = `${listing.category} · ${DAYS} days`;
+      if (listing.image_url) {
+        document.getElementById('checkout-item-image').src = listing.image_url;
+        document.getElementById('summary-item-image').src = listing.image_url;
+      }
+
+      if (listing.status !== 'available') {
+        stepButton.disabled = true;
+        stepButton.textContent = 'Listing Sold Out';
+        stepButton.classList.add('opacity-60', 'cursor-not-allowed');
+      }
+
+      calcTotal();
+    } catch (_error) {
+      stepButton.disabled = true;
+      stepButton.textContent = 'Listing Unavailable';
+      stepButton.classList.add('opacity-60', 'cursor-not-allowed');
+    }
+  }
+
+  const membershipConfig = {
+    'free-trial': {
+      title: 'Start Your Free Trial',
+      summaryHeading: 'Trial Summary',
+      itemTitle: 'OmniStream+ 14-Day Free Trial',
+      itemSubtitle: 'No card required · Cancels anytime',
+      itemImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80',
+      reviewLabel: 'Trial Ready',
+      reviewText: 'Start the 14-day trial and explore membership perks without entering payment details.',
+      reviewAuthor: '- OmniStream Membership',
+      total: 0,
+      totalNote: 'No card required today',
+      cta: 'Activate Free Trial',
+      note: 'Your free trial starts immediately and can be upgraded later from your account.'
+    },
+    'plus': {
+      title: 'Complete Membership Checkout',
+      summaryHeading: 'Membership Summary',
+      itemTitle: 'OmniStream+ Monthly Membership',
+      itemSubtitle: 'Priority benefits · Renews monthly',
+      itemImage: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80',
+      reviewLabel: 'Plus Member',
+      reviewText: 'Upgrade for faster delivery, priority approvals, and early booking access.',
+      reviewAuthor: '- OmniStream Membership',
+      total: 499,
+      totalNote: 'Billed monthly after trial',
+      cta: 'Confirm Membership',
+      note: 'Membership billing is handled securely and can be canceled anytime.'
+    }
+  };
+
+  function applyMembershipMode() {
+    const config = membershipConfig[membershipTier] || membershipConfig.plus;
+    const isTrial = membershipTier === 'free-trial';
+    const breadcrumbParent = document.getElementById('checkout-breadcrumb-parent');
+    const breadcrumbCurrent = document.getElementById('checkout-breadcrumb-current');
+    const heading = document.getElementById('checkout-heading');
+    const summaryHeading = document.getElementById('summary-heading');
+    const itemTitle = document.getElementById('checkout-item-title');
+    const itemSubtitle = document.getElementById('checkout-item-subtitle');
+    const itemImage = document.getElementById('checkout-item-image');
+    const summaryItemTitle = document.getElementById('summary-item-title');
+    const summaryItemSubtitle = document.getElementById('summary-item-subtitle');
+    const summaryItemImage = document.getElementById('summary-item-image');
+    const review = document.getElementById('checkout-rating');
+    const itemCard = document.getElementById('checkout-item-card');
+    const summaryItemCard = document.getElementById('summary-item-card');
+    const insuranceBlock = document.getElementById('checkout-insurance');
+    const paymentBlock = document.getElementById('checkout-payment');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+    const step1Button = document.getElementById('step1-continue-btn');
+    const summaryNote = document.getElementById('summary-note');
+
+    if (heading) heading.textContent = config.title;
+    if (breadcrumbParent) {
+      breadcrumbParent.textContent = 'Membership';
+      breadcrumbParent.href = 'plans.html';
+    }
+    if (breadcrumbCurrent) breadcrumbCurrent.textContent = isTrial ? 'Free Trial' : 'Membership Checkout';
+    if (summaryHeading) summaryHeading.textContent = config.summaryHeading;
+    if (itemTitle) itemTitle.textContent = config.itemTitle;
+    if (itemSubtitle) itemSubtitle.textContent = config.itemSubtitle;
+    if (itemImage) itemImage.src = config.itemImage;
+    if (summaryItemTitle) summaryItemTitle.textContent = config.itemTitle;
+    if (summaryItemSubtitle) summaryItemSubtitle.textContent = config.itemSubtitle;
+    if (summaryItemImage) summaryItemImage.src = config.itemImage;
+    if (review) review.innerHTML = '<span class="material-symbols-outlined text-sm text-yellow-500" style="font-variation-settings:\'FILL\' 1;">star</span><span class="text-xs font-bold">4.9</span><span class="text-xs text-outline ml-1">Trial members only</span>';
+    if (itemCard) itemCard.classList.add('ring-1', 'ring-primary/10');
+    if (summaryItemCard) summaryItemCard.classList.add('ring-1', 'ring-primary/10');
+    if (insuranceBlock) insuranceBlock.classList.add('hidden');
+    if (step2) step2.classList.add('hidden');
+    if (isTrial && paymentBlock) paymentBlock.classList.add('hidden');
+    if (isTrial && step3) step3.classList.add('hidden');
+    if (step1Button) {
+      step1Button.textContent = isTrial ? config.cta : 'Continue to Payment';
+      step1Button.onclick = isTrial ? activateMembership : function () { goStep(3); };
+    }
+    if (summaryNote) {
+      summaryNote.querySelector('p').textContent = config.note;
+    }
+
+    const total = config.total;
+    document.getElementById('sum-subtotal').textContent = '₹' + fmt(total);
+    document.getElementById('sum-delivery').textContent = '₹0';
+    document.getElementById('sum-txfee').textContent = '₹0';
+    document.getElementById('sum-insurance').textContent = '₹0';
+    document.getElementById('sum-deposit').textContent = '₹0';
+    document.getElementById('sum-total').textContent = '₹' + fmt(total);
+    document.getElementById('pay-btn-total').textContent = '₹' + fmt(total);
+    document.getElementById('sum-total-note').textContent = config.totalNote;
+    document.getElementById('sum-del-label').textContent = 'Included in membership';
+    document.getElementById('sum-ins-label').textContent = 'Included in membership';
+    document.getElementById('ins-row').classList.add('hidden');
+    document.getElementById('summary-delivery-row').classList.add('hidden');
+    document.getElementById('summary-tx-row').classList.add('hidden');
+    document.getElementById('summary-deposit-row').classList.add('hidden');
+
+    const stepDots = [document.getElementById('step2-dot')];
+    stepDots.forEach((dot) => {
+      if (dot && dot.parentElement) dot.parentElement.classList.add('hidden');
+    });
+    if (isTrial) {
+      const step3Dot = document.getElementById('step3-dot');
+      if (step3Dot && step3Dot.parentElement) step3Dot.parentElement.classList.add('hidden');
+    }
+    document.querySelectorAll('.w-12.h-0\.5.bg-surface-container-high').forEach((divider, index) => {
+      if (index === 0 || (isTrial && index === 1)) divider.classList.add('hidden');
+    });
+  }
+
+  function activateMembership() {
+    const config = membershipConfig[membershipTier] || membershipConfig.plus;
+    const ref = `membership_${membershipTier}_${Date.now()}`;
+    window.location.href = `order_confirmation.html?ref=${encodeURIComponent(ref)}&plan=${encodeURIComponent(membershipTier)}&mode=membership`;
+  }
+
   function fmt(n) {
     return Math.round(n).toLocaleString('en-IN');
   }
 
   function calcTotal() {
+    if (isMembershipFlow) {
+      const config = membershipConfig[membershipTier] || membershipConfig.plus;
+      document.getElementById('sum-subtotal').textContent = '₹' + fmt(config.total);
+      document.getElementById('sum-delivery').textContent = '₹0';
+      document.getElementById('sum-txfee').textContent = '₹0';
+      document.getElementById('sum-deposit').textContent = '₹0';
+      document.getElementById('sum-total').textContent = '₹' + fmt(config.total);
+      document.getElementById('pay-btn-total').textContent = '₹' + fmt(config.total);
+      return;
+    }
+
     const insVal   = document.querySelector('input[name="insurance"]:checked').value;
     const delVal   = document.querySelector('input[name="delivery"]:checked')?.value || 'standard';
 
@@ -454,10 +622,48 @@
   }
 
   // ── Init ───────────────────────────────────────────────
+  if (isMembershipFlow) {
+    applyMembershipMode();
+  }
   calcTotal();
+  applyRentalListing();
 
   // ── Razorpay Integration ────────────────────────────────
   function checkoutWithRazorpay() {
+    if (isMembershipFlow && membershipTier === 'free-trial') {
+      activateMembership();
+      return;
+    }
+
+    if (isMembershipFlow && membershipTier !== 'free-trial') {
+      const rawTotalStr = document.getElementById('sum-total').textContent.replace(/[^\d.-]/g, '');
+      const amountInPaise = parseInt(rawTotalStr) * 100;
+      const options = {
+        key: 'rzp_test_SSYa8qxHpH3R2I',
+        amount: amountInPaise,
+        currency: 'INR',
+        name: 'OmniShare+',
+        description: 'OmniStream+ Membership',
+        handler: function (response) {
+          window.location.href = 'order_confirmation.html?ref=' + response.razorpay_payment_id + '&mode=membership';
+        },
+        prefill: {
+          name: 'Alex Member',
+          email: 'alex@example.com',
+          contact: '9999999999'
+        },
+        theme: {
+          color: '#0059bb'
+        }
+      };
+      const rzp1 = new Razorpay(options);
+      rzp1.on('payment.failed', function (response) {
+        alert('Payment Failed. Reason: ' + response.error.description);
+      });
+      rzp1.open();
+      return;
+    }
+
     const rawTotalStr = document.getElementById('sum-total').textContent.replace(/[^\d.-]/g, '');
     const amountInPaise = parseInt(rawTotalStr) * 100;
     
@@ -468,7 +674,36 @@
       "name": "OmniShare",
       "description": "Red Komodo 6K Cinema Package",
       "handler": function (response) {
-          window.location.href = "order_confirmation.html?ref=" + response.razorpay_payment_id;
+          const listingId = rentalListingId;
+          if (!listingId) {
+            window.location.href = "order_confirmation.html?ref=" + response.razorpay_payment_id;
+            return;
+          }
+          const today = new Date();
+          const end = new Date(today);
+          end.setDate(end.getDate() + (DAYS - 1));
+
+          fetch('/api/bookings/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              listing_id: listingId,
+              renter_name: 'Alex Renter',
+              renter_email: 'alex@example.com',
+              start_date: today.toISOString().slice(0, 10),
+              end_date: end.toISOString().slice(0, 10)
+            })
+          })
+          .then(async (res) => {
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+              throw new Error(data.error || 'Booking could not be completed');
+            }
+            window.location.href = `order_confirmation.html?ref=${encodeURIComponent(response.razorpay_payment_id)}&booking=${encodeURIComponent(data.booking.id)}&listing=${encodeURIComponent(listingId || '')}`;
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
       },
       "prefill": {
           "name": "Alex Renter",
