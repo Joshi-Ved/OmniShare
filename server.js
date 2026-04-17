@@ -688,6 +688,21 @@ async function seedErpDataIfEmpty() {
         );
     }
 
+    const seedNow = new Date().toISOString();
+    const fashionRows = [
+        ['fsh_tux_007', 'Tom Ford Black Tie Ensemble', 'Runway-ready tuxedo set for editorial and red carpet shoots', 'Fashion', 'available', 'Excellent', 'Sienna Vale', 'sienna.v@stylehouse.co', 6200, 9000, '', seedNow, seedNow],
+        ['fsh_rolex_008', 'Rolex Day-Date 40', '18k gold statement watch for high-fashion campaigns', 'Fashion', 'available', 'Excellent', 'Sienna Vale', 'sienna.v@stylehouse.co', 8900, 15000, '', seedNow, seedNow],
+        ['fsh_patek_009', 'Patek Philippe Nautilus', 'Collector-grade luxury watch for premium editorial content', 'Fashion', 'available', 'Excellent', 'Adrian Cole', 'adrian.c@atelier.one', 10400, 18000, '', seedNow, seedNow],
+        ['fsh_gown_010', 'Couture Evening Gown Set', 'Editorial wardrobe kit with accessories for luxury fashion shoots', 'Fashion', 'available', 'Excellent', 'Adrian Cole', 'adrian.c@atelier.one', 5400, 8000, '', seedNow, seedNow],
+    ];
+
+    for (const row of fashionRows) {
+        await runSql(
+            'INSERT OR IGNORE INTO erp_listings (id, title, description, category, status, item_condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            row
+        );
+    }
+
     const disputesCount = await getSql('SELECT COUNT(*) AS count FROM erp_disputes');
     if ((disputesCount?.count || 0) === 0) {
         const now = new Date().toISOString();
