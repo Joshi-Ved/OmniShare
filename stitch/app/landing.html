@@ -178,7 +178,7 @@
 </div>
 <div class="flex items-center gap-6">
 <a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="signin.html">Sign In</a>
-<a class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 active:scale-95 text-center" href="subscription.html">Join Now</a>
+<a id="join-now-link" class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 active:scale-95 text-center" href="checkout.html?flow=membership&amp;tier=free-trial">Join Now</a>
 </div>
 </div>
 <div class="md:hidden px-6 pb-4 max-w-[1440px] mx-auto">
@@ -422,7 +422,7 @@
 </div>
 </div>
 <div class="relative z-10">
-<a class="inline-block bg-surface-container-lowest text-primary px-10 py-5 rounded-full font-headline font-bold text-xl transition-all duration-300 hover:scale-105 active:scale-95 editorial-shadow" href="checkout.html">
+<a id="start-trading-link" class="inline-block bg-surface-container-lowest text-primary px-10 py-5 rounded-full font-headline font-bold text-xl transition-all duration-300 hover:scale-105 active:scale-95 editorial-shadow" href="checkout.html?flow=membership&amp;tier=free-trial">
                         Start Trading Today
                     </a>
 </div>
@@ -594,6 +594,36 @@
             const target = params.toString() ? `search.html?${params.toString()}` : 'search.html';
             window.location.href = target;
         });
+    })();
+
+    (function wireJoinNowRoute() {
+        const joinNowLink = document.getElementById('join-now-link');
+        const startTradingLink = document.getElementById('start-trading-link');
+        if (!joinNowLink && !startTradingLink) return;
+
+        let activeEmail = '';
+        try {
+            activeEmail = localStorage.getItem('omnishare:active-email') || '';
+        } catch (_error) {
+            activeEmail = '';
+        }
+
+        function buildMembershipUrl(tier) {
+            const target = new URL('checkout.html', window.location.href);
+            target.searchParams.set('flow', 'membership');
+            target.searchParams.set('tier', tier || 'free-trial');
+            if (activeEmail) {
+                target.searchParams.set('email', activeEmail);
+            }
+            return `${target.pathname}${target.search}`;
+        }
+
+        if (joinNowLink) {
+            joinNowLink.href = buildMembershipUrl('free-trial');
+        }
+        if (startTradingLink) {
+            startTradingLink.href = buildMembershipUrl('free-trial');
+        }
     })();
 </script>
 </body></html>

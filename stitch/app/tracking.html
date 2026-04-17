@@ -53,11 +53,11 @@
     <p class="text-xs font-bold uppercase tracking-widest text-primary mb-2">Live Tracking</p>
     <h1 class="font-headline font-bold text-4xl md:text-5xl tracking-tight mb-3">Your Rental <span class="text-primary italic">Journey</span></h1>
     <div class="flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
-      <span>Booking Ref: <strong class="text-on-surface">#OMN-2024-9847</strong></span>
+      <span>Booking Ref: <strong class="text-on-surface" id="booking-ref">Pending</strong></span>
       <span>·</span>
-      <span>Red Komodo 6K Cinema Package</span>
+      <span id="booking-title">Rental item</span>
       <span>·</span>
-      <span>Oct 12 – Oct 15, 2024</span>
+      <span id="booking-dates">Dates unavailable</span>
     </div>
   </div>
 
@@ -99,7 +99,7 @@
           <div class="pb-8 slide-in">
             <p class="font-headline font-bold text-base">Booking Confirmed</p>
             <p class="text-xs text-on-surface-variant mt-0.5">Oct 11, 2024 · 10:32 AM</p>
-            <p class="text-sm text-on-surface-variant mt-2">Owner Julian R. accepted your booking. Payment of ₹5,790 charged successfully.</p>
+            <p class="text-sm text-on-surface-variant mt-2" id="step-booked-copy">Booking confirmed. Payment has been captured successfully.</p>
           </div>
         </div>
 
@@ -114,7 +114,7 @@
           <div class="pb-8 slide-in" style="animation-delay:0.1s">
             <p class="font-headline font-bold text-base">Item Prepared &amp; Packed</p>
             <p class="text-xs text-on-surface-variant mt-0.5">Oct 11, 2024 · 4:15 PM</p>
-            <p class="text-sm text-on-surface-variant mt-2">Host packed and quality-checked the Red Komodo 6K kit. OmniGuard insurance activated.</p>
+            <p class="text-sm text-on-surface-variant mt-2" id="step-preparing-copy">Host packed and quality-checked the listing. Insurance is active.</p>
           </div>
         </div>
 
@@ -132,7 +132,7 @@
               <span class="px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-wide">Live</span>
             </div>
             <p class="text-xs text-on-surface-variant mt-0.5">Oct 12, 2024 · In Transit</p>
-            <p class="text-sm text-on-surface-variant mt-2">Your item is with <strong>BlueDart Express</strong>. Tracking ID: BDX-4892761. ETA: Today before 6 PM.</p>
+            <p class="text-sm text-on-surface-variant mt-2" id="step-route-copy">Your item is with the delivery partner. ETA: Today before 6 PM.</p>
             <div class="mt-4 bg-surface-container-low rounded-xl p-4 flex items-center gap-4">
               <span class="material-symbols-outlined text-primary">gps_fixed</span>
               <div>
@@ -215,7 +215,7 @@
   </div>
 
   <!-- Simulate Progress (Demo) -->
-  <div class="bg-primary/5 border border-primary/15 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+  <div class="bg-primary/5 border border-primary/15 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4" id="demo-controls">
     <div>
       <p class="font-headline font-bold text-sm">Demo: Simulate Status Progression</p>
       <p class="text-xs text-on-surface-variant mt-1">Click to advance the tracking state in real-time.</p>
@@ -240,6 +240,8 @@
 
 <script>
   // ── State machine ────────────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const demoMode = params.get('demo') === '1';
   const states = [
     {
       id:'booked', progress:20, pct:'20%',
@@ -273,7 +275,8 @@
     }
   ];
 
-  let current = 2; // start at "On the Way"
+  let current = Math.max(0, states.findIndex((state) => state.id === (params.get('status') || 'route')));
+  if (current < 0) current = 0;
 
   const allStepIds = ['booked','preparing','route','delivering','returned'];
 
@@ -288,6 +291,10 @@
     if (s.location) {
       document.getElementById('location-text').textContent = s.location;
     }
+
+    document.getElementById('booking-ref').textContent = params.get('ref') || '#Booking Pending';
+    document.getElementById('booking-title').textContent = params.get('title') || 'Rental item';
+    document.getElementById('booking-dates').textContent = params.get('dates') || 'Dates unavailable';
 
     // Classes
     allStepIds.forEach((sid, i) => {
@@ -306,6 +313,10 @@
   }
 
   function advanceStep() {
+    if (!demoMode) {
+      alert('Tracking is read-only for live bookings. Use a demo booking to simulate progression.');
+      return;
+    }
     if (current < states.length - 1) {
       current++;
       applyState(current);
@@ -323,12 +334,17 @@
     'Powai, Mumbai — 0.8 km away'
   ];
   let locIdx = 0;
-  setInterval(() => {
-    if (current === 2) {
-      locIdx = (locIdx + 1) % locations.length;
-      document.getElementById('location-text').textContent = locations[locIdx];
-    }
-  }, 4000);
+  if (demoMode) {
+    setInterval(() => {
+      if (current === 2) {
+        locIdx = (locIdx + 1) % locations.length;
+        document.getElementById('location-text').textContent = locations[locIdx];
+      }
+    }, 4000);
+  } else {
+    const controls = document.getElementById('demo-controls');
+    if (controls) controls.classList.add('hidden');
+  }
 
   applyState(current);
 </script>

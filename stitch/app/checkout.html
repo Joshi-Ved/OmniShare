@@ -47,7 +47,7 @@
     </nav>
     <div class="flex items-center gap-4">
       <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="profile.html">Sign In</a>
-      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container active:scale-95" href="subscription.html">Join Now</a>
+      <a id="join-now-link" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container active:scale-95" href="checkout.html?flow=membership&amp;tier=free-trial">Join Now</a>
     </div>
   </div>
 </header>
@@ -378,6 +378,8 @@
   const isMembershipFlow = checkoutParams.get('flow') === 'membership';
   const membershipTier = checkoutParams.get('tier') || 'plus';
   const rentalListingId = checkoutParams.get('listing');
+  const activeEmailKey = 'omnishare:active-email';
+  const currentUserEmail = checkoutParams.get('email') || safeStorageGet(activeEmailKey) || '';
   let DAILY_RATE      = 1000;   // ₹1,000/day
   let DAYS            = 3;
   let SUBTOTAL        = DAILY_RATE * DAYS;    // ₹3,000
@@ -386,6 +388,25 @@
   const DEL_EXP_RATE  = 0.30;                 // 30%
   const INS_PER_DAY   = 100;                  // ₹100/day standard
   const DEPOSIT       = 1500;                 // ₹1,500 escrow
+
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function buildOrderConfirmationUrl(baseUrl) {
+    const url = new URL(baseUrl, window.location.href);
+    url.searchParams.set('email', currentUserEmail);
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+
+  const joinNowLink = document.getElementById('join-now-link');
+  if (joinNowLink) {
+    joinNowLink.href = `checkout.html?flow=membership&tier=free-trial&email=${encodeURIComponent(currentUserEmail)}`;
+  }
 
   // Pre-compute some labels
   document.getElementById('del-std-fee').textContent = fmt(SUBTOTAL * DEL_STD_RATE);
@@ -541,7 +562,7 @@
   function activateMembership() {
     const config = membershipConfig[membershipTier] || membershipConfig.plus;
     const ref = `membership_${membershipTier}_${Date.now()}`;
-    window.location.href = `order_confirmation.html?ref=${encodeURIComponent(ref)}&plan=${encodeURIComponent(membershipTier)}&mode=membership`;
+    window.location.href = buildOrderConfirmationUrl(`order_confirmation.html?ref=${encodeURIComponent(ref)}&plan=${encodeURIComponent(membershipTier)}&mode=membership`);
   }
 
   function fmt(n) {
@@ -645,11 +666,11 @@
         name: 'OmniShare+',
         description: 'OmniStream+ Membership',
         handler: function (response) {
-          window.location.href = 'order_confirmation.html?ref=' + response.razorpay_payment_id + '&mode=membership';
+          window.location.href = buildOrderConfirmationUrl('order_confirmation.html?ref=' + response.razorpay_payment_id + '&mode=membership');
         },
         prefill: {
           name: 'Alex Member',
-          email: 'guest.test@omnishare.local',
+          email: currentUserEmail,
           contact: '9999999999'
         },
         theme: {
@@ -676,7 +697,7 @@
       "handler": function (response) {
           const listingId = rentalListingId;
           if (!listingId) {
-            window.location.href = "order_confirmation.html?ref=" + response.razorpay_payment_id;
+            window.location.href = buildOrderConfirmationUrl('order_confirmation.html?ref=' + response.razorpay_payment_id);
             return;
           }
           const today = new Date();
@@ -689,7 +710,7 @@
             body: JSON.stringify({
               listing_id: listingId,
               renter_name: 'Guest Test User',
-              renter_email: 'guest.test@omnishare.local',
+              renter_email: currentUserEmail,
               start_date: today.toISOString().slice(0, 10),
               end_date: end.toISOString().slice(0, 10)
             })
@@ -707,7 +728,7 @@
       },
       "prefill": {
           "name": "Guest Test User",
-          "email": "guest.test@omnishare.local",
+          "email": currentUserEmail,
           "contact": "9999999999"
       },
       "theme": {

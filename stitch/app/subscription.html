@@ -132,7 +132,7 @@
                         Join OmniStream+ and transform your rental workflow with editorial-grade benefits tailored for the modern curator.
                     </p>
 <div class="flex flex-wrap gap-4">
-<a class="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-bold text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform text-center" href="checkout.html?flow=membership&tier=plus">
+<a id="subscription-upgrade-link" class="inline-block px-10 py-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-bold text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform text-center" href="checkout.html?flow=membership&tier=plus">
                             Upgrade for ₹499 / $6 per month
                         </a>
 <a class="inline-block px-10 py-4 rounded-full bg-surface-container-high text-on-surface font-headline font-bold text-lg hover:bg-surface-container-highest transition-colors text-center" href="#benefits">
@@ -259,7 +259,7 @@
 <p class="font-headline font-bold text-xl text-on-primary-fixed-variant">Ready for the premium exchange?</p>
 <p class="text-sm text-on-surface-variant">Cancel anytime. No hidden contractual obligations.</p>
 </div>
-<a class="inline-block px-8 py-3 rounded-full bg-primary text-on-primary font-headline font-bold hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 text-center" href="checkout.html?flow=membership&tier=free-trial">
+<a id="subscription-trial-link" class="inline-block px-8 py-3 rounded-full bg-primary text-on-primary font-headline font-bold hover:bg-primary-container transition-colors shadow-lg shadow-primary/20 text-center" href="checkout.html?flow=membership&tier=free-trial">
                         Start 14-Day Free Trial
                     </a>
 </div>
@@ -305,4 +305,30 @@
 </div>
 </div>
 </footer>
+<script>
+    (function wireMembershipCtas() {
+        const activeEmailKey = 'omnishare:active-email';
+
+        function safeStorageGet(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (_error) {
+                return null;
+            }
+        }
+
+        function buildMembershipHref(baseHref) {
+            const activeEmail = safeStorageGet(activeEmailKey);
+            if (!activeEmail) return baseHref;
+            const url = new URL(baseHref, window.location.href);
+            url.searchParams.set('email', activeEmail);
+            return `${url.pathname}${url.search}${url.hash}`;
+        }
+
+        const upgradeLink = document.getElementById('subscription-upgrade-link');
+        const trialLink = document.getElementById('subscription-trial-link');
+        if (upgradeLink) upgradeLink.href = buildMembershipHref(upgradeLink.getAttribute('href'));
+        if (trialLink) trialLink.href = buildMembershipHref(trialLink.getAttribute('href'));
+    })();
+</script>
 </body></html>

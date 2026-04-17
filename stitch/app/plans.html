@@ -38,7 +38,7 @@
     </nav>
     <div class="flex items-center gap-4">
       <a class="text-slate-500 font-medium hover:text-primary transition-colors" href="signin.html">Sign In</a>
-      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-primary-container transition-colors" href="signup.html">Get Started</a>
+      <a id="plans-get-started-link" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-primary-container transition-colors" href="checkout.html?flow=membership&amp;tier=free-trial">Get Started</a>
     </div>
   </div>
 </header>
@@ -85,7 +85,7 @@
           <li class="flex items-start gap-3 text-sm text-outline"><span class="material-symbols-outlined text-outline text-base mt-0.5">remove</span>Standard shipping (paid)</li>
           <li class="flex items-start gap-3 text-sm text-outline"><span class="material-symbols-outlined text-outline text-base mt-0.5">remove</span>Priority listing placement</li>
         </ul>
-        <a href="signup.html" class="block w-full py-3.5 text-center border-2 border-primary text-primary rounded-full font-headline font-bold hover:bg-primary/5 transition-colors">
+        <a id="plans-start-free-link" href="checkout.html?flow=membership&tier=free-trial" class="block w-full py-3.5 text-center border-2 border-primary text-primary rounded-full font-headline font-bold hover:bg-primary/5 transition-colors">
           Start Free
         </a>
       </div>
@@ -112,7 +112,7 @@
           <li class="flex items-start gap-3 text-sm text-white"><span class="material-symbols-outlined text-white text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Standard OmniGuard insurance</li>
           <li class="flex items-start gap-3 text-sm text-white/60"><span class="material-symbols-outlined text-white/40 text-base mt-0.5">remove</span>5-Hour express delivery</li>
         </ul>
-        <a href="checkout.html?flow=membership&tier=free-trial" class="block w-full py-3.5 text-center bg-white text-primary rounded-full font-headline font-bold hover:bg-surface-container-lowest transition-colors shadow-md">
+        <a id="plans-free-trial-link" href="checkout.html?flow=membership&tier=free-trial" class="block w-full py-3.5 text-center bg-white text-primary rounded-full font-headline font-bold hover:bg-surface-container-lowest transition-colors shadow-md">
           Get OmniShare+
         </a>
         <p class="text-center text-white/50 text-xs mt-3">14-day free trial · No card now</p>
@@ -140,7 +140,7 @@
           <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Dedicated account manager</li>
           <li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-emerald-500 text-base mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span>Instant DigiLocker KYC (auto)</li>
         </ul>
-        <a href="checkout.html?flow=membership&tier=plus" class="block w-full py-3.5 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
+        <a id="plans-plus-link" href="checkout.html?flow=membership&tier=plus" class="block w-full py-3.5 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">
           Go Pro
         </a>
         <p class="text-center text-outline text-xs mt-3">14-day free trial · No card now</p>
@@ -227,10 +227,10 @@
       <h2 class="font-headline font-bold text-4xl text-surface tracking-tight mb-4">Ready to get started?</h2>
       <p class="text-surface-variant text-lg mb-10">Join 50,000+ members. Free forever, upgrade when it counts.</p>
       <div class="flex flex-wrap items-center justify-center gap-4">
-        <a href="signup.html" class="px-10 py-4 bg-primary text-white rounded-full font-headline font-bold text-lg hover:bg-primary-container transition-colors shadow-xl shadow-primary/30">
+        <a id="plans-cta-start-free-link" href="checkout.html?flow=membership&tier=free-trial" class="px-10 py-4 bg-primary text-white rounded-full font-headline font-bold text-lg hover:bg-primary-container transition-colors shadow-xl shadow-primary/30">
           Start Free
         </a>
-        <a href="checkout.html?flow=membership&tier=plus" class="px-10 py-4 bg-white/10 text-white rounded-full font-headline font-bold text-lg hover:bg-white/20 transition-colors">
+        <a id="plans-cta-plus-link" href="checkout.html?flow=membership&tier=plus" class="px-10 py-4 bg-white/10 text-white rounded-full font-headline font-bold text-lg hover:bg-white/20 transition-colors">
           Get OmniShare+ — ₹199/mo
         </a>
       </div>
@@ -271,6 +271,40 @@
 </footer>
 
 <script>
+  const activeEmailKey = 'omnishare:active-email';
+
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function buildMembershipHref(baseHref) {
+    const activeEmail = safeStorageGet(activeEmailKey);
+    if (!activeEmail) {
+      return baseHref;
+    }
+
+    const url = new URL(baseHref, window.location.href);
+    url.searchParams.set('email', activeEmail);
+    return `${url.pathname}${url.search}${url.hash}`;
+  }
+
+  const freeTrialLink = document.getElementById('plans-free-trial-link');
+  const plusLink = document.getElementById('plans-plus-link');
+  const getStartedLink = document.getElementById('plans-get-started-link');
+  const startFreeLink = document.getElementById('plans-start-free-link');
+  const ctaStartFreeLink = document.getElementById('plans-cta-start-free-link');
+  const ctaPlusLink = document.getElementById('plans-cta-plus-link');
+  if (freeTrialLink) freeTrialLink.href = buildMembershipHref(freeTrialLink.getAttribute('href'));
+  if (plusLink) plusLink.href = buildMembershipHref(plusLink.getAttribute('href'));
+  if (getStartedLink) getStartedLink.href = buildMembershipHref(getStartedLink.getAttribute('href'));
+  if (startFreeLink) startFreeLink.href = buildMembershipHref(startFreeLink.getAttribute('href'));
+  if (ctaStartFreeLink) ctaStartFreeLink.href = buildMembershipHref(ctaStartFreeLink.getAttribute('href'));
+  if (ctaPlusLink) ctaPlusLink.href = buildMembershipHref(ctaPlusLink.getAttribute('href'));
+
   // Billing toggle
   const toggle = document.getElementById('billing-toggle');
   toggle.addEventListener('change', () => {

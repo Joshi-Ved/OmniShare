@@ -213,15 +213,35 @@
     const params = new URLSearchParams(window.location.search);
     const flow = params.get("flow");
     const tier = (params.get("tier") || "plus").toLowerCase();
+    const activeEmailKey = 'omnishare:active-email';
+    const subscriptionKeyPrefix = 'omnishare:membership:';
+
+    function safeStorageGet(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (_error) {
+        return null;
+      }
+    }
+
+    function safeStorageSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (_error) {
+        return;
+      }
+    }
 
     if (flow !== "membership") {
       return;
     }
 
+    const activeEmail = params.get('email') || safeStorageGet(activeEmailKey) || '';
+
     const planConfig = {
-      "free-trial": { name: "OmniShare Free Trial", price: "₹0", cycle: "14-day trial", badge: "Trial Active" },
-      plus: { name: "OmniShare Plus Membership", price: "₹1,999", cycle: "Monthly", badge: "Active" },
-      pro: { name: "OmniShare Pro Membership", price: "₹4,999", cycle: "Monthly", badge: "Active" }
+      "free-trial": { name: "OmniShare Free Trial", price: "₹0", cycle: "14-day trial", badge: "Trial Active", summary: "Trial active · Ends after 14 days." },
+      plus: { name: "OmniShare Plus Membership", price: "₹1,999", cycle: "Monthly", badge: "Active", summary: "Plus membership active · Renews monthly." },
+      pro: { name: "OmniShare Pro Membership", price: "₹4,999", cycle: "Monthly", badge: "Active", summary: "Pro membership active · Renews monthly." }
     };
 
     const selected = planConfig[tier] || planConfig.plus;
@@ -235,6 +255,37 @@
     const readableTrialEnd = trialEnd.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
     const readableNextBilling = nextBilling.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
     const memberRef = "#MEM-" + now.getFullYear() + "-" + String(Math.floor(1000 + Math.random() * 9000));
+    const storageKey = `${subscriptionKeyPrefix}${String(activeEmail || '').trim().toLowerCase() || 'default'}`;
+    const subscriptionRecord = {
+      email: String(activeEmail || '').trim().toLowerCase(),
+      tier,
+      label: tier === 'free-trial' ? 'Free Trial' : tier === 'pro' ? 'Pro Membership' : 'Plus Membership',
+      summary: selected.summary,
+      cycle: tier === 'free-trial' ? `Trial ends ${readableTrialEnd}` : `Renews ${readableNextBilling}`,
+      activatedAt: now.toISOString(),
+      nextBillingAt: tier === 'free-trial' ? trialEnd.toISOString() : nextBilling.toISOString(),
+      reference: memberRef
+    };
+
+    try {
+      safeStorageSet(activeEmailKey, subscriptionRecord.email);
+      safeStorageSet(storageKey, JSON.stringify(subscriptionRecord));
+    } catch (_error) {
+      // Ignore storage failures in private/incognito contexts.
+    }
+
+    fetch('/api/users/subscription/activate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: subscriptionRecord.email,
+        tier: subscriptionRecord.tier,
+        reference: subscriptionRecord.reference,
+        source: 'membership_confirmation',
+        activated_at: subscriptionRecord.activatedAt,
+        next_billing_at: subscriptionRecord.nextBillingAt,
+      }),
+    }).catch(() => undefined);
 
     document.title = "Membership Confirmed | OmniShare";
     document.getElementById("successTitle").textContent = "Membership Activated!";

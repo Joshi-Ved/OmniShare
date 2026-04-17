@@ -64,13 +64,14 @@
         <div class="space-y-4">
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Email</label>
-            <input type="email" value="both.test@omnishare.local" readonly/>
+            <input id="signin-email" type="email" value="" placeholder="you@example.com"/>
           </div>
           <div>
             <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Password</label>
-            <input type="password" value="Both@12345" readonly/>
+            <input id="signin-password" type="password" value="" placeholder="Your password"/>
           </div>
-          <a href="profile.html?email=both.test@omnishare.local" class="block w-full py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-base hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">Sign In as Both User</a>
+          <button id="signin-submit" type="button" class="block w-full py-4 text-center bg-gradient-to-r from-primary to-primary-container text-white rounded-full font-headline font-bold text-base hover:scale-[1.01] active:scale-95 transition-all shadow-lg shadow-primary/20">Sign In</button>
+          <p id="signin-status" class="text-xs text-outline text-center min-h-[1rem]"></p>
           <div class="grid grid-cols-2 gap-3">
             <a href="owner_portal.html" class="block text-center py-3 rounded-full bg-surface-container-low text-on-surface text-sm font-bold hover:bg-surface-container transition-colors">Host Login</a>
             <a href="admin.html" class="block text-center py-3 rounded-full bg-surface-container-low text-on-surface text-sm font-bold hover:bg-surface-container transition-colors">Admin Login</a>
@@ -91,5 +92,89 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function initSigninFlow() {
+    const emailInput = document.getElementById('signin-email');
+    const passwordInput = document.getElementById('signin-password');
+    const submitButton = document.getElementById('signin-submit');
+    const statusNode = document.getElementById('signin-status');
+    const formContainer = document.getElementById('fallback-signin');
+    const activeEmailKey = 'omnishare:active-email';
+    try {
+      const storedEmail = localStorage.getItem(activeEmailKey) || '';
+      if (storedEmail) emailInput.value = storedEmail;
+    } catch (_error) {
+      // Ignore storage restrictions.
+    }
+
+
+    function setStatus(message, isError) {
+      statusNode.textContent = message || '';
+      statusNode.className = isError
+        ? 'text-xs text-error text-center min-h-[1rem]'
+        : 'text-xs text-outline text-center min-h-[1rem]';
+    }
+
+    async function loginUser() {
+      const email = String(emailInput.value || '').trim().toLowerCase();
+      const password = String(passwordInput.value || '').trim();
+      if (!email || !password) {
+        setStatus('Enter both email and password.', true);
+        return;
+      }
+
+      submitButton.disabled = true;
+      setStatus('Signing in...', false);
+
+      try {
+        const response = await fetch('/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        let data = null;
+        try {
+          data = await response.json();
+        } catch (_error) {
+          data = null;
+        }
+        if (!response.ok || !data.success) {
+          throw new Error((data && data.error) || 'Login failed');
+        }
+
+        try {
+          localStorage.setItem(activeEmailKey, email);
+        } catch (_error) {
+          // Ignore storage restrictions.
+        }
+
+        const role = String(data.user?.role || 'guest').toLowerCase();
+        if (role === 'admin') {
+          window.location.href = 'admin.html';
+          return;
+        }
+        if (role === 'host' || role === 'both') {
+          window.location.href = `owner_portal.html?email=${encodeURIComponent(email)}`;
+          return;
+        }
+        window.location.href = `profile.html?email=${encodeURIComponent(email)}`;
+      } catch (error) {
+        setStatus(error.message, true);
+      } finally {
+        submitButton.disabled = false;
+      }
+    }
+
+    submitButton.addEventListener('click', loginUser);
+    if (formContainer) {
+      formContainer.addEventListener('keydown', function handleEnterSubmit(event) {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        if (!submitButton.disabled) loginUser();
+      });
+    }
+  })();
+</script>
 
 </body></html>

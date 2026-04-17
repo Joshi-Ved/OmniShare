@@ -60,6 +60,7 @@ function normalizeListingStatus(status) {
     if (!status) return status;
     const value = String(status).toLowerCase();
     if (value === 'rented') return 'sold_out';
+    if (value === 'approved' || value === 'published' || value === 'active') return 'available';
     return value;
 }
 
@@ -71,8 +72,71 @@ function normalizeEmail(value) {
     return String(value || '').trim().toLowerCase();
 }
 
+const TEST_USER_ACCOUNTS = [
+    { email: 'admin.test@omnishare.local', name: 'Admin Test', password: 'Admin@12345', role: 'admin', kyc_status: 'verified' },
+    { email: 'host.test@omnishare.local', name: 'Host Test', password: 'Host@12345', role: 'host', kyc_status: 'verified' },
+    { email: 'guest.test@omnishare.local', name: 'Guest Test', password: 'Guest@12345', role: 'guest', kyc_status: 'pending' },
+    { email: 'both.test@omnishare.local', name: 'Both Test User', password: 'Both@12345', role: 'both', kyc_status: 'verified' },
+];
+
+function titleCaseRole(role) {
+    const value = String(role || 'guest').trim().toLowerCase();
+    if (!value) return 'Guest';
+    if (value === 'both') return 'Host + Guest';
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function sanitizeRole(role) {
+    const value = String(role || 'guest').trim().toLowerCase();
+    if (value === 'admin' || value === 'host' || value === 'guest' || value === 'both') {
+        return value;
+    }
+    return 'guest';
+}
+
 function createRewardId() {
     return `rw_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+}
+
+function getSubscriptionConfig(tier) {
+    const normalizedTier = normalizeEmail(tier);
+    if (normalizedTier === 'pro') {
+        return {
+            tier: 'pro',
+            status: 'active',
+            plan_name: 'OmniShare Pro Membership',
+            billing_cycle: 'Monthly',
+            monthly_fee: 299,
+        };
+    }
+
+    if (normalizedTier === 'free-trial' || normalizedTier === 'trial') {
+        return {
+            tier: 'free-trial',
+            status: 'trial',
+            plan_name: 'OmniShare Free Trial',
+            billing_cycle: '14-day trial',
+            monthly_fee: 0,
+        };
+    }
+
+    if (normalizedTier === 'plus') {
+        return {
+            tier: 'plus',
+            status: 'active',
+            plan_name: 'OmniShare Plus Membership',
+            billing_cycle: 'Monthly',
+            monthly_fee: 199,
+        };
+    }
+
+    return {
+        tier: 'free',
+        status: 'free',
+        plan_name: 'Free Plan',
+        billing_cycle: 'None',
+        monthly_fee: 0,
+    };
 }
 
 function daysBetweenInclusive(startDate, endDate) {
@@ -202,6 +266,169 @@ async function getRewardSummary(email) {
         pendingCoins,
         unreadCount,
     };
+}
+
+async function ensureSubscriptionProfile(email) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    const existing = await getSql(
+        'SELECT email, tier, status, plan_name, billing_cycle, activated_at, next_billing_at, reference, source, updated_at FROM user_subscriptions WHERE email = ?',
+        [normalizedEmail]
+    );
+
+    if (existing) {
+        return existing;
+    }
+
+    const now = new Date().toISOString();
+    const fallback = getSubscriptionConfig('free');
+    await runSql(
+        'INSERT INTO user_subscriptions (email, tier, status, plan_name, billing_cycle, activated_at, next_billing_at, reference, source, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [normalizedEmail, fallback.tier, fallback.status, fallback.plan_name, fallback.billing_cycle, now, null, '', 'system', now]
+    );
+
+    return {
+        email: normalizedEmail,
+        tier: fallback.tier,
+        status: fallback.status,
+        plan_name: fallback.plan_name,
+        billing_cycle: fallback.billing_cycle,
+        activated_at: now,
+        next_billing_at: null,
+        reference: '',
+        source: 'system',
+        updated_at: now,
+    };
+}
+
+async function ensureUserAccount(email, profile = {}) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    const existing = await getSql(
+        'SELECT email, name, role, kyc_status, joined_at, is_test_user, updated_at FROM user_accounts WHERE email = ?',
+        [normalizedEmail]
+    );
+    if (existing) {
+        return existing;
+    }
+
+    const now = new Date().toISOString();
+    const defaultName = String(profile.name || '').trim() || normalizedEmail.split('@')[0];
+    const role = sanitizeRole(profile.role);
+    const kycStatus = String(profile.kyc_status || 'pending').trim().toLowerCase() || 'pending';
+    const isTestUser = profile.is_test_user ? 1 : 0;
+    const password = String(profile.password || '').trim();
+
+    await runSql(
+        'INSERT INTO user_accounts (email, name, password, role, kyc_status, joined_at, is_test_user, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [normalizedEmail, defaultName, password, role, kycStatus, now, isTestUser, now]
+    );
+
+    return {
+        email: normalizedEmail,
+        name: defaultName,
+        role,
+        kyc_status: kycStatus,
+        joined_at: now,
+        is_test_user: isTestUser,
+        updated_at: now,
+    };
+}
+
+async function upsertSubscription({ email, tier, reference = '', source = 'web', activatedAt = '', nextBillingAt = null }) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) {
+        return null;
+    }
+
+    const config = getSubscriptionConfig(tier);
+    const now = new Date().toISOString();
+    await ensureUserAccount(normalizedEmail);
+    const existing = await ensureSubscriptionProfile(normalizedEmail);
+    const activeAt = activatedAt || existing?.activated_at || now;
+    const nextBilling = nextBillingAt || (config.tier === 'free-trial' ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString() : config.tier === 'free' ? null : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString());
+
+    await runSql(
+        'UPDATE user_subscriptions SET tier = ?, status = ?, plan_name = ?, billing_cycle = ?, activated_at = ?, next_billing_at = ?, reference = ?, source = ?, updated_at = ? WHERE email = ?',
+        [config.tier, config.status, config.plan_name, config.billing_cycle, activeAt, nextBilling, String(reference || '').trim(), String(source || 'web').trim(), now, normalizedEmail]
+    );
+
+    return {
+        email: normalizedEmail,
+        tier: config.tier,
+        status: config.status,
+        plan_name: config.plan_name,
+        billing_cycle: config.billing_cycle,
+        activated_at: activeAt,
+        next_billing_at: nextBilling,
+        reference: String(reference || '').trim(),
+        source: String(source || 'web').trim(),
+        updated_at: now,
+        monthly_fee: config.monthly_fee,
+    };
+}
+
+async function createUserAccount({ email, password, role = 'guest', name = '', kycStatus = 'pending', isTestUser = 0 }) {
+    const normalizedEmail = normalizeEmail(email);
+    const rawPassword = String(password || '').trim();
+    const userName = String(name || '').trim();
+    if (!normalizedEmail || !rawPassword || !userName) {
+        return { error: 'name, email and password are required', status: 400 };
+    }
+    if (!normalizedEmail.includes('@')) {
+        return { error: 'Invalid email address', status: 400 };
+    }
+    if (rawPassword.length < 8) {
+        return { error: 'Password must be at least 8 characters', status: 400 };
+    }
+
+    const roleValue = sanitizeRole(role);
+    const existing = await getSql('SELECT email FROM user_accounts WHERE email = ?', [normalizedEmail]);
+    if (existing) {
+        return { error: 'User already exists', status: 409 };
+    }
+
+    const now = new Date().toISOString();
+    await runSql(
+        'INSERT INTO user_accounts (email, name, password, role, kyc_status, joined_at, is_test_user, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [normalizedEmail, userName, rawPassword, roleValue, String(kycStatus || 'pending').trim().toLowerCase(), now, Number(isTestUser) ? 1 : 0, now]
+    );
+
+    await ensureRewardProfile(normalizedEmail);
+    const subscription = await ensureSubscriptionProfile(normalizedEmail);
+    const user = await getSql(
+        'SELECT email, name, role, kyc_status, joined_at, is_test_user, updated_at FROM user_accounts WHERE email = ?',
+        [normalizedEmail]
+    );
+
+    return { user, subscription };
+}
+
+async function getSubscriptionDashboardData() {
+    const rows = await allSql(
+        'SELECT email, tier, status, plan_name, billing_cycle, activated_at, next_billing_at, reference, source, updated_at FROM user_subscriptions ORDER BY datetime(updated_at) DESC'
+    );
+
+    const summary = rows.reduce(
+        (accumulator, row) => {
+            const fee = getSubscriptionConfig(row.tier).monthly_fee;
+            accumulator.total += 1;
+            accumulator.mrr += fee;
+            if (row.status === 'trial') accumulator.trial += 1;
+            else if (row.status === 'active') accumulator.active += 1;
+            else accumulator.free += 1;
+            return accumulator;
+        },
+        { total: 0, active: 0, trial: 0, free: 0, mrr: 0 }
+    );
+
+    return { rows, summary };
 }
 
 async function claimRewardNotification(notificationId) {
@@ -343,6 +570,38 @@ async function initializeDatabase() {
     await runSql('CREATE INDEX IF NOT EXISTS idx_reward_notifications_email ON user_reward_notifications(email)');
     await runSql('CREATE INDEX IF NOT EXISTS idx_reward_notifications_created_at ON user_reward_notifications(created_at DESC)');
 
+    await runSql(`
+        CREATE TABLE IF NOT EXISTS user_accounts (
+            email TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            password TEXT NOT NULL DEFAULT '',
+            role TEXT NOT NULL DEFAULT 'guest',
+            kyc_status TEXT NOT NULL DEFAULT 'pending',
+            joined_at TEXT NOT NULL,
+            is_test_user INTEGER NOT NULL DEFAULT 0,
+            updated_at TEXT NOT NULL
+        )
+    `);
+    await runSql('CREATE INDEX IF NOT EXISTS idx_user_accounts_role ON user_accounts(role)');
+    await runSql('CREATE INDEX IF NOT EXISTS idx_user_accounts_kyc_status ON user_accounts(kyc_status)');
+
+    await runSql(`
+        CREATE TABLE IF NOT EXISTS user_subscriptions (
+            email TEXT PRIMARY KEY,
+            tier TEXT NOT NULL DEFAULT 'free',
+            status TEXT NOT NULL DEFAULT 'free',
+            plan_name TEXT NOT NULL DEFAULT 'Free Plan',
+            billing_cycle TEXT NOT NULL DEFAULT 'None',
+            activated_at TEXT NOT NULL,
+            next_billing_at TEXT,
+            reference TEXT DEFAULT '',
+            source TEXT NOT NULL DEFAULT 'system',
+            updated_at TEXT NOT NULL
+        )
+    `);
+    await runSql('CREATE INDEX IF NOT EXISTS idx_user_subscriptions_tier ON user_subscriptions(tier)');
+    await runSql('CREATE INDEX IF NOT EXISTS idx_user_subscriptions_status ON user_subscriptions(status)');
+
     await ensureColumn('erp_bookings', 'listing_id', "TEXT DEFAULT ''");
     await ensureColumn('erp_listings', 'description', "TEXT DEFAULT ''");
     await ensureColumn('erp_listings', 'host_email', "TEXT DEFAULT ''");
@@ -361,6 +620,24 @@ async function initializeDatabase() {
     await ensureColumn('user_reward_notifications', 'created_at', "TEXT DEFAULT ''");
     await ensureColumn('user_reward_notifications', 'updated_at', "TEXT DEFAULT ''");
     await ensureColumn('user_reward_notifications', 'claimed_at', 'TEXT');
+
+    await ensureColumn('user_subscriptions', 'tier', "TEXT DEFAULT 'free'");
+    await ensureColumn('user_subscriptions', 'status', "TEXT DEFAULT 'free'");
+    await ensureColumn('user_subscriptions', 'plan_name', "TEXT DEFAULT 'Free Plan'");
+    await ensureColumn('user_subscriptions', 'billing_cycle', "TEXT DEFAULT 'None'");
+    await ensureColumn('user_subscriptions', 'activated_at', "TEXT DEFAULT ''");
+    await ensureColumn('user_subscriptions', 'next_billing_at', 'TEXT');
+    await ensureColumn('user_subscriptions', 'reference', "TEXT DEFAULT ''");
+    await ensureColumn('user_subscriptions', 'source', "TEXT DEFAULT 'system'");
+    await ensureColumn('user_subscriptions', 'updated_at', "TEXT DEFAULT ''");
+
+    await ensureColumn('user_accounts', 'name', "TEXT DEFAULT ''");
+    await ensureColumn('user_accounts', 'password', "TEXT DEFAULT ''");
+    await ensureColumn('user_accounts', 'role', "TEXT DEFAULT 'guest'");
+    await ensureColumn('user_accounts', 'kyc_status', "TEXT DEFAULT 'pending'");
+    await ensureColumn('user_accounts', 'joined_at', "TEXT DEFAULT ''");
+    await ensureColumn('user_accounts', 'is_test_user', 'INTEGER DEFAULT 0');
+    await ensureColumn('user_accounts', 'updated_at', "TEXT DEFAULT ''");
 }
 
 async function seedErpDataIfEmpty() {
@@ -384,16 +661,31 @@ async function seedErpDataIfEmpty() {
     if ((listingsCount?.count || 0) === 0) {
         const now = new Date().toISOString();
         const rows = [
-            ['cam_fx3_001', 'Sony FX3 Cinema Camera', 'Premium full-frame cinema camera body', 'Cameras', 'sold_out', 'Excellent', 'Julian R.', 'julian.r@lens.co', 20500, 42000, '', now, now],
-            ['drone_m3_002', 'DJI Mavic 3 Pro Drone', 'Professional drone with 5.1K recording', 'Drones', 'sold_out', 'Good', 'Julian R.', 'julian.r@lens.co', 9000, 12000, '', now, now],
-            ['light_apu_003', 'Aputure 300D Light Kit', 'Complete lighting package for studio and set', 'Lighting', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 4000, 6000, '', now, now],
-            ['lens_rf50_004', 'Canon RF 50mm Lens', 'Fast prime lens with high optical clarity', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 3500, 5000, '', now, now],
-            ['audio_zoom_005', 'Zoom H6 Audio Recorder', 'Field recorder kit with accessories', 'Audio', 'maintenance', 'Needs Repair', 'Marcus S.', 'marcus.s@lens.co', 2500, 3000, '', now, now],
-            ['rig_ronin_006', 'DJI Ronin Stabilizer', '3-axis stabilizer for mirrorless cinema rigs', 'Stabilizers', 'sold_out', 'Good', 'Marcus S.', 'marcus.s@lens.co', 5500, 9000, '', now, now],
+            ['cam_fx3_001', 'Sony FX3 Cinema Camera', 'Premium full-frame cinema camera body', 'Cameras', 'sold_out', 'Excellent', 'Julian R.', 'julian.r@lens.co', 9500, 12000, '', now, now],
+            ['drone_m3_002', 'DJI Mavic 3 Pro Drone', 'Professional drone with 5.1K recording', 'Drones', 'sold_out', 'Good', 'Julian R.', 'julian.r@lens.co', 6200, 8000, '', now, now],
+            ['light_apu_003', 'Aputure 300D Light Kit', 'Complete lighting package for studio and set', 'Lighting', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 2400, 4000, '', now, now],
+            ['lens_rf50_004', 'Canon RF 50mm Lens', 'Fast prime lens with high optical clarity', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 1800, 3000, '', now, now],
+            ['audio_zoom_005', 'Zoom H6 Audio Recorder', 'Field recorder kit with accessories', 'Audio', 'maintenance', 'Needs Repair', 'Marcus S.', 'marcus.s@lens.co', 1200, 2000, '', now, now],
+            ['rig_ronin_006', 'DJI Ronin Stabilizer', '3-axis stabilizer for mirrorless cinema rigs', 'Stabilizers', 'sold_out', 'Good', 'Marcus S.', 'marcus.s@lens.co', 3200, 5000, '', now, now],
         ];
         for (const row of rows) {
             await runSql('INSERT INTO erp_listings (id, title, description, category, status, item_condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', row);
         }
+    }
+
+    const pricingFixes = [
+        ['cam_fx3_001', 9500, 12000],
+        ['drone_m3_002', 6200, 8000],
+        ['light_apu_003', 2400, 4000],
+        ['lens_rf50_004', 1800, 3000],
+        ['audio_zoom_005', 1200, 2000],
+        ['rig_ronin_006', 3200, 5000],
+    ];
+    for (const [id, pricePerDay, deposit] of pricingFixes) {
+        await runSql(
+            'UPDATE erp_listings SET price_per_day = ?, deposit = ?, updated_at = ? WHERE id = ?',
+            [pricePerDay, deposit, new Date().toISOString(), id]
+        );
     }
 
     const disputesCount = await getSql('SELECT COUNT(*) AS count FROM erp_disputes');
@@ -408,6 +700,20 @@ async function seedErpDataIfEmpty() {
         for (const row of rows) {
             await runSql('INSERT INTO erp_disputes (id, type, parties, issue, status, priority, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)', row);
         }
+    }
+
+    for (const user of TEST_USER_ACCOUNTS) {
+        const normalizedEmail = normalizeEmail(user.email);
+        await runSql(
+            'INSERT OR IGNORE INTO user_accounts (email, name, password, role, kyc_status, joined_at, is_test_user, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [normalizedEmail, user.name, user.password, user.role, user.kyc_status, new Date().toISOString(), 1, new Date().toISOString()]
+        );
+        await runSql(
+            'UPDATE user_accounts SET name = ?, password = ?, role = ?, kyc_status = ?, is_test_user = 1, updated_at = ? WHERE email = ?',
+            [user.name, user.password, sanitizeRole(user.role), user.kyc_status, new Date().toISOString(), normalizedEmail]
+        );
+        await ensureSubscriptionProfile(normalizedEmail);
+        await ensureRewardProfile(normalizedEmail);
     }
 }
 
@@ -428,8 +734,23 @@ app.post('/api/create-order', async (req, res) => {
     }
 });
 
-app.get('/api/admin/metrics', (req, res) => {
-    res.json({ totalRevenue: 3450000, activeRentals: 42, pendingKYC: 15, newSignupsToday: 8 });
+app.get('/api/admin/metrics', async (req, res) => {
+    try {
+        const subscriptionData = await getSubscriptionDashboardData();
+        res.json({
+            totalRevenue: 3450000,
+            activeRentals: 42,
+            pendingKYC: 15,
+            newSignupsToday: 8,
+            subscriptionMrr: subscriptionData.summary.mrr,
+            activeSubscriptions: subscriptionData.summary.active,
+            trialSubscriptions: subscriptionData.summary.trial,
+            freeUsers: subscriptionData.summary.free,
+            subscriptionCount: subscriptionData.summary.total,
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 app.post('/api/admin/kyc-webhook', (req, res) => {
@@ -487,14 +808,50 @@ app.post('/api/reviews/submit', async (req, res) => {
 app.get('/api/listings/public', async (req, res) => {
     try {
         const requestedStatus = String(req.query.status || '').toLowerCase();
+        const minPriceRaw = req.query.min_price;
+        const maxPriceRaw = req.query.max_price;
+        const minPrice = minPriceRaw === undefined || minPriceRaw === '' ? null : Number(minPriceRaw);
+        const maxPrice = maxPriceRaw === undefined || maxPriceRaw === '' ? null : Number(maxPriceRaw);
+
+        if (minPrice !== null && (!Number.isFinite(minPrice) || minPrice < 0)) {
+            return res.status(400).json({ success: false, error: 'min_price must be a non-negative number' });
+        }
+        if (maxPrice !== null && (!Number.isFinite(maxPrice) || maxPrice < 0)) {
+            return res.status(400).json({ success: false, error: 'max_price must be a non-negative number' });
+        }
+        if (minPrice !== null && maxPrice !== null && minPrice > maxPrice) {
+            return res.status(400).json({ success: false, error: 'min_price cannot be greater than max_price' });
+        }
+
         const params = [];
+        const whereParts = [];
         let query = 'SELECT id, title, description, category, status, item_condition AS condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at FROM erp_listings';
 
         if (requestedStatus) {
-            query += ' WHERE lower(status) = ?';
-            params.push(requestedStatus);
+            if (requestedStatus === 'available') {
+                whereParts.push("lower(status) IN ('available', 'approved', 'published', 'active')");
+            } else if (requestedStatus === 'sold_out') {
+                whereParts.push("lower(status) IN ('sold_out', 'rented')");
+            } else {
+                whereParts.push('lower(status) = ?');
+                params.push(requestedStatus);
+            }
         } else {
-            query += " WHERE lower(status) IN ('available', 'sold_out', 'rented')";
+            whereParts.push("lower(status) IN ('available', 'approved', 'published', 'active', 'sold_out', 'rented')");
+        }
+
+        if (minPrice !== null) {
+            whereParts.push('price_per_day >= ?');
+            params.push(Math.round(minPrice));
+        }
+
+        if (maxPrice !== null) {
+            whereParts.push('price_per_day <= ?');
+            params.push(Math.round(maxPrice));
+        }
+
+        if (whereParts.length) {
+            query += ` WHERE ${whereParts.join(' AND ')}`;
         }
 
         query += ' ORDER BY datetime(updated_at) DESC';
@@ -810,6 +1167,115 @@ app.get('/api/users/rewards', async (req, res) => {
     }
 });
 
+app.get('/api/users/subscription', async (req, res) => {
+    try {
+        const email = normalizeEmail(req.query.email);
+        if (!email) {
+            return res.status(400).json({ success: false, error: 'email query parameter is required' });
+        }
+
+        const subscription = await ensureSubscriptionProfile(email);
+        return res.json({ success: true, email, subscription });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/users/register', async (req, res) => {
+    try {
+        const firstName = String(req.body.first_name || req.body.firstName || '').trim();
+        const lastName = String(req.body.last_name || req.body.lastName || '').trim();
+        const providedName = String(req.body.name || '').trim();
+        const fullName = providedName || `${firstName} ${lastName}`.trim();
+
+        const result = await createUserAccount({
+            email: req.body.email,
+            password: req.body.password,
+            role: req.body.role,
+            name: fullName,
+            kycStatus: req.body.kyc_status || 'pending',
+            isTestUser: 0,
+        });
+
+        if (result?.error) {
+            return res.status(result.status || 400).json({ success: false, error: result.error });
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: 'Account created successfully',
+            user: {
+                ...result.user,
+                role_label: titleCaseRole(result.user.role),
+            },
+            subscription: result.subscription,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/users/login', async (req, res) => {
+    try {
+        const email = normalizeEmail(req.body.email);
+        const password = String(req.body.password || '').trim();
+        if (!email || !password) {
+            return res.status(400).json({ success: false, error: 'email and password are required' });
+        }
+
+        const user = await getSql(
+            'SELECT email, name, password, role, kyc_status, joined_at, is_test_user, updated_at FROM user_accounts WHERE email = ?',
+            [email]
+        );
+        if (!user || String(user.password || '') !== password) {
+            return res.status(401).json({ success: false, error: 'Invalid email or password' });
+        }
+
+        await ensureRewardProfile(email);
+        const subscription = await ensureSubscriptionProfile(email);
+
+        return res.json({
+            success: true,
+            user: {
+                email: user.email,
+                name: user.name,
+                role: user.role,
+                role_label: titleCaseRole(user.role),
+                kyc_status: user.kyc_status,
+                joined_at: user.joined_at,
+                is_test_user: user.is_test_user,
+                updated_at: user.updated_at,
+            },
+            subscription,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/users/subscription/activate', async (req, res) => {
+    try {
+        const email = normalizeEmail(req.body.email || req.query.email);
+        const tier = String(req.body.tier || req.body.plan || 'plus').trim().toLowerCase();
+        if (!email) {
+            return res.status(400).json({ success: false, error: 'email is required' });
+        }
+
+        const subscription = await upsertSubscription({
+            email,
+            tier,
+            reference: String(req.body.reference || req.body.ref || '').trim(),
+            source: String(req.body.source || 'checkout').trim(),
+            activatedAt: String(req.body.activated_at || '').trim(),
+            nextBillingAt: req.body.next_billing_at ? String(req.body.next_billing_at).trim() : null,
+        });
+
+        return res.status(201).json({ success: true, message: 'Subscription saved', subscription });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.get('/api/users/notifications', async (req, res) => {
     try {
         const email = normalizeEmail(req.query.email);
@@ -882,6 +1348,11 @@ app.post('/api/admin/rewards/award', async (req, res) => {
             return res.status(400).json({ success: false, error: 'email and positive coin_amount are required' });
         }
 
+        const userAccount = await getSql('SELECT email, name FROM user_accounts WHERE email = ?', [email]);
+        if (!userAccount) {
+            return res.status(404).json({ success: false, error: 'User not found. Create or register the user first.' });
+        }
+
         const notification = await awardCoins({
             email,
             amount,
@@ -891,7 +1362,63 @@ app.post('/api/admin/rewards/award', async (req, res) => {
             reference: String(req.body.reference || '').trim(),
         });
 
-        return res.status(201).json({ success: true, message: 'Reward notification created', notification });
+        return res.status(201).json({
+            success: true,
+            message: `Reward mail sent to ${userAccount.email} and added to inbox`,
+            notification,
+            user: { email: userAccount.email, name: userAccount.name },
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/admin/subscriptions', async (req, res) => {
+    try {
+        const data = await getSubscriptionDashboardData();
+        return res.json({
+            success: true,
+            count: data.rows.length,
+            summary: data.summary,
+            results: data.rows,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/admin/users', async (req, res) => {
+    try {
+        const rows = await allSql(
+            `
+            SELECT
+                ua.email,
+                ua.name,
+                ua.role,
+                ua.kyc_status,
+                ua.joined_at,
+                ua.is_test_user,
+                ua.updated_at,
+                us.tier,
+                us.status AS subscription_status,
+                us.plan_name,
+                us.next_billing_at
+            FROM user_accounts ua
+            LEFT JOIN user_subscriptions us ON us.email = ua.email
+            ORDER BY ua.is_test_user DESC, datetime(ua.joined_at) DESC
+            `
+        );
+
+        const results = rows.map((row) => ({
+            ...row,
+            role_label: titleCaseRole(row.role),
+            plan_tier: row.tier || 'free',
+            plan_name: row.plan_name || 'Free Plan',
+            subscription_status: row.subscription_status || 'free',
+            kyc_status: row.kyc_status || 'pending',
+        }));
+
+        return res.json({ success: true, count: results.length, results });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }

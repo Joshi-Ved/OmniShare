@@ -62,6 +62,7 @@
           <h1 id="profile-name" class="font-headline font-bold text-3xl text-on-primary-fixed">Marcus Sterling</h1>
           <span class="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full uppercase tracking-wider">Gold Host</span>
           <span class="px-3 py-1 bg-white/40 text-on-primary-fixed text-xs font-bold rounded-full">KYC Verified</span>
+          <span id="membership-badge" class="px-3 py-1 bg-white/40 text-on-primary-fixed text-xs font-bold rounded-full">Free Plan</span>
         </div>
         <p id="profile-email" class="text-on-primary-fixed/70 text-sm mb-4">m.sterling@studio.com · Member since January 2023</p>
         <div class="flex flex-wrap gap-6 text-sm">
@@ -105,6 +106,22 @@
       <p class="text-xs text-emerald-700">Identity verified on Jan 14, 2023. You can list items and book rentals without restrictions.</p>
     </div>
     <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">Active</span>
+  </div>
+
+  <div class="mb-10 bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm flex flex-col md:flex-row md:items-center gap-4">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">workspace_premium</span>
+      </div>
+      <div>
+        <p class="font-headline font-bold text-sm text-on-surface">Subscription Status</p>
+        <p id="membership-summary" class="text-xs text-on-surface-variant">Free plan · Upgrade anytime from the plans page.</p>
+      </div>
+    </div>
+    <div class="md:ml-auto flex items-center gap-3">
+      <span id="membership-cycle" class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">No active billing</span>
+      <a href="subscription.html" class="px-4 py-2 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary-container transition-colors">Manage Plan</a>
+    </div>
   </div>
 
   <!-- Tabs -->
@@ -313,12 +330,109 @@
 </footer>
 
 <script>
-  const hardcodedProfile = {
-    name: 'Both Test User',
-    email: 'both.test@omnishare.local'
-  };
-  let rewardEmail = new URLSearchParams(window.location.search).get('email') || hardcodedProfile.email;
+  const activeEmailKey = 'omnishare:active-email';
+  const subscriptionKeyPrefix = 'omnishare:membership:';
+  let rewardEmail = new URLSearchParams(window.location.search).get('email') || safeStorageGet(activeEmailKey) || '';
   const rewardsInboxLink = document.getElementById('rewards-inbox-link');
+  const membershipBadge = document.getElementById('membership-badge');
+  const membershipSummary = document.getElementById('membership-summary');
+  const membershipCycle = document.getElementById('membership-cycle');
+
+  function normalizeEmail(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (_error) {
+      return;
+    }
+  }
+
+  function getSubscriptionKey(email) {
+    return `${subscriptionKeyPrefix}${normalizeEmail(email) || 'default'}`;
+  }
+
+  function getDefaultSubscriptionState() {
+    return {
+      tier: 'free',
+      label: 'Free Plan',
+      summary: 'Free plan · Upgrade anytime from the plans page.',
+      cycle: 'No active billing',
+      activatedAt: null,
+      nextBillingAt: null,
+    };
+  }
+
+  function buildSubscriptionState(email) {
+    const fallbackState = getDefaultSubscriptionState();
+    const keys = [getSubscriptionKey(email), getSubscriptionKey('default')];
+
+    for (const key of keys) {
+      try {
+        const raw = safeStorageGet(key);
+        if (!raw) continue;
+        const parsed = JSON.parse(raw);
+        if (!parsed || !parsed.tier) continue;
+        return {
+          ...fallbackState,
+          ...parsed,
+          label: parsed.label || fallbackState.label,
+          summary: parsed.summary || fallbackState.summary,
+          cycle: parsed.cycle || fallbackState.cycle,
+        };
+      } catch (_error) {
+        continue;
+      }
+    }
+
+    return fallbackState;
+  }
+
+  function getDisplayNameFromEmail(email) {
+    const normalized = normalizeEmail(email);
+    if (!normalized) return 'Your Profile';
+    return normalized.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+  }
+
+  async function loadSubscriptionState(email) {
+    try {
+      const response = await fetch(`/api/users/subscription?email=${encodeURIComponent(normalizeEmail(email))}`);
+      if (!response.ok) {
+        throw new Error('Unable to load subscription');
+      }
+
+      const payload = await response.json();
+      if (payload?.success && payload.subscription) {
+        return payload.subscription;
+      }
+    } catch (_error) {
+      // Fall back to browser storage below.
+    }
+
+    return buildSubscriptionState(email);
+  }
+
+  function renderSubscriptionState(state) {
+    if (membershipBadge) {
+      membershipBadge.textContent = state.label;
+    }
+    if (membershipSummary) {
+      membershipSummary.textContent = state.summary;
+    }
+    if (membershipCycle) {
+      membershipCycle.textContent = state.cycle;
+    }
+  }
 
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -440,12 +554,27 @@
   }
 
   async function initHardcodedProfile() {
+    safeStorageSet(activeEmailKey, rewardEmail);
+
     if (rewardEmail) {
       rewardsInboxLink.href = `notifications.html?email=${encodeURIComponent(rewardEmail)}`;
     }
 
-    document.getElementById('profile-name').textContent = hardcodedProfile.name;
-    document.getElementById('profile-email').textContent = `${rewardEmail} · Member since January 2023`;
+    document.getElementById('profile-name').textContent = getDisplayNameFromEmail(rewardEmail);
+    document.getElementById('profile-email').textContent = rewardEmail ? `${rewardEmail} · Member since your signup date` : 'Connect your account to load profile details.';
+    const subscriptionState = await loadSubscriptionState(rewardEmail);
+    renderSubscriptionState({
+      ...subscriptionState,
+      label: subscriptionState.plan_name || subscriptionState.label,
+      summary: subscriptionState.status === 'trial'
+        ? 'Trial active · Upgrade before it expires.'
+        : subscriptionState.status === 'active'
+          ? `${subscriptionState.plan_name || 'Membership'} active · ${subscriptionState.billing_cycle || 'Monthly'}`
+          : 'Free plan · Upgrade anytime from the plans page.',
+      cycle: subscriptionState.next_billing_at
+        ? `Renews ${new Date(subscriptionState.next_billing_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`
+        : 'No active billing',
+    });
 
     await loadRewards();
   }

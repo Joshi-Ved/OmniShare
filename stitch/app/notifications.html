@@ -114,7 +114,16 @@
   </div>
 </footer>
 <script>
-  let rewardsEmail = new URLSearchParams(window.location.search).get('email') || 'both.test@omnishare.local';
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  const activeRewardsEmail = new URLSearchParams(window.location.search).get('email') || safeStorageGet('omnishare:active-email') || '';
+  let rewardsEmail = activeRewardsEmail;
   const backToProfile = document.getElementById('back-to-profile');
   backToProfile.href = 'profile.html';
   document.getElementById('active-email').textContent = rewardsEmail;

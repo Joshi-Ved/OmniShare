@@ -31,7 +31,7 @@
     </nav>
     <div class="flex items-center gap-4">
       <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="signin.html">Sign In</a>
-      <a class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container" href="signup.html">Join Now</a>
+      <a id="join-now-link" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container" href="checkout.html?flow=membership&amp;tier=free-trial">Join Now</a>
     </div>
   </div>
 </header>
@@ -78,4 +78,23 @@
     </div>
   </div>
 </footer>
+<script>
+  (function wireJoinNowRoute() {
+    const joinNowLink = document.getElementById('join-now-link');
+    if (!joinNowLink) return;
+
+    let activeEmail = '';
+    try {
+      activeEmail = localStorage.getItem('omnishare:active-email') || '';
+    } catch (_error) {
+      activeEmail = '';
+    }
+
+    const target = new URL('checkout.html', window.location.href);
+    target.searchParams.set('flow', 'membership');
+    target.searchParams.set('tier', 'free-trial');
+    if (activeEmail) target.searchParams.set('email', activeEmail);
+    joinNowLink.href = `${target.pathname}${target.search}`;
+  })();
+</script>
 </body></html>

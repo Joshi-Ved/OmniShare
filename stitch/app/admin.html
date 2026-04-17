@@ -64,6 +64,9 @@
     <a href="#" onclick="return switchSection('users',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">group</span>Users
     </a>
+    <a id="sidebar-rewards-link" href="#" onclick="return switchSection('rewards',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
+      <span class="material-symbols-outlined text-lg">mail</span>Rewards Mail
+    </a>
     <a href="#" onclick="return switchSection('listings',this)" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-on-surface-variant hover:bg-surface-container transition-colors">
       <span class="material-symbols-outlined text-lg">storefront</span>Listings
     </a>
@@ -140,6 +143,78 @@
       </div>
     </div>
 
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-wider text-outline">Platform Take Rate</p>
+        <p class="font-headline font-bold text-2xl mt-1" id="kpi-take-rate">0%</p>
+        <p class="text-xs text-outline mt-2">Net commission over gross volume</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-wider text-outline">Avg Ticket Size</p>
+        <p class="font-headline font-bold text-2xl mt-1" id="kpi-atv">₹0</p>
+        <p class="text-xs text-outline mt-2">Average value per transaction</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-wider text-outline">Projected ARR</p>
+        <p class="font-headline font-bold text-2xl mt-1" id="kpi-arr">₹0</p>
+        <p class="text-xs text-outline mt-2">Annualized platform revenue</p>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm">
+        <p class="text-[10px] font-black uppercase tracking-wider text-outline">Monthly Target Gap</p>
+        <p class="font-headline font-bold text-2xl mt-1" id="kpi-target-gap">₹0</p>
+        <p class="text-xs mt-2" id="kpi-target-note">Against ₹2.5L net target</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10 shadow-sm space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="font-headline font-bold text-lg">Subscription Operations</h2>
+          <p class="text-xs text-outline mt-1" id="subscription-sync-label">Loading backend subscription records...</p>
+        </div>
+        <a href="subscription.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-xs font-bold hover:bg-primary-container transition-colors">
+          <span class="material-symbols-outlined text-sm">workspace_premium</span>
+          View Plans
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="rounded-xl bg-surface-container-low p-4 border border-outline-variant/10">
+          <p class="text-[10px] font-black uppercase tracking-wider text-outline">Total Members</p>
+          <p id="subscription-total-count" class="font-headline font-bold text-2xl mt-1">0</p>
+        </div>
+        <div class="rounded-xl bg-surface-container-low p-4 border border-outline-variant/10">
+          <p class="text-[10px] font-black uppercase tracking-wider text-outline">Active Plans</p>
+          <p id="subscription-active-count" class="font-headline font-bold text-2xl mt-1">0</p>
+        </div>
+        <div class="rounded-xl bg-surface-container-low p-4 border border-outline-variant/10">
+          <p class="text-[10px] font-black uppercase tracking-wider text-outline">Trials</p>
+          <p id="subscription-trial-count" class="font-headline font-bold text-2xl mt-1">0</p>
+        </div>
+        <div class="rounded-xl bg-surface-container-low p-4 border border-outline-variant/10">
+          <p class="text-[10px] font-black uppercase tracking-wider text-outline">Free Users</p>
+          <p id="subscription-free-count" class="font-headline font-bold text-2xl mt-1">0</p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="border-b border-outline-variant/15 bg-surface-container-low">
+              <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline">Member</th>
+              <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline hidden md:table-cell">Plan</th>
+              <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline">Status</th>
+              <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline hidden lg:table-cell">Billing</th>
+              <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline hidden md:table-cell">Updated</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant/10" id="subscription-table-body">
+            <tr><td class="p-4 text-xs text-outline" colspan="5">Loading subscriptions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Bar Chart + Live Feed  -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -199,6 +274,28 @@
             <div class="flex-1 bg-emerald-500 rounded-t animate-pulse" id="spark-latest" style="height:40%"></div>
           </div>
         </div>
+
+        <div class="mt-8 border-t border-outline-variant/15 pt-6">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs font-bold uppercase tracking-wider text-outline">Stream Contribution Matrix</p>
+            <span class="text-[11px] text-outline" id="stream-dominant">Top stream: -</span>
+          </div>
+          <div class="overflow-x-auto rounded-xl border border-outline-variant/15">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-surface-container-low">
+                <tr>
+                  <th class="p-3 font-black uppercase tracking-wider text-outline">Stream</th>
+                  <th class="p-3 font-black uppercase tracking-wider text-outline">Revenue</th>
+                  <th class="p-3 font-black uppercase tracking-wider text-outline">Share</th>
+                  <th class="p-3 font-black uppercase tracking-wider text-outline">Health</th>
+                </tr>
+              </thead>
+              <tbody id="stream-breakdown-body" class="divide-y divide-outline-variant/10">
+                <tr><td class="p-3 text-outline" colspan="4">Loading stream insights...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       <!-- Live Transaction Feed -->
@@ -247,6 +344,57 @@
         </svg>
         <p class="font-headline font-bold text-2xl" id="gauge-subs-val">0%</p>
         <p class="text-xs text-outline mt-1 uppercase tracking-wider">Subscription Conversion</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-5 gap-6">
+      <div class="xl:col-span-2 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm space-y-4">
+        <div>
+          <h3 class="font-headline font-bold text-lg">Revenue Quality Board</h3>
+          <p class="text-xs text-outline mt-1">Live quality indicators for monetization stability.</p>
+        </div>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between rounded-lg bg-surface-container-low px-3 py-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-outline">Growth Velocity</span>
+            <span id="kpi-growth-velocity" class="text-sm font-headline font-bold text-emerald-600">+0.0%</span>
+          </div>
+          <div class="flex items-center justify-between rounded-lg bg-surface-container-low px-3 py-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-outline">Subscription Penetration</span>
+            <span id="kpi-sub-penetration" class="text-sm font-headline font-bold">0.0%</span>
+          </div>
+          <div class="flex items-center justify-between rounded-lg bg-surface-container-low px-3 py-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-outline">Stream Concentration</span>
+            <span id="kpi-concentration" class="text-sm font-headline font-bold">Low Risk</span>
+          </div>
+          <div class="flex items-center justify-between rounded-lg bg-surface-container-low px-3 py-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-outline">Penalty Dependence</span>
+            <span id="kpi-penalty-dep" class="text-sm font-headline font-bold">0.0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="xl:col-span-3 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+          <div>
+            <h3 class="font-headline font-bold text-lg">Revenue Optimization Playbook</h3>
+            <p class="text-xs text-outline mt-1">Actionable recommendations generated from live stream mix.</p>
+          </div>
+          <span id="playbook-score" class="px-3 py-1 rounded-full text-[11px] font-black uppercase bg-primary/10 text-primary">Score: 0/100</span>
+        </div>
+        <div class="overflow-x-auto rounded-xl border border-outline-variant/15">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-surface-container-low">
+              <tr>
+                <th class="p-3 font-black uppercase tracking-wider text-outline">Priority</th>
+                <th class="p-3 font-black uppercase tracking-wider text-outline">Action</th>
+                <th class="p-3 font-black uppercase tracking-wider text-outline">Owner</th>
+                <th class="p-3 font-black uppercase tracking-wider text-outline">Expected Lift</th>
+              </tr>
+            </thead>
+            <tbody id="stream-actions-body" class="divide-y divide-outline-variant/10">
+              <tr><td class="p-3 text-outline" colspan="4">Preparing recommendations...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -321,9 +469,12 @@
     <h2 class="font-headline font-bold text-2xl mb-6">User Management</h2>
     <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/10 shadow-sm overflow-hidden">
       <div class="p-4 border-b border-outline-variant/15 flex items-center gap-4">
-        <input type="text" placeholder="Search users…" class="flex-1 bg-surface-container-low border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20"/>
-        <select class="bg-surface-container-low border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20">
-          <option>All Users</option><option>KYC Verified</option><option>Unverified</option><option>Suspended</option>
+        <input id="users-search-input" type="text" placeholder="Search users..." class="flex-1 bg-surface-container-low border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20"/>
+        <select id="users-filter-select" class="bg-surface-container-low border-none rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20">
+          <option value="all">All Users</option>
+          <option value="verified">KYC Verified</option>
+          <option value="pending">Pending KYC</option>
+          <option value="test">Test Users</option>
         </select>
       </div>
       <table class="w-full text-left text-sm">
@@ -335,9 +486,7 @@
           <th class="p-4 font-bold text-xs uppercase tracking-wider text-outline">Action</th>
         </tr></thead>
         <tbody class="divide-y divide-outline-variant/10" id="users-table">
-          <tr><td class="p-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">M</div><div><p class="font-bold">Marcus Sterling</p><p class="text-xs text-outline">m.sterling@studio.com</p></div></div></td><td class="p-4 hidden md:table-cell"><span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase">Pro</span></td><td class="p-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Verified</span></td><td class="p-4 text-outline hidden md:table-cell text-xs">Jan 14, 2023</td><td class="p-4"><button class="text-primary text-xs font-bold hover:underline">View</button></td></tr>
-          <tr><td class="p-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-xs">E</div><div><p class="font-bold">Elena Rodriguez</p><p class="text-xs text-outline">e.r@studio.io</p></div></div></td><td class="p-4 hidden md:table-cell"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Plus</span></td><td class="p-4"><span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Verified</span></td><td class="p-4 text-outline hidden md:table-cell text-xs">Mar 3, 2023</td><td class="p-4"><button class="text-primary text-xs font-bold hover:underline">View</button></td></tr>
-          <tr><td class="p-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-amber-400 text-white flex items-center justify-center font-bold text-xs">J</div><div><p class="font-bold">Julian R.</p><p class="text-xs text-outline">julian.r@lens.co</p></div></div></td><td class="p-4 hidden md:table-cell"><span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Free</span></td><td class="p-4"><span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Pending</span></td><td class="p-4 text-outline hidden md:table-cell text-xs">Oct 5, 2024</td><td class="p-4"><button class="text-primary text-xs font-bold hover:underline" onclick="switchSection('kyc',document.querySelectorAll('#sidebar a')[1])">Verify</button></td></tr>
+          <tr><td class="p-4 text-xs text-outline" colspan="5">Loading users...</td></tr>
         </tbody>
       </table>
     </div>
@@ -752,7 +901,13 @@
           <h3 class="font-headline font-bold text-lg mb-1">Reward Mail Composer</h3>
           <p class="text-sm text-on-surface-variant">Send a mail, subject, and coin bonus directly to a member's inbox page.</p>
         </div>
-        <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">User Email</label><input id="reward-email" type="email" placeholder="member@example.com" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Test User Email</label>
+          <select id="reward-email" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full">
+            <option value="">Loading test users...</option>
+          </select>
+          <p class="text-[10px] text-outline mt-2">Recipients are restricted to local test users.</p>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Coin Amount</label><input id="reward-amount" type="number" value="25" min="1" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
           <div><label class="text-xs font-bold uppercase tracking-widest text-outline block mb-2">Mail Source</label><input id="reward-source" type="text" value="admin_mail" class="bg-surface-container-low border-none rounded-xl px-4 py-3 text-sm w-full"/></div>
@@ -773,12 +928,29 @@
 // ── Section switching ─────────────────────────────────────
 const titles = {revenue:'Revenue Dashboard',kyc:'KYC Verification',users:'User Management',listings:'Listing Inventory',bookings:'Booking Workflow',disputes:'Disputes & Support',reviews:'Review Moderation',settings:'Platform Settings'};
 function switchSection(name, link) {
+  const sectionName = name === 'rewards' ? 'settings' : name;
   document.querySelectorAll('.section-block').forEach(s => s.classList.add('hidden'));
   document.querySelectorAll('#sidebar a').forEach(a => a.classList.remove('active'));
-  document.getElementById('section-' + name).classList.remove('hidden');
-  document.getElementById('section-title').textContent = titles[name];
+  document.getElementById('section-' + sectionName).classList.remove('hidden');
+  document.getElementById('section-title').textContent = name === 'rewards' ? 'Reward Mail Composer' : titles[name];
   if (link) link.classList.add('active');
   return false;
+}
+
+function openRewardComposerForUser(email) {
+  const rewardsLink = document.getElementById('sidebar-rewards-link');
+  switchSection('rewards', rewardsLink);
+
+  const emailField = document.getElementById('reward-email');
+  const statusField = document.getElementById('reward-status');
+  if (emailField) {
+    emailField.value = email;
+    if (emailField.value !== email) {
+      if (statusField) statusField.textContent = `This user is not in test-user dropdown: ${email}`;
+      return;
+    }
+  }
+  if (statusField) statusField.textContent = `Ready to send reward mail to ${email}`;
 }
 
 // ── Revenue Data Sets ──────────────────────────────────────
@@ -787,13 +959,394 @@ const revenueData = {
   week:  { rentals:28600, subs:8400, ins:3250, del:3800, penalty:720, total:44770 },
   month: { rentals:98000, subs:31200, ins:11400, del:13500, penalty:2900, total:157000 }
 };
+const revenueBaseline = JSON.parse(JSON.stringify(revenueData));
+const streamLabels = {
+  rentals: 'Rental Commissions',
+  subs: 'Subscriptions',
+  ins: 'Insurance Premiums',
+  del: 'Delivery Fees',
+  penalty: 'Penalty / Late Fees'
+};
 let currentData = revenueData.week;
 let txCount = 0;
 let todayRevenue = 0;
 let commissionTotal = 0;
 let verifiedToday = 0;
+let subscriptionDashboardSummary = { total: 0, active: 0, trial: 0, free: 0, mrr: 0 };
 
 function fmt(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
+function fmtPct(value){ return `${(Math.max(0, value) * 100).toFixed(1)}%`; }
+
+function getMonthlyGrossProjection(period, total) {
+  const multipliers = { today: 30, week: 4.33, month: 1 };
+  const factor = multipliers[period] || 1;
+  return Math.round(total * factor);
+}
+
+function updateRevenueInsights() {
+  const period = document.getElementById('chart-period')?.value || 'week';
+  const total = Number(currentData.total || 0);
+  const commissionBase = Math.max(1, todayRevenue || total);
+  const takeRate = commissionTotal > 0 ? (commissionTotal / commissionBase) : 0;
+  const avgTicket = txCount > 0 ? (todayRevenue / txCount) : 0;
+
+  const monthlyGross = getMonthlyGrossProjection(period, total);
+  const monthlyNet = Math.round(monthlyGross * 0.18) + Number(subscriptionDashboardSummary.mrr || 0);
+  const projectedArr = monthlyNet * 12;
+  const monthlyTarget = 250000;
+  const targetGap = monthlyNet - monthlyTarget;
+  const baselineTotal = Number(revenueBaseline[period]?.total || 1);
+  const growthVelocity = (total - baselineTotal) / Math.max(1, baselineTotal);
+
+  const subsShare = total > 0 ? Number(currentData.subs || 0) / total : 0;
+  const penaltyShare = total > 0 ? Number(currentData.penalty || 0) / total : 0;
+  const shares = [
+    Number(currentData.rentals || 0),
+    Number(currentData.subs || 0),
+    Number(currentData.ins || 0),
+    Number(currentData.del || 0),
+    Number(currentData.penalty || 0)
+  ].map((value) => (total > 0 ? value / total : 0));
+  const concentrationIndex = shares.reduce((acc, value) => acc + (value * value), 0) * 10000;
+
+  const memberTotal = Number(subscriptionDashboardSummary.total || 0);
+  const memberActive = Number(subscriptionDashboardSummary.active || 0);
+  const subscriptionPenetration = memberTotal > 0 ? (memberActive / memberTotal) : 0;
+
+  const takeRateEl = document.getElementById('kpi-take-rate');
+  const atvEl = document.getElementById('kpi-atv');
+  const arrEl = document.getElementById('kpi-arr');
+  const gapEl = document.getElementById('kpi-target-gap');
+  const gapNoteEl = document.getElementById('kpi-target-note');
+  const growthEl = document.getElementById('kpi-growth-velocity');
+  const subPenEl = document.getElementById('kpi-sub-penetration');
+  const concentrationEl = document.getElementById('kpi-concentration');
+  const penaltyEl = document.getElementById('kpi-penalty-dep');
+  const playbookScoreEl = document.getElementById('playbook-score');
+
+  if (takeRateEl) takeRateEl.textContent = fmtPct(takeRate);
+  if (atvEl) atvEl.textContent = fmt(avgTicket);
+  if (arrEl) arrEl.textContent = fmt(projectedArr);
+  if (gapEl) {
+    gapEl.textContent = `${targetGap >= 0 ? '+' : ''}${fmt(targetGap)}`;
+    gapEl.className = `font-headline font-bold text-2xl mt-1 ${targetGap >= 0 ? 'text-emerald-600' : 'text-red-500'}`;
+  }
+  if (gapNoteEl) {
+    gapNoteEl.textContent = targetGap >= 0
+      ? 'Ahead of monthly net target'
+      : 'Below monthly net target';
+    gapNoteEl.className = `text-xs mt-2 ${targetGap >= 0 ? 'text-emerald-600' : 'text-red-500'}`;
+  }
+
+  if (growthEl) {
+    const growthText = `${growthVelocity >= 0 ? '+' : ''}${(growthVelocity * 100).toFixed(1)}%`;
+    growthEl.textContent = growthText;
+    growthEl.className = `text-sm font-headline font-bold ${growthVelocity >= 0 ? 'text-emerald-600' : 'text-red-500'}`;
+  }
+  if (subPenEl) {
+    subPenEl.textContent = fmtPct(subscriptionPenetration);
+  }
+  if (penaltyEl) {
+    penaltyEl.textContent = fmtPct(penaltyShare);
+    penaltyEl.className = `text-sm font-headline font-bold ${penaltyShare > 0.12 ? 'text-red-500' : 'text-emerald-600'}`;
+  }
+  if (concentrationEl) {
+    let concentrationLabel = 'Low Risk';
+    let concentrationClass = 'text-emerald-600';
+    if (concentrationIndex >= 3200) {
+      concentrationLabel = 'High Risk';
+      concentrationClass = 'text-red-500';
+    } else if (concentrationIndex >= 2200) {
+      concentrationLabel = 'Medium Risk';
+      concentrationClass = 'text-amber-600';
+    }
+    concentrationEl.textContent = concentrationLabel;
+    concentrationEl.className = `text-sm font-headline font-bold ${concentrationClass}`;
+  }
+
+  const streamRows = [
+    ['rentals', Number(currentData.rentals || 0)],
+    ['subs', Number(currentData.subs || 0)],
+    ['ins', Number(currentData.ins || 0)],
+    ['del', Number(currentData.del || 0)],
+    ['penalty', Number(currentData.penalty || 0)]
+  ];
+  const sortedRows = [...streamRows].sort((a, b) => b[1] - a[1]);
+  const top = sortedRows[0] || ['rentals', 0];
+
+  const breakdownBody = document.getElementById('stream-breakdown-body');
+  const topLabel = document.getElementById('stream-dominant');
+
+  if (topLabel) {
+    const topShare = total > 0 ? top[1] / total : 0;
+    topLabel.textContent = `Top stream: ${streamLabels[top[0]]} (${fmtPct(topShare)})`;
+  }
+
+  if (breakdownBody) {
+    breakdownBody.innerHTML = sortedRows.map(([key, value]) => {
+      const share = total > 0 ? value / total : 0;
+      let healthLabel = 'Balanced';
+      let healthClass = 'bg-slate-100 text-slate-700';
+      if (share >= 0.45) {
+        healthLabel = 'Core Driver';
+        healthClass = 'bg-primary/10 text-primary';
+      } else if (share >= 0.2) {
+        healthLabel = 'Growth Stream';
+        healthClass = 'bg-emerald-50 text-emerald-700';
+      } else if (share <= 0.08) {
+        healthLabel = 'Under Leveraged';
+        healthClass = 'bg-amber-50 text-amber-700';
+      }
+
+      return `
+        <tr>
+          <td class="p-3 font-semibold">${streamLabels[key]}</td>
+          <td class="p-3 font-headline font-bold">${fmt(value)}</td>
+          <td class="p-3">${fmtPct(share)}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${healthClass}">${healthLabel}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  const playbookActions = [
+    {
+      priority: penaltyShare > 0.12 ? 'P0' : 'P2',
+      action: penaltyShare > 0.12
+        ? 'Reduce late-fee dependency by improving reminder nudges and on-time return incentives.'
+        : 'Penalty revenue stable. Keep SLA nudges and avoid over-optimizing fee collection.',
+      owner: 'Ops + Retention',
+      lift: penaltyShare > 0.12 ? '+3-5% NPS, +1-2% repeat bookings' : 'Maintain current quality'
+    },
+    {
+      priority: subsShare < 0.2 ? 'P1' : 'P2',
+      action: subsShare < 0.2
+        ? 'Upsell membership at checkout and post-rental moments to raise recurring revenue share.'
+        : 'Subscription mix healthy. Run cohort renewal campaigns for higher retention.',
+      owner: 'Growth',
+      lift: subsShare < 0.2 ? '+8-12% MRR in 30 days' : '+3-5% renewal rate'
+    },
+    {
+      priority: concentrationIndex >= 3200 ? 'P1' : 'P3',
+      action: concentrationIndex >= 3200
+        ? 'Diversify streams by bundling insurance + delivery into rental checkout.'
+        : 'Stream mix is balanced. Test premium delivery windows for incremental upside.',
+      owner: 'Product',
+      lift: concentrationIndex >= 3200 ? '+6-9% non-rental revenue' : '+2-4% delivery revenue'
+    }
+  ];
+
+  const actionsBody = document.getElementById('stream-actions-body');
+  if (actionsBody) {
+    actionsBody.innerHTML = playbookActions.map((row) => {
+      const priorityClass = row.priority === 'P0'
+        ? 'bg-red-50 text-red-600'
+        : row.priority === 'P1'
+        ? 'bg-amber-50 text-amber-700'
+        : 'bg-slate-100 text-slate-700';
+      return `
+        <tr>
+          <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${priorityClass}">${row.priority}</span></td>
+          <td class="p-3">${row.action}</td>
+          <td class="p-3 font-semibold">${row.owner}</td>
+          <td class="p-3 text-emerald-700 font-semibold">${row.lift}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  if (playbookScoreEl) {
+    const growthScore = Math.max(0, Math.min(35, Math.round((growthVelocity + 0.2) * 70)));
+    const subScore = Math.max(0, Math.min(30, Math.round(subscriptionPenetration * 30)));
+    const concentrationScore = Math.max(0, Math.min(20, 20 - Math.round((concentrationIndex / 5000) * 20)));
+    const penaltyScore = Math.max(0, Math.min(15, 15 - Math.round(penaltyShare * 80)));
+    const playbookScore = growthScore + subScore + concentrationScore + penaltyScore;
+    playbookScoreEl.textContent = `Score: ${playbookScore}/100`;
+    playbookScoreEl.className = `px-3 py-1 rounded-full text-[11px] font-black uppercase ${playbookScore >= 70 ? 'bg-emerald-50 text-emerald-700' : playbookScore >= 45 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-600'}`;
+  }
+}
+
+function fmtDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value || '—';
+  }
+  return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function subscriptionBadge(row) {
+  if (row.status === 'trial') {
+    return '<span class="px-2 py-1 rounded-full bg-amber-50 text-amber-700 text-[10px] font-black uppercase">Trial</span>';
+  }
+  if (row.status === 'active') {
+    return '<span class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase">Active</span>';
+  }
+  return '<span class="px-2 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-black uppercase">Free</span>';
+}
+
+function planBadge(row) {
+  const tier = String(row.tier || 'free').toLowerCase();
+  if (tier === 'pro') {
+    return '<span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase">Pro</span>';
+  }
+  if (tier === 'plus') {
+    return '<span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Plus</span>';
+  }
+  if (tier === 'free-trial') {
+    return '<span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Trial</span>';
+  }
+  return '<span class="px-2 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-black uppercase">Free</span>';
+}
+
+function userPlanBadge(row) {
+  const tier = String(row.plan_tier || 'free').toLowerCase();
+  if (tier === 'pro') return '<span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase">Pro</span>';
+  if (tier === 'plus') return '<span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Plus</span>';
+  if (tier === 'free-trial') return '<span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Trial</span>';
+  return '<span class="px-2 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-black uppercase">Free</span>';
+}
+
+function userKycBadge(row) {
+  const value = String(row.kyc_status || 'pending').toLowerCase();
+  if (value === 'verified') return '<span class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase">Verified</span>';
+  if (value === 'rejected') return '<span class="px-2 py-1 bg-red-50 text-red-700 rounded-full text-[10px] font-black uppercase">Rejected</span>';
+  return '<span class="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-[10px] font-black uppercase">Pending</span>';
+}
+
+let allAdminUsers = [];
+
+function populateRewardRecipients() {
+  const recipientSelect = document.getElementById('reward-email');
+  if (!recipientSelect) return;
+
+  const testUsers = allAdminUsers.filter((user) => Number(user.is_test_user || 0) === 1);
+  if (!testUsers.length) {
+    recipientSelect.innerHTML = '<option value="">No test users found</option>';
+    return;
+  }
+
+  recipientSelect.innerHTML = ['<option value="">Select a test user</option>']
+    .concat(
+      testUsers.map((user) => `<option value="${user.email}">${user.name || user.email} (${user.email})</option>`)
+    )
+    .join('');
+}
+
+function renderUsersTable() {
+  const tableEl = document.getElementById('users-table');
+  if (!tableEl) return;
+
+  const searchValue = String(document.getElementById('users-search-input')?.value || '').trim().toLowerCase();
+  const filterValue = String(document.getElementById('users-filter-select')?.value || 'all').toLowerCase();
+
+  let filtered = [...allAdminUsers];
+  if (filterValue === 'verified') {
+    filtered = filtered.filter((u) => String(u.kyc_status || '').toLowerCase() === 'verified');
+  } else if (filterValue === 'pending') {
+    filtered = filtered.filter((u) => String(u.kyc_status || '').toLowerCase() !== 'verified');
+  } else if (filterValue === 'test') {
+    filtered = filtered.filter((u) => Number(u.is_test_user || 0) === 1);
+  }
+
+  if (searchValue) {
+    filtered = filtered.filter((u) => {
+      return String(u.email || '').toLowerCase().includes(searchValue)
+        || String(u.name || '').toLowerCase().includes(searchValue)
+        || String(u.role_label || '').toLowerCase().includes(searchValue);
+    });
+  }
+
+  if (!filtered.length) {
+    tableEl.innerHTML = '<tr><td class="p-4 text-xs text-outline" colspan="5">No users match this filter.</td></tr>';
+    return;
+  }
+
+  tableEl.innerHTML = filtered.map((user) => {
+    const initial = String(user.name || user.email || 'U').charAt(0).toUpperCase();
+    const roleBadge = Number(user.is_test_user || 0) ? '<span class="ml-2 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase">Test</span>' : '';
+
+    return `
+      <tr>
+        <td class="p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs">${initial}</div>
+            <div>
+              <p class="font-bold">${user.name || user.email}</p>
+              <p class="text-xs text-outline">${user.email} · ${user.role_label || user.role || 'User'} ${roleBadge}</p>
+            </div>
+          </div>
+        </td>
+        <td class="p-4 hidden md:table-cell">${userPlanBadge(user)}</td>
+        <td class="p-4">${userKycBadge(user)}</td>
+        <td class="p-4 text-outline hidden md:table-cell text-xs">${fmtDate(user.joined_at)}</td>
+        <td class="p-4"><button class="text-primary text-xs font-bold hover:underline" onclick="openRewardComposerForUser('${user.email}')">Send Mail</button></td>
+      </tr>`;
+  }).join('');
+}
+
+async function loadUsers() {
+  const tableEl = document.getElementById('users-table');
+  if (!tableEl) return;
+
+  try {
+    const response = await fetch('/api/admin/users');
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Could not load users');
+    }
+    allAdminUsers = data.results || [];
+    renderUsersTable();
+    populateRewardRecipients();
+  } catch (error) {
+    tableEl.innerHTML = `<tr><td class="p-4 text-xs text-error" colspan="5">${error.message}</td></tr>`;
+  }
+}
+
+async function loadSubscriptions() {
+  const tableEl = document.getElementById('subscription-table-body');
+  const statusEl = document.getElementById('subscription-sync-label');
+  if (!tableEl || !statusEl) return;
+
+  statusEl.textContent = 'Syncing subscription records from backend...';
+  try {
+    const response = await fetch('/api/admin/subscriptions');
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Could not load subscriptions');
+    }
+
+    subscriptionDashboardSummary = data.summary || subscriptionDashboardSummary;
+    document.getElementById('subscription-total-count').textContent = subscriptionDashboardSummary.total || 0;
+    document.getElementById('subscription-active-count').textContent = subscriptionDashboardSummary.active || 0;
+    document.getElementById('subscription-trial-count').textContent = subscriptionDashboardSummary.trial || 0;
+    document.getElementById('subscription-free-count').textContent = subscriptionDashboardSummary.free || 0;
+    document.getElementById('kpi-mrr').textContent = fmt(subscriptionDashboardSummary.mrr || 0);
+    updateRevenueInsights();
+
+    if (!data.results.length) {
+      tableEl.innerHTML = '<tr><td class="p-4 text-xs text-outline" colspan="5">No subscription records yet.</td></tr>';
+      statusEl.textContent = 'Backend connected, no subscriptions stored yet.';
+      return;
+    }
+
+    tableEl.innerHTML = data.results.slice(0, 10).map((row) => {
+      return `
+        <tr>
+          <td class="p-4">
+            <p class="font-bold text-sm">${row.email}</p>
+            <p class="text-xs text-outline">${row.reference || 'No reference'}</p>
+          </td>
+          <td class="p-4 hidden md:table-cell">${planBadge(row)}</td>
+          <td class="p-4">${subscriptionBadge(row)}</td>
+          <td class="p-4 hidden lg:table-cell text-xs text-on-surface-variant">${row.billing_cycle || 'None'}</td>
+          <td class="p-4 hidden md:table-cell text-xs text-outline">${fmtDate(row.updated_at)}</td>
+        </tr>`;
+    }).join('');
+
+    statusEl.textContent = `Synced ${subscriptionDashboardSummary.total || data.count || 0} member records from SQLite.`;
+  } catch (error) {
+    tableEl.innerHTML = `<tr><td class="p-4 text-xs text-error" colspan="5">${error.message}</td></tr>`;
+    statusEl.textContent = 'Subscription sync failed.';
+  }
+}
 
 async function issueReward() {
   const email = document.getElementById('reward-email').value.trim();
@@ -804,7 +1357,7 @@ async function issueReward() {
   const status = document.getElementById('reward-status');
 
   if (!email || !amount || amount <= 0) {
-    status.textContent = 'Enter a valid email and coin amount.';
+    status.textContent = 'Select a test user and enter a valid coin amount.';
     return;
   }
 
@@ -815,8 +1368,9 @@ async function issueReward() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, amount, source, title, message })
     });
-    if (!response.ok) throw new Error('Reward could not be sent');
-    status.textContent = 'Reward sent successfully.';
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.error || 'Reward could not be sent');
+    status.textContent = 'Reward mail delivered to user inbox successfully.';
   } catch (error) {
     status.textContent = error.message;
   }
@@ -837,6 +1391,7 @@ function updateChart() {
     document.getElementById('bar-'+k).style.width = Math.round(v/max*100)+'%';
     document.getElementById('bar-'+k+'-val').textContent = fmt(v);
   });
+  updateRevenueInsights();
 }
 updateChart();
 
@@ -848,7 +1403,12 @@ function refreshKPIs() {
   document.getElementById('kpi-commission').textContent = fmt(commissionTotal);
   document.getElementById('kpi-bookings').textContent = Math.floor(24 + txCount * 0.3);
   document.getElementById('kpi-pending').textContent = Math.max(0, 4 - Math.floor(txCount/3)) + ' pending';
-  document.getElementById('kpi-mrr').textContent = fmt(157000 + todayRevenue * 0.4);
+  if (subscriptionDashboardSummary.total) {
+    document.getElementById('kpi-mrr').textContent = fmt(subscriptionDashboardSummary.mrr);
+  } else {
+    document.getElementById('kpi-mrr').textContent = fmt(0);
+  }
+  updateRevenueInsights();
 }
 
 // Gauge animation (once)
@@ -1081,7 +1641,14 @@ async function loadAdminListingReviews() {
 
 renderKycQueue();
 loadAdminListingReviews();
+loadSubscriptions();
+loadUsers();
 setInterval(loadAdminListingReviews, 15000);
+setInterval(loadSubscriptions, 30000);
+setInterval(loadUsers, 30000);
+
+document.getElementById('users-search-input')?.addEventListener('input', renderUsersTable);
+document.getElementById('users-filter-select')?.addEventListener('change', renderUsersTable);
 
 // Separate reviews data storage
 let allReviews = [];
