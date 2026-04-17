@@ -100,7 +100,8 @@
 </div>
 </div>
 <div class="flex items-center gap-4">
-<a href="signin.html" class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 transition-all active:scale-95">Sign In</a>
+<a id="header-signin-link" href="signin.html" class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 transition-all active:scale-95">Sign In</a>
+<a id="header-signout-link" href="signin.html" class="hidden text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 transition-all active:scale-95">Sign Out</a>
 <a id="join-now-link" href="checkout.html?flow=membership&amp;tier=free-trial" class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold transition-all hover:opacity-80 active:scale-95 inline-block">Join Now</a>
 </div>
 </nav>
@@ -206,7 +207,7 @@
 </div>
 <div id="listing-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 <!-- Rental Card Item 1 -->
-<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html'" data-category="tech-camera" data-price="2400" data-availability="instant" data-nav="lighting">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=pro_studio_light_001'" data-id="pro_studio_light_001" data-category="tech-camera" data-price="2400" data-availability="instant" data-nav="lighting">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="professional studio strobe light with a softbox in a high-end photography studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKQ6hy46JO9QnSimNFXnf8Ch7ogx-V_vs4rBh6lY06al6_1tFRUGcZ-qvY_qgQciDt0YcFbDF9DXo-hPdkHEzPatSTFy65Lq_35XJo1f-eZqjtejZDgoVSv47Sws8Oxwx-Ujsdy37ACsbrUt4mILjBcPfoyHzTSCXLkEYN0VklulnZdvdLDd95XdUMM2G_Vjh36S97rJiS2SyEWTr1p2_n1HB125K7_CLaJW36Wjfa8QLhWmWERk3VhvzEibEMEcVfm9nW1yC5oVI"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -235,7 +236,7 @@
 </div>
 </div>
 <!-- Card 2 -->
-<div class="js-listing-card group flex flex-col" data-category="high-end-audio" data-price="1800" data-availability="request" data-nav="audio">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=syn_prophet6_002'" data-id="syn_prophet6_002" data-category="high-end-audio" data-price="1800" data-availability="request" data-nav="audio">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="vintage style analog synthesizer with wooden side panels and numerous knobs and sliders" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1qIv9i0MSyrzv9lt2Xbl8-pTYEZuI3vC4MrN165sOHQuUbf96sArbtmteZEJZxl4yNepEWRuO10ayqy12yhQg1jjZ_pi2_AUbz19chyvkrdTVWHAyerjDjMshs2JSKTTMcGJw8ANaHdkpLo-Rm1CSPPcpIE9YpDCw8HsLXbFm3IcqoqH0DnD4zF0rU8oRlqPgYpY65yp9hjSgXbqu1pO3TPqPfnz8GaWH65G8u0xLYhdfUDyYFKfyw2I8kP7MO4LGoVv-j-v1tYo"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -263,7 +264,7 @@
 </div>
 </div>
 <!-- Card 3 -->
-<div class="js-listing-card group flex flex-col" data-category="tech-camera" data-price="3200" data-availability="instant" data-nav="cameras">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=mon_prodisp_003'" data-id="mon_prodisp_003" data-category="tech-camera" data-price="3200" data-availability="instant" data-nav="cameras">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="ultra-wide high resolution curved computer monitor on a clean desk with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXLJgkB0FrNt76HjHva4QZzdOqYhIGtTgnXuFKaBbx_n-MGCOZbSKCoN-AwF-2UdmVWwdJ-LZYICTblrtagM6eSGc0MIWa_GCEOPQOiNCaU_ecgyG_3J58kDafqGLcQOdwhvNRwDKbH1elw3Z1JqRvMZffX_TRN5oLud3cPQr500IlhgEIQ_wYDcEFSS7mm14-gY3RKCEjX-8gwvHbIc242disOMX7-aI5VXJWAnHVFT8KbljKEq8K-sukl2kHe0xAbxpyECoTPaQ"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -291,7 +292,7 @@
 </div>
 </div>
 <!-- Card 4 -->
-<div class="js-listing-card group flex flex-col" data-category="high-end-audio" data-price="1900" data-availability="request" data-nav="audio">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=gtr_gibson_004'" data-id="gtr_gibson_004" data-category="high-end-audio" data-price="1900" data-availability="request" data-nav="audio">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="modern black electric guitar leaning against a boutique amplifier in a stylish music room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIYOByjDSUrNH3ymzp3a6e7hbpmepA8FkFi_AvPmOwu6RMszLzdiMA2X00XVjRMwCYEamMbqNXWXnZxCLeTOLlsi-EQlxBikWYPYvk1Os3a9WeJ2NqO-6wphPDXvtR373n4IU7kDui2s1HcWH8Rl0uTwx1rfDxIbly6teSRwT8kUBXNHvQ4Y4R2SSED5idj8OgPMkOPr2DqRv5EnY_Y8qJsdm23G8t_VJhwF2I3LGD_FfvtOkxYlFMDDsYMhJB2lplZkd8wSq16lY"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -319,7 +320,7 @@
 </div>
 </div>
 <!-- Card 5 -->
-<div class="js-listing-card group flex flex-col" data-category="tech-camera" data-price="4800" data-availability="instant" data-nav="lenses">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=lens_arri_005'" data-id="lens_arri_005" data-category="tech-camera" data-price="4800" data-availability="instant" data-nav="lenses">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="professional cinema prime lens detail showing focus ring and glass reflections in a studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCcAs5ckQ5mg3F2fN2-5roNrJRaWsWNg6KHfI9CjDraS-sraKjvbQFo1H0iTp5tSBQikvkYjDIVo-tuotgYAbrywZ4xDEgLY_uD3maCjbi9Xr6OCGR1vqz5-Kj80n0nmS3NWGCTEKjW92vhbwU3tu-5m8gg2hMzjzaPXd7Ao86BFec5CksIJzHYDRbC0ci4P3cxLBlifN1WZyte0xbIfYwC-uirP7FQjoPhc-W0rmLe2ZnRjStXHh8f3oYrs93laXCJZyHVNEbBcU"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -347,7 +348,7 @@
 </div>
 </div>
 <!-- Card 6 -->
-<div class="js-listing-card group flex flex-col" data-category="editorial-fashion" data-price="2800" data-availability="request" data-nav="fashion">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=boots_balenciaga_006'" data-id="boots_balenciaga_006" data-category="editorial-fashion" data-price="2800" data-availability="request" data-nav="fashion">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="pair of luxury designer leather shoes on a pedestal with warm spotlighting in a boutique" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPqnjgJS1Q29swYaA8wXzZSxW60nN_t1qA6MUA3UZpXPoGYQYeswa1ReHLhZFhUga51sDhduVUJufMwxgIObfVnUCswxTdnh5kzFWki96uLMrpmI14CtuzoFBlOZpTw-38dm_TifjXKy5YJsd6QorKe_m3LKIY-5zZlxroNdbSGrLhXzqX9Mz0VCMXke3UQbGsfXP7c1qS1GZhc4gY_sH107r3XAaeD83EMrEtBUnCLDOLkXib2CyDvYB5ufJCZz6HtQ5qGgsTTQQ"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -375,7 +376,7 @@
 </div>
 </div>
 <!-- Card 7 -->
-<div class="js-listing-card group flex flex-col" data-category="editorial-fashion" data-price="6200" data-availability="instant" data-nav="fashion">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=fsh_tux_007'" data-id="fsh_tux_007" data-category="editorial-fashion" data-price="6200" data-availability="instant" data-nav="fashion">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="luxury tailored tuxedo on mannequin in a premium studio showroom" src="https://images.unsplash.com/photo-1593032465171-8bd5f7f74f76?auto=format&fit=crop&w=900&q=80"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -403,7 +404,7 @@
 </div>
 </div>
 <!-- Card 8 -->
-<div class="js-listing-card group flex flex-col" data-category="editorial-fashion" data-price="8900" data-availability="request" data-nav="fashion">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=fsh_rolex_008'" data-id="fsh_rolex_008" data-category="editorial-fashion" data-price="8900" data-availability="request" data-nav="fashion">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="luxury swiss watch close up on velvet stand with dramatic lighting" src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=900&q=80"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -431,7 +432,7 @@
 </div>
 </div>
 <!-- Card 9 -->
-<div class="js-listing-card group flex flex-col" data-category="editorial-fashion" data-price="10400" data-availability="instant" data-nav="fashion">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=fsh_patek_009'" data-id="fsh_patek_009" data-category="editorial-fashion" data-price="10400" data-availability="instant" data-nav="fashion">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="luxury steel sports watch displayed on marble pedestal" src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=900&q=80"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -459,7 +460,7 @@
 </div>
 </div>
 <!-- Card 10 -->
-<div class="js-listing-card group flex flex-col" data-category="editorial-fashion" data-price="5400" data-availability="request" data-nav="fashion">
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=fsh_gown_010'" data-id="fsh_gown_010" data-category="editorial-fashion" data-price="5400" data-availability="request" data-nav="fashion">
 <div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="designer couture dress hanging in modern fitting room" src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80"/>
 <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
@@ -483,6 +484,146 @@
 <div class="flex items-center gap-1">
 <span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹270</span>
 </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 11 -->
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=cam_red_011'" data-id="cam_red_011" data-category="tech-camera" data-price="9500" data-availability="instant" data-nav="cameras">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1606986628025-35d57e735ae0?auto=format&fit=crop&w=900&q=80"/>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Midtown, NY</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">RED Komodo 6K Camera</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">5.0</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm">Premium full-frame cinema camera with global shutter.</p>
+<div class="pt-2 flex flex-col">
+<span class="text-2xl font-black price-display">₹9,500 <span class="text-sm font-normal text-outline">($115) / day</span></span>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹475</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 12 -->
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=lens_sigma_012'" data-id="lens_sigma_012" data-category="tech-camera" data-price="3500" data-availability="instant" data-nav="lenses">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1606933248051-5ce98adc5040?auto=format&fit=crop&w=900&q=80"/>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Williamsburg, NY</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Sigma Cine 18-35mm T2</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">4.9</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm">Professional cinema zoom lens with excellent color rendition.</p>
+<div class="pt-2 flex flex-col">
+<span class="text-2xl font-black price-display">₹3,500 <span class="text-sm font-normal text-outline">($42) / day</span></span>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹175</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 13 -->
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=light_aputure_013'" data-id="light_aputure_013" data-category="tech-camera" data-price="5200" data-availability="instant" data-nav="lighting">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=900&q=80"/>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Long Island City, NY</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Aputure 600D Pro Light</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">4.8</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm">High-power LED cinema light for large-scale productions.</p>
+<div class="pt-2 flex flex-col">
+<span class="text-2xl font-black price-display">₹5,200 <span class="text-sm font-normal text-outline">($63) / day</span></span>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹260</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 14 -->
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=mic_rode_014'" data-id="mic_rode_014" data-category="high-end-audio" data-price="1200" data-availability="instant" data-nav="audio">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1516867532316-aab3e96c587f?auto=format&fit=crop&w=900&q=80"/>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">East Village, NY</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Rode Wireless GO II</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">4.7</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm">Professional wireless microphone system with dual channels.</p>
+<div class="pt-2 flex flex-col">
+<span class="text-2xl font-black price-display">₹1,200 <span class="text-sm font-normal text-outline">($14) / day</span></span>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹60</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 15 -->
+<div class="js-listing-card group flex flex-col cursor-pointer" onclick="window.location.href='product_detail.html?id=fashion_watch_022'" data-id="fashion_watch_022" data-category="editorial-fashion" data-price="7800" data-availability="instant" data-nav="fashion">
+<div class="relative aspect-[4/5] overflow-hidden rounded-xl bg-surface-container-low mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=80"/>
+<button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-on-surface hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<div class="absolute bottom-4 left-4">
+<span class="px-3 py-1 rounded-full bg-on-surface/90 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Upper East Side, NY</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-start">
+<h3 class="font-bold text-lg leading-tight group-hover:text-primary transition-colors">Omega Seamaster Chronograph</h3>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold">5.0</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm">Luxury Swiss chronograph watch for editorial shoots.</p>
+<div class="pt-2 flex flex-col">
+<span class="text-2xl font-black price-display">₹7,800 <span class="text-sm font-normal text-outline">($94) / day</span></span>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-bold text-outline uppercase tracking-tight">Est. transaction fee: ₹390</span>
 </div>
 </div>
 </div>
@@ -567,6 +708,74 @@
 </div>
 </footer>
 <script>
+  (function wireAuthAwareHeaderRoutes() {
+    const activeEmailKey = 'omnishare:active-email';
+    const queryEmail = String(new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase();
+    let activeEmail = '';
+    try {
+      activeEmail = String(localStorage.getItem(activeEmailKey) || '').trim().toLowerCase();
+    } catch (_error) {
+      activeEmail = '';
+    }
+
+    const resolvedEmail = queryEmail || activeEmail;
+    if (resolvedEmail) {
+      try {
+        localStorage.setItem(activeEmailKey, resolvedEmail);
+      } catch (_error) {
+        // Ignore storage restrictions.
+      }
+    }
+
+    function withEmailParam(href) {
+      if (!resolvedEmail || !href || href.startsWith('#')) return href;
+      try {
+        const url = new URL(href, window.location.href);
+        if (url.origin !== window.location.origin) return href;
+        url.searchParams.set('email', resolvedEmail);
+        return `${url.pathname}${url.search}${url.hash}`;
+      } catch (_error) {
+        return href;
+      }
+    }
+
+    document.querySelectorAll('a[href^="search.html"], a[href^="profile.html"], a[href^="owner_portal.html"], a[href^="subscription.html"], a[href^="checkout.html"]').forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      link.setAttribute('href', withEmailParam(href));
+    });
+
+    if (resolvedEmail) {
+      document.querySelectorAll('a[href^="signin.html"]').forEach((link) => {
+        link.setAttribute('href', `profile.html?email=${encodeURIComponent(resolvedEmail)}`);
+      });
+    }
+
+    const signinLink = document.getElementById('header-signin-link');
+    const signoutLink = document.getElementById('header-signout-link');
+    if (signoutLink) {
+      signoutLink.addEventListener('click', function onSignout(event) {
+        event.preventDefault();
+        try {
+          localStorage.removeItem(activeEmailKey);
+        } catch (_error) {
+          // Ignore storage restrictions.
+        }
+        window.location.href = 'signin.html';
+      });
+
+      if (resolvedEmail) {
+        signoutLink.classList.remove('hidden');
+      } else {
+        signoutLink.classList.add('hidden');
+      }
+    }
+
+    if (signinLink && resolvedEmail) {
+      signinLink.textContent = 'Profile';
+      signinLink.setAttribute('href', `profile.html?email=${encodeURIComponent(resolvedEmail)}`);
+    }
+  })();
+
   (function wireJoinNowRoute() {
     const joinNowLink = document.getElementById('join-now-link');
     if (!joinNowLink) return;
@@ -601,6 +810,50 @@
       navKey: '',
       selectedAvailability: '',
     };
+
+    function buildInlineListingFallbackImage(title, category) {
+      const safeTitle = String(title || 'Omnishare Listing').replace(/[&<>"']/g, '');
+      const safeCategory = String(category || 'Rental').replace(/[&<>"']/g, '');
+      const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1125" viewBox="0 0 900 1125">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1125" fill="url(#bg)"/>
+  <circle cx="720" cy="180" r="140" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="130" cy="980" r="180" fill="rgba(255,255,255,0.10)"/>
+  <text x="70" y="520" fill="#ffffff" font-family="Arial, sans-serif" font-size="44" font-weight="700">${safeTitle}</text>
+  <text x="70" y="585" fill="#dbeafe" font-family="Arial, sans-serif" font-size="28" font-weight="500">${safeCategory}</text>
+  <text x="70" y="1025" fill="#bfdbfe" font-family="Arial, sans-serif" font-size="24" font-weight="600">Omnishare</text>
+</svg>`;
+      return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg);
+    }
+
+    function wireCardImageFallback(card, listing) {
+      const imageEl = card.querySelector('img');
+      if (!imageEl) return;
+
+      const fallback = buildInlineListingFallbackImage(listing?.title || card.querySelector('h3')?.textContent, listing?.category || card.dataset.category);
+      imageEl.onerror = () => {
+        imageEl.onerror = null;
+        imageEl.src = fallback;
+      };
+
+      const apiImage = String(listing?.image_url || '').trim();
+      if (apiImage) {
+        imageEl.src = apiImage;
+      } else if (!String(imageEl.getAttribute('src') || '').trim()) {
+        imageEl.src = fallback;
+      }
+
+      // If the image has already failed before this handler was attached, force fallback now.
+      if (imageEl.complete && imageEl.naturalWidth === 0) {
+        imageEl.src = fallback;
+      }
+    }
 
     function getSelectedCategories() {
       return categoryInputs
@@ -638,6 +891,50 @@
       });
     }
 
+    async function syncCardsWithLiveListings() {
+      const tasks = cards.map(async (card) => {
+        const listingId = String(card.dataset.id || '').trim();
+        if (!listingId) {
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/listings/${encodeURIComponent(listingId)}`);
+          const data = await response.json();
+          if (!response.ok || !data.success || !data.listing) {
+            // Hide dead cards that point to missing listings.
+            card.dataset.apiHidden = '1';
+            return;
+          }
+
+          const listing = data.listing;
+          card.dataset.apiHidden = '0';
+          card.dataset.price = String(Number(listing.price_per_day || 0));
+          card.dataset.availability = listing.is_available ? 'instant' : 'request';
+
+          const priceEl = card.querySelector('.price-display');
+          if (priceEl && Number.isFinite(Number(listing.price_per_day))) {
+            priceEl.innerHTML = `₹${Number(listing.price_per_day).toLocaleString('en-IN')} <span class="text-sm font-normal text-outline">/ day</span>`;
+          }
+
+          const cardTitle = card.querySelector('h3');
+          if (cardTitle && listing.title) {
+            cardTitle.textContent = listing.title;
+          }
+
+          wireCardImageFallback(card, listing);
+
+          card.setAttribute('onclick', `window.location.href='product_detail.html?id=${listing.id}'`);
+        } catch (_error) {
+          // Keep card visible if API check fails temporarily.
+          card.dataset.apiHidden = '0';
+          wireCardImageFallback(card, null);
+        }
+      });
+
+      await Promise.all(tasks);
+    }
+
     function applyFilters() {
       const maxPrice = Number(priceRange?.value || 0);
       const selectedCategories = getSelectedCategories();
@@ -656,7 +953,8 @@
         const matchesPrice = price <= maxPrice;
         const matchesAvailability = !state.selectedAvailability || availability === state.selectedAvailability;
 
-        const isVisible = matchesNav && matchesCategory && matchesPrice && matchesAvailability;
+        const hiddenByApi = String(card.dataset.apiHidden || '0') === '1';
+        const isVisible = !hiddenByApi && matchesNav && matchesCategory && matchesPrice && matchesAvailability;
         card.style.display = isVisible ? '' : 'none';
         if (isVisible) visibleCount += 1;
       });
@@ -715,10 +1013,13 @@
       state.navKey = queryNav;
     }
 
-    updateNavStyles();
-    updateAvailabilityStyles();
-    updatePriceLabel();
-    applyFilters();
+    (async () => {
+      await syncCardsWithLiveListings();
+      updateNavStyles();
+      updateAvailabilityStyles();
+      updatePriceLabel();
+      applyFilters();
+    })();
   })();
 </script>
 </body></html>

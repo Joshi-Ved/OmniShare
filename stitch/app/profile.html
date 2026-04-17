@@ -36,6 +36,7 @@
         notifications
         <span class="absolute top-1 right-1 w-3 h-3 bg-primary rounded-full border-2 border-white"></span>
       </a>
+      <a id="header-signout-link" class="px-4 py-2 rounded-full border border-outline-variant/40 text-xs font-bold text-slate-600 hover:text-primary hover:border-primary/40 transition-colors" href="signin.html">Sign Out</a>
       <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
         <img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfMEpaHhPeLp0yEooiRD7ibpUsSkOl6fjaY22MfZ1gQeIToNY_70wEbaIFgxaoixR3NgsTv7g19p_U2O8GsbhgqU8NtKakNm61pOn2h33-TCCMHcZAZA4z7Jvv3l5qI_TAkW1K0ZGhhO4C4YhehXAW_sLXIX8ZDwNwnmReL5bHrwr8C6jNTOax9v0iQGFWbmG9e9l2z9duoEzfAyoV5hQ6ZqVz_2kxwYNziocA6ZfJpQKh8Uh1QTLhpmvIyETClwPpOVwJpaAHUs"/>
       </div>
@@ -358,6 +359,50 @@
     }
   }
 
+  function wireSignoutButton() {
+    const signoutLink = document.getElementById('header-signout-link');
+    if (!signoutLink) return;
+
+    signoutLink.addEventListener('click', function onSignout(event) {
+      event.preventDefault();
+      try {
+        localStorage.removeItem(activeEmailKey);
+      } catch (_error) {
+        // Ignore storage restrictions.
+      }
+      window.location.href = 'signin.html';
+    });
+  }
+
+  function withEmailParam(href, email) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail || !href || href.startsWith('#')) return href;
+    try {
+      const url = new URL(href, window.location.href);
+      if (url.origin !== window.location.origin) return href;
+      url.searchParams.set('email', normalizedEmail);
+      return `${url.pathname}${url.search}${url.hash}`;
+    } catch (_error) {
+      return href;
+    }
+  }
+
+  function wireSessionRoutes(email) {
+    const scopedSelectors = [
+      'a[href^="search.html"]',
+      'a[href^="owner_portal.html"]',
+      'a[href^="profile.html"]',
+      'a[href^="notifications.html"]',
+      'a[href^="subscription.html"]'
+    ];
+    scopedSelectors.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((link) => {
+        const href = link.getAttribute('href') || '';
+        link.setAttribute('href', withEmailParam(href, email));
+      });
+    });
+  }
+
   function getSubscriptionKey(email) {
     return `${subscriptionKeyPrefix}${normalizeEmail(email) || 'default'}`;
   }
@@ -555,6 +600,8 @@
 
   async function initHardcodedProfile() {
     safeStorageSet(activeEmailKey, rewardEmail);
+    wireSignoutButton();
+    wireSessionRoutes(rewardEmail);
 
     if (rewardEmail) {
       rewardsInboxLink.href = `notifications.html?email=${encodeURIComponent(rewardEmail)}`;

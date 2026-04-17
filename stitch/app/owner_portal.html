@@ -34,6 +34,7 @@
       <a class="text-slate-500 hover:text-primary transition-colors" href="subscription.html">How it Works</a>
     </nav>
     <div class="flex items-center gap-4">
+      <a id="header-signout-link" class="hidden md:inline-flex px-4 py-2 rounded-full border border-outline-variant/40 text-xs font-bold text-slate-600 hover:text-primary hover:border-primary/40 transition-colors" href="signin.html">Sign Out</a>
       <a class="text-slate-500 hover:text-primary transition-colors" href="profile.html">
         <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/30">
           <img alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYfMEpaHhPeLp0yEooiRD7ibpUsSkOl6fjaY22MfZ1gQeIToNY_70wEbaIFgxaoixR3NgsTv7g19p_U2O8GsbhgqU8NtKakNm61pOn2h33-TCCMHcZAZA4z7Jvv3l5qI_TAkW1K0ZGhhO4C4YhehXAW_sLXIX8ZDwNwnmReL5bHrwr8C6jNTOax9v0iQGFWbmG9e9l2z9duoEzfAyoV5hQ6ZqVz_2kxwYNziocA6ZfJpQKh8Uh1QTLhpmvIyETClwPpOVwJpaAHUs"/>
@@ -534,6 +535,63 @@
     const name = email ? email.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()) : 'Current Host';
     return { name, email };
   })();
+
+  if (hostIdentity.email) {
+    try {
+      localStorage.setItem(hostIdentityKey, hostIdentity.email);
+    } catch (_error) {
+      // Ignore storage restrictions.
+    }
+  }
+
+  function withEmailParam(href, email) {
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!normalizedEmail || !href || href.startsWith('#')) return href;
+    try {
+      const url = new URL(href, window.location.href);
+      if (url.origin !== window.location.origin) return href;
+      url.searchParams.set('email', normalizedEmail);
+      return `${url.pathname}${url.search}${url.hash}`;
+    } catch (_error) {
+      return href;
+    }
+  }
+
+  function wireSessionRoutes(email) {
+    const scopedSelectors = [
+      'a[href^="search.html"]',
+      'a[href^="owner_portal.html"]',
+      'a[href^="profile.html"]',
+      'a[href^="subscription.html"]',
+      'a[href^="checkout.html"]'
+    ];
+
+    scopedSelectors.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((link) => {
+        const href = link.getAttribute('href') || '';
+        link.setAttribute('href', withEmailParam(href, email));
+      });
+    });
+  }
+
+  wireSessionRoutes(hostIdentity.email);
+
+  const signoutLink = document.getElementById('header-signout-link');
+  if (signoutLink) {
+    signoutLink.addEventListener('click', function onSignout(event) {
+      event.preventDefault();
+      try {
+        localStorage.removeItem(hostIdentityKey);
+      } catch (_error) {
+        // Ignore storage restrictions.
+      }
+      window.location.href = 'signin.html';
+    });
+
+    if (hostIdentity.email) {
+      signoutLink.classList.remove('hidden');
+    }
+  }
 
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));

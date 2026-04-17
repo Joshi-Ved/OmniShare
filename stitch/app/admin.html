@@ -715,6 +715,7 @@
         <option value="all">All Listings</option>
         <option value="pending_approval">Pending Approval</option>
         <option value="available">Available</option>
+        <option value="booked">Booked (Pending/Active)</option>
         <option value="sold_out">Sold Out</option>
         <option value="maintenance">Maintenance</option>
         <option value="damaged">Damaged</option>
@@ -1787,7 +1788,7 @@ async function handleBookingAction(bookingId, action) {
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.error || 'Booking action failed');
 
-    await loadBookings();
+    await Promise.all([loadBookings(), loadListings()]);
     closeBookingModal();
   } catch (error) {
     alert(error.message);
@@ -1879,8 +1880,15 @@ async function loadListings() {
   if (!listEl) return;
 
   try {
-    const response = await fetch('/api/admin/listings');
-    const data = await response.json();
+    let data;
+    let response = await fetch('/api/admin/listings-availability');
+    if (response.ok) {
+      data = await response.json();
+    }
+    if (!response.ok || !data || !data.success) {
+      response = await fetch('/api/admin/listings');
+      data = await response.json();
+    }
     if (!response.ok || !data.success) throw new Error(data.error || 'Could not load listings');
 
     allListings = data.results || [];
@@ -1894,6 +1902,9 @@ async function loadListings() {
 function getListingActionButton(listing) {
   if (listing.status === 'pending_approval') {
     return `<div class="flex items-center gap-3"><button onclick="handleListingAction('${listing.id}','approve')" class="text-emerald-700 text-xs font-bold hover:underline">Approve</button><button onclick="handleListingAction('${listing.id}','reject')" class="text-red-600 text-xs font-bold hover:underline">Reject</button></div>`;
+  }
+  if (listing.status === 'booked') {
+    return `<button onclick="handleListingAction('${listing.id}','mark-available')" class="text-primary text-xs font-bold hover:underline">Override: Mark Available</button>`;
   }
   if (listing.status === 'maintenance' || listing.status === 'damaged') {
     return `<button onclick="handleListingAction('${listing.id}','mark-available')" class="text-primary text-xs font-bold hover:underline">Mark Available</button>`;
@@ -1930,7 +1941,7 @@ function updateListingStats() {
 
   const total = allListings.length;
   const available = allListings.filter((l) => l.status === 'available').length;
-  const rented = allListings.filter((l) => l.status === 'sold_out').length;
+  const rented = allListings.filter((l) => l.status === 'sold_out' || l.status === 'booked').length;
   const issues = allListings.filter((l) => l.status === 'maintenance' || l.status === 'damaged').length;
 
   document.getElementById('listing-total-count').textContent = total;
@@ -1953,13 +1964,13 @@ function filterListings() {
     return;
   }
 
-  const statusColors = { pending_approval: 'bg-amber-50 text-amber-700', available: 'bg-emerald-50 text-emerald-700', sold_out: 'bg-blue-50 text-blue-700', maintenance: 'bg-red-50 text-red-700', damaged: 'bg-red-50 text-red-700', rejected: 'bg-slate-100 text-slate-700' };
+  const statusColors = { pending_approval: 'bg-amber-50 text-amber-700', available: 'bg-emerald-50 text-emerald-700', booked: 'bg-indigo-50 text-indigo-700', sold_out: 'bg-blue-50 text-blue-700', maintenance: 'bg-red-50 text-red-700', damaged: 'bg-red-50 text-red-700', rejected: 'bg-slate-100 text-slate-700' };
   
   listEl.innerHTML = filtered.map((l) => `
     <tr>
       <td class="p-4"><p class="font-bold text-sm">${l.title}</p><p class="text-xs text-outline">${l.id}</p></td>
       <td class="p-4"><p class="text-xs font-semibold">${l.category}</p></td>
-      <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-black uppercase ${statusColors[l.status] || ''}">${l.status}</span></td>
+      <td class="p-4"><span class="px-2 py-1 rounded-full text-[10px] font-black uppercase ${statusColors[l.status] || ''}">${l.status}</span>${l.active_booking ? `<p class="text-[10px] text-outline mt-1">${l.active_booking.id} ${l.active_booking.status}</p>` : ''}</td>
       <td class="p-4 hidden md:table-cell text-xs">${l.condition}</td>
       <td class="p-4"><p class="text-xs">${l.host}</p></td>
       <td class="p-4">${getListingActionButton(l)}</td>
@@ -2048,5 +2059,7 @@ setInterval(loadModeratorReviews, 30000);
 loadBookings();
 loadListings();
 loadDisputes();
+setInterval(loadBookings, 15000);
+setInterval(loadListings, 15000);
 </script>
 </body></html>

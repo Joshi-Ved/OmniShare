@@ -30,7 +30,8 @@
       <a class="text-slate-500 hover:text-primary transition-colors" href="owner_portal.html">List an Item</a>
     </nav>
     <div class="flex items-center gap-4">
-      <a class="text-slate-500 hover:text-primary transition-colors font-medium" href="signin.html">Sign In</a>
+      <a id="header-signin-link" class="text-slate-500 hover:text-primary transition-colors font-medium" href="signin.html">Sign In</a>
+      <a id="header-signout-link" class="hidden text-slate-500 hover:text-primary transition-colors font-medium" href="signin.html">Sign Out</a>
       <a id="join-now-link" class="bg-primary text-white px-6 py-2.5 rounded-full font-bold transition-all hover:bg-primary-container" href="checkout.html?flow=membership&amp;tier=free-trial">Join Now</a>
     </div>
   </div>
@@ -79,6 +80,74 @@
   </div>
 </footer>
 <script>
+  (function wireAuthAwareHeaderRoutes() {
+    const activeEmailKey = 'omnishare:active-email';
+    const queryEmail = String(new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase();
+    let activeEmail = '';
+    try {
+      activeEmail = String(localStorage.getItem(activeEmailKey) || '').trim().toLowerCase();
+    } catch (_error) {
+      activeEmail = '';
+    }
+
+    activeEmail = queryEmail || activeEmail;
+    if (activeEmail) {
+      try {
+        localStorage.setItem(activeEmailKey, activeEmail);
+      } catch (_error) {
+        // Ignore storage restrictions.
+      }
+    }
+
+    function withEmailParam(href) {
+      if (!activeEmail || !href || href.startsWith('#')) return href;
+      try {
+        const url = new URL(href, window.location.href);
+        if (url.origin !== window.location.origin) return href;
+        url.searchParams.set('email', activeEmail);
+        return `${url.pathname}${url.search}${url.hash}`;
+      } catch (_error) {
+        return href;
+      }
+    }
+
+    document.querySelectorAll('a[href^="search.html"], a[href^="plans.html"], a[href^="owner_portal.html"], a[href^="privacy.html"], a[href^="terms.html"], a[href^="checkout.html"]').forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      link.setAttribute('href', withEmailParam(href));
+    });
+
+    if (activeEmail) {
+      document.querySelectorAll('a[href^="signin.html"]').forEach((link) => {
+        link.setAttribute('href', `profile.html?email=${encodeURIComponent(activeEmail)}`);
+      });
+    }
+
+    const signinLink = document.getElementById('header-signin-link');
+    const signoutLink = document.getElementById('header-signout-link');
+    if (signoutLink) {
+      signoutLink.addEventListener('click', function onSignout(event) {
+        event.preventDefault();
+        try {
+          localStorage.removeItem(activeEmailKey);
+        } catch (_error) {
+          // Ignore storage restrictions.
+        }
+        window.location.href = 'signin.html';
+      });
+
+      if (activeEmail) {
+        signoutLink.classList.remove('hidden');
+      } else {
+        signoutLink.classList.add('hidden');
+      }
+    }
+
+    if (signinLink && activeEmail) {
+      signinLink.textContent = 'Profile';
+      signinLink.setAttribute('href', `profile.html?email=${encodeURIComponent(activeEmail)}`);
+    }
+  })();
+
   (function wireJoinNowRoute() {
     const joinNowLink = document.getElementById('join-now-link');
     if (!joinNowLink) return;

@@ -661,12 +661,28 @@ async function seedErpDataIfEmpty() {
     if ((listingsCount?.count || 0) === 0) {
         const now = new Date().toISOString();
         const rows = [
-            ['cam_fx3_001', 'Sony FX3 Cinema Camera', 'Premium full-frame cinema camera body', 'Cameras', 'sold_out', 'Excellent', 'Julian R.', 'julian.r@lens.co', 9500, 12000, '', now, now],
-            ['drone_m3_002', 'DJI Mavic 3 Pro Drone', 'Professional drone with 5.1K recording', 'Drones', 'sold_out', 'Good', 'Julian R.', 'julian.r@lens.co', 6200, 8000, '', now, now],
-            ['light_apu_003', 'Aputure 300D Light Kit', 'Complete lighting package for studio and set', 'Lighting', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 2400, 4000, '', now, now],
-            ['lens_rf50_004', 'Canon RF 50mm Lens', 'Fast prime lens with high optical clarity', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 1800, 3000, '', now, now],
-            ['audio_zoom_005', 'Zoom H6 Audio Recorder', 'Field recorder kit with accessories', 'Audio', 'maintenance', 'Needs Repair', 'Marcus S.', 'marcus.s@lens.co', 1200, 2000, '', now, now],
-            ['rig_ronin_006', 'DJI Ronin Stabilizer', '3-axis stabilizer for mirrorless cinema rigs', 'Stabilizers', 'sold_out', 'Good', 'Marcus S.', 'marcus.s@lens.co', 3200, 5000, '', now, now],
+            ['pro_studio_light_001', 'Profoto B10X Plus Studio Kit', 'Professional lighting for commercial photography.', 'Lighting', 'available', 'Excellent', 'Marcus S.', 'marcus.s@lens.co', 2400, 4000, '', now, now],
+            ['syn_prophet6_002', 'Sequential Prophet-6 Synthesizer', 'Classic polyphonic analog synthesizer.', 'Audio', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 1800, 3000, '', now, now],
+            ['mon_prodisp_003', 'Apple Pro Display XDR', '32-inch Retina 6K display for color grading.', 'Cameras', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 3200, 5000, '', now, now],
+            ['gtr_gibson_004', 'Gibson Les Paul Custom', 'Ebony finish, 1968 Reissue.', 'Audio', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 1900, 3000, '', now, now],
+            ['lens_arri_005', 'Arri Signature Prime 35mm', 'LPL Mount cinema lens with exceptional bokeh.', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 4800, 7000, '', now, now],
+            ['boots_balenciaga_006', 'Balenciaga Runway Boots', 'Size 42, Black leather from SS24 collection.', 'Fashion', 'available', 'Excellent', 'Sienna Vale', 'sienna.v@stylehouse.co', 2800, 4500, '', now, now],
+            ['cam_red_011', 'RED Komodo 6K Cinema Camera', 'Premium full-frame cinema camera with global shutter.', 'Cameras', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 9500, 15000, '', now, now],
+            ['lens_sigma_012', 'Sigma Cine 18-35mm T2', 'Professional cinema zoom lens with excellent color rendition.', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 3500, 6000, '', now, now],
+            ['light_aputure_013', 'Aputure 600D Pro Light', 'High-power LED cinema light for large-scale productions.', 'Lighting', 'available', 'Excellent', 'Marcus S.', 'marcus.s@lens.co', 5200, 8000, '', now, now],
+            ['mic_rode_014', 'Rode Wireless GO II System', 'Professional wireless microphone system with dual channels.', 'Audio', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 1200, 2000, '', now, now],
+            ['stabilizer_gimbal_015', 'DJI Ronin 4D', 'Advanced camera stabilization and gimbal system.', 'Stabilizers', 'available', 'Excellent', 'Marcus S.', 'marcus.s@lens.co', 6800, 10000, '', now, now],
+            ['tripod_sachtler_016', 'Sachtler Flowtech 75 Tripod', 'Carbon fiber tripod with fluid head for cinema.', 'Grip', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 1500, 2500, '', now, now],
+            ['monitor_smallhd_017', 'SmallHD 702 Bright Touch Monitor', '7-inch 4K monitor with sun-readable display.', 'Cameras', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 950, 1500, '', now, now],
+            ['lens_canon_018', 'Canon RF 24-70mm F2.8L IS USM', 'Fast zoom lens for mirrorless cinema.', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 2800, 4500, '', now, now],
+            ['lighting_kino_019', 'Kino Flo Celeb 400 LED Light', 'Flicker-free LED light for studio and location work.', 'Lighting', 'available', 'Excellent', 'Marcus S.', 'marcus.s@lens.co', 1800, 3000, '', now, now],
+            ['recorder_zoom_020', 'Zoom F3 Audio Recorder', 'Compact field recorder with professional preamps.', 'Audio', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 800, 1200, '', now, now],
+            ['fashion_sunglasses_021', 'Gucci Oversize Square Sunglasses', 'Luxury fashion sunglasses from latest collection.', 'Fashion', 'available', 'Excellent', 'Sienna Vale', 'sienna.v@stylehouse.co', 1500, 2500, '', now, now],
+            ['fashion_watch_022', 'Omega Seamaster Planet Ocean', 'Luxury Swiss chronograph watch for editorial shoots.', 'Fashion', 'available', 'Excellent', 'Adrian Cole', 'adrian.c@atelier.one', 7800, 12000, '', now, now],
+            ['fashion_bag_023', 'Hermès Birkin 35 Noir', 'Premium luxury handbag for high-fashion content.', 'Fashion', 'available', 'Excellent', 'Sienna Vale', 'sienna.v@stylehouse.co', 4500, 7000, '', now, now],
+            ['fashion_suit_024', 'Versace Black Tailored Suit', 'Luxury menswear ensemble for editorial campaigns.', 'Fashion', 'available', 'Excellent', 'Adrian Cole', 'adrian.c@atelier.one', 3800, 5500, '', now, now],
+            ['grip_dolly_025', 'Slider Dolly Track System', 'Portable dolly system for smooth camera movements.', 'Grip', 'available', 'Excellent', 'Marcus S.', 'marcus.s@lens.co', 2200, 3500, '', now, now],
+            ['camera_drone_026', 'DJI Air 3S Drone', 'Professional drone with 4K camera and long flight time.', 'Cameras', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 3500, 5500, '', now, now],
         ];
         for (const row of rows) {
             await runSql('INSERT INTO erp_listings (id, title, description, category, status, item_condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', row);
@@ -674,12 +690,28 @@ async function seedErpDataIfEmpty() {
     }
 
     const pricingFixes = [
-        ['cam_fx3_001', 9500, 12000],
-        ['drone_m3_002', 6200, 8000],
-        ['light_apu_003', 2400, 4000],
-        ['lens_rf50_004', 1800, 3000],
-        ['audio_zoom_005', 1200, 2000],
-        ['rig_ronin_006', 3200, 5000],
+        ['pro_studio_light_001', 2400, 4000],
+        ['syn_prophet6_002', 1800, 3000],
+        ['mon_prodisp_003', 3200, 5000],
+        ['gtr_gibson_004', 1900, 3000],
+        ['lens_arri_005', 4800, 7000],
+        ['boots_balenciaga_006', 2800, 4500],
+        ['cam_red_011', 9500, 15000],
+        ['lens_sigma_012', 3500, 6000],
+        ['light_aputure_013', 5200, 8000],
+        ['mic_rode_014', 1200, 2000],
+        ['stabilizer_gimbal_015', 6800, 10000],
+        ['tripod_sachtler_016', 1500, 2500],
+        ['monitor_smallhd_017', 950, 1500],
+        ['lens_canon_018', 2800, 4500],
+        ['lighting_kino_019', 1800, 3000],
+        ['recorder_zoom_020', 800, 1200],
+        ['fashion_sunglasses_021', 1500, 2500],
+        ['fashion_watch_022', 7800, 12000],
+        ['fashion_bag_023', 4500, 7000],
+        ['fashion_suit_024', 3800, 5500],
+        ['grip_dolly_025', 2200, 3500],
+        ['camera_drone_026', 3500, 5500],
     ];
     for (const [id, pricePerDay, deposit] of pricingFixes) {
         await runSql(
@@ -696,7 +728,23 @@ async function seedErpDataIfEmpty() {
         ['fsh_gown_010', 'Couture Evening Gown Set', 'Editorial wardrobe kit with accessories for luxury fashion shoots', 'Fashion', 'available', 'Excellent', 'Adrian Cole', 'adrian.c@atelier.one', 5400, 8000, '', seedNow, seedNow],
     ];
 
+    // Ensure search-page linked listings exist even when DB was created before latest seed rows.
+    const searchLinkedRows = [
+        ['cam_red_011', 'RED Komodo 6K Cinema Camera', 'Premium full-frame cinema camera with global shutter.', 'Cameras', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 9500, 15000, '', seedNow, seedNow],
+        ['lens_sigma_012', 'Sigma Cine 18-35mm T2', 'Professional cinema zoom lens with excellent color rendition.', 'Lenses', 'available', 'Excellent', 'Elena R.', 'elena.r@lens.co', 3500, 6000, '', seedNow, seedNow],
+        ['light_aputure_013', 'Aputure 600D Pro Light', 'High-power LED cinema light for large-scale productions.', 'Lighting', 'available', 'Excellent', 'Marcus S.', 'marcus.s@lens.co', 5200, 8000, '', seedNow, seedNow],
+        ['mic_rode_014', 'Rode Wireless GO II System', 'Professional wireless microphone system with dual channels.', 'Audio', 'available', 'Excellent', 'Julian R.', 'julian.r@lens.co', 1200, 2000, '', seedNow, seedNow],
+        ['fashion_watch_022', 'Omega Seamaster Planet Ocean', 'Luxury Swiss chronograph watch for editorial shoots.', 'Fashion', 'available', 'Excellent', 'Adrian Cole', 'adrian.c@atelier.one', 7800, 12000, '', seedNow, seedNow],
+    ];
+
     for (const row of fashionRows) {
+        await runSql(
+            'INSERT OR IGNORE INTO erp_listings (id, title, description, category, status, item_condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            row
+        );
+    }
+
+    for (const row of searchLinkedRows) {
         await runSql(
             'INSERT OR IGNORE INTO erp_listings (id, title, description, category, status, item_condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             row
@@ -842,6 +890,9 @@ app.get('/api/listings/public', async (req, res) => {
         const whereParts = [];
         let query = 'SELECT id, title, description, category, status, item_condition AS condition, host, host_email, price_per_day, deposit, image_url, created_at, updated_at FROM erp_listings';
 
+        // Always exclude booked listings from public view
+        whereParts.push("lower(status) != 'booked'");
+
         if (requestedStatus) {
             if (requestedStatus === 'available') {
                 whereParts.push("lower(status) IN ('available', 'approved', 'published', 'active')");
@@ -884,7 +935,30 @@ app.get('/api/listings/:id', async (req, res) => {
         if (!listing) {
             return res.status(404).json({ success: false, error: 'Listing not found' });
         }
-        return res.json({ success: true, listing: { ...listing, status: normalizeListingStatus(listing.status) } });
+        
+            // Get active/pending bookings for availability info
+            const bookings = await allSql(
+                'SELECT id, renter, start_date, end_date, status FROM erp_bookings WHERE listing_id = ? AND (status = ? OR status = ?)',
+                [req.params.id, 'active', 'pending']
+            );
+        
+            const activeBooking = bookings[0] || null;
+        
+            return res.json({
+                success: true,
+                listing: {
+                    ...listing,
+                    status: normalizeListingStatus(listing.status),
+                    is_available: normalizeListingStatus(listing.status) === 'available' && !activeBooking,
+                    active_booking: activeBooking ? {
+                        id: activeBooking.id,
+                        renter: activeBooking.renter,
+                        start_date: activeBooking.start_date,
+                        end_date: activeBooking.end_date,
+                        status: activeBooking.status
+                    } : null
+                }
+            });
     } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
     }
@@ -1060,6 +1134,52 @@ app.get('/api/admin/bookings', async (req, res) => {
     }
 });
 
+app.get('/api/admin/listings-availability', async (req, res) => {
+    try {
+        const listings = await allSql('SELECT id, title, category, status, host, host_email, price_per_day, created_at, updated_at FROM erp_listings ORDER BY datetime(created_at) DESC');
+        
+        // Enrich with booking information
+        const enrichedListings = await Promise.all(listings.map(async (listing) => {
+            const bookings = await allSql(
+                'SELECT id, renter, start_date, end_date, status FROM erp_bookings WHERE listing_id = ? ORDER BY datetime(created_at) DESC',
+                [listing.id]
+            );
+            
+            const activeBooking = bookings.find(b => b.status === 'active' || b.status === 'pending');
+            
+            return {
+                ...listing,
+                booking_count: bookings.length,
+                has_active_booking: !!activeBooking,
+                active_booking: activeBooking ? {
+                    id: activeBooking.id,
+                    renter: activeBooking.renter,
+                    start_date: activeBooking.start_date,
+                    end_date: activeBooking.end_date,
+                    status: activeBooking.status,
+                    dates: `${formatDateLabel(activeBooking.start_date)} - ${formatDateLabel(activeBooking.end_date)}`
+                } : null,
+                recent_bookings: bookings.slice(0, 5).map(b => ({
+                    id: b.id,
+                    renter: b.renter,
+                    start_date: b.start_date,
+                    end_date: b.end_date,
+                    status: b.status,
+                    dates: `${formatDateLabel(b.start_date)} - ${formatDateLabel(b.end_date)}`
+                }))
+            };
+        }));
+        
+        return res.json({
+            success: true,
+            count: enrichedListings.length,
+            results: enrichedListings
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.post('/api/admin/bookings/:id/action', async (req, res) => {
     try {
         const { id } = req.params;
@@ -1117,6 +1237,93 @@ app.post('/api/admin/bookings/:id/action', async (req, res) => {
     }
 });
 
+// Booking request endpoint (from product detail page)
+app.post('/api/bookings/request', async (req, res) => {
+    try {
+        const listingId = String(req.body.listing_id || '').trim();
+        const renterName = String(req.body.renter_name || '').trim();
+        const renterEmail = normalizeEmail(req.body.renter_email);
+        const startDate = String(req.body.start_date || '').trim();
+        const endDate = String(req.body.end_date || '').trim();
+        const message = String(req.body.message || '').trim();
+
+        if (!listingId || !renterName || !renterEmail || !startDate || !endDate) {
+            return res.status(400).json({ success: false, error: 'Missing required fields: listing_id, renter_name, renter_email, start_date, end_date' });
+        }
+
+        const listing = await getSql('SELECT * FROM erp_listings WHERE id = ?', [listingId]);
+        if (!listing) {
+            return res.status(404).json({ success: false, error: 'Listing not found' });
+        }
+
+        const currentStatus = normalizeListingStatus(listing.status);
+        if (currentStatus !== 'available') {
+            return res.status(409).json({ success: false, error: 'Listing is not available for booking' });
+        }
+
+        const bookingDays = daysBetweenInclusive(startDate, endDate);
+        const amount = Math.max(0, Math.round((Number(listing.price_per_day) || 0) * bookingDays));
+        const bookingId = `BK${String(Math.floor(Math.random() * 9000) + 1000)}`;
+        const now = new Date().toISOString();
+
+        // Create booking
+        await runSql(
+              'INSERT INTO erp_bookings (id, renter, email, listing, listing_id, start_date, end_date, status, amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [bookingId, renterName, renterEmail, listing.title, listingId, startDate, endDate, 'pending', amount, now, now]
+        );
+
+        // Update listing status to indicate it has an active/pending booking
+        await runSql(
+            'UPDATE erp_listings SET status = ?, updated_at = ? WHERE id = ?',
+            ['booked', now, listingId]
+        );
+
+        return res.status(201).json({
+            success: true,
+            message: 'Booking request submitted successfully',
+            booking_id: bookingId,
+            amount: amount,
+            days: bookingDays
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Contact/Message endpoint
+app.post('/api/messages/send', async (req, res) => {
+    try {
+        const listingId = String(req.body.listing_id || '').trim();
+        const senderName = String(req.body.sender_name || '').trim();
+        const senderEmail = normalizeEmail(req.body.sender_email);
+        const subject = String(req.body.subject || '').trim();
+        const messageText = String(req.body.message || '').trim();
+
+        if (!listingId || !senderName || !senderEmail || !subject || !messageText) {
+            return res.status(400).json({ success: false, error: 'Missing required fields' });
+        }
+
+        const listing = await getSql('SELECT * FROM erp_listings WHERE id = ?', [listingId]);
+        if (!listing) {
+            return res.status(404).json({ success: false, error: 'Listing not found' });
+        }
+
+        const messageId = `MSG${String(Math.floor(Math.random() * 9000) + 1000)}`;
+        const now = new Date().toISOString();
+
+        // Store message (you can create a messages table or use email directly)
+        console.log(`New message from ${senderName} (${senderEmail}) about listing "${listing.title}": ${messageText}`);
+
+        return res.status(201).json({
+            success: true,
+            message: 'Message sent successfully',
+            message_id: messageId
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 app.get('/api/admin/listings', async (req, res) => {
     try {
         const results = await allSql('SELECT id, title, description, category, status, item_condition AS condition, host, host_email, price_per_day, deposit, updated_at, created_at FROM erp_listings ORDER BY datetime(updated_at) DESC');
@@ -1132,6 +1339,19 @@ app.post('/api/admin/listings/:id/action', async (req, res) => {
         const action = String(req.body.action || '').toLowerCase();
         const listing = await getSql('SELECT * FROM erp_listings WHERE id = ?', [id]);
         if (!listing) return res.status(404).json({ success: false, error: 'Listing not found' });
+
+        const activeBooking = await getSql(
+            "SELECT id, status FROM erp_bookings WHERE listing_id = ? AND status IN ('pending', 'active') ORDER BY datetime(created_at) DESC LIMIT 1",
+            [id]
+        );
+
+        const wantsAvailable = action === 'mark-available' || action === 'approve' || action === 'relist';
+        if (wantsAvailable && activeBooking) {
+            return res.status(409).json({
+                success: false,
+                error: `Cannot mark listing available while booking ${activeBooking.id} is ${activeBooking.status}`,
+            });
+        }
 
         const normalizedCurrent = normalizeListingStatus(listing.status);
         let nextStatus = normalizedCurrent;

@@ -177,7 +177,8 @@
 </div>
 </div>
 <div class="flex items-center gap-6">
-<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="signin.html">Sign In</a>
+<a id="header-signin-link" class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="signin.html">Sign In</a>
+<a id="header-signout-link" class="hidden text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 duration-150" href="signin.html">Sign Out</a>
 <a id="join-now-link" class="bg-primary hover:bg-primary-container text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 active:scale-95 text-center" href="checkout.html?flow=membership&amp;tier=free-trial">Join Now</a>
 </div>
 </div>
@@ -596,6 +597,74 @@
         });
     })();
 
+    (function wireAuthAwareHeaderRoutes() {
+        const activeEmailKey = 'omnishare:active-email';
+        const queryEmail = String(new URLSearchParams(window.location.search).get('email') || '').trim().toLowerCase();
+        let storedEmail = '';
+        try {
+            storedEmail = String(localStorage.getItem(activeEmailKey) || '').trim().toLowerCase();
+        } catch (_error) {
+            storedEmail = '';
+        }
+
+        const activeEmail = queryEmail || storedEmail;
+        if (activeEmail) {
+            try {
+                localStorage.setItem(activeEmailKey, activeEmail);
+            } catch (_error) {
+                // Ignore storage restrictions.
+            }
+        }
+
+        function withEmailParam(href) {
+            if (!activeEmail || !href || href.startsWith('#')) return href;
+            try {
+                const url = new URL(href, window.location.href);
+                if (url.origin !== window.location.origin) return href;
+                url.searchParams.set('email', activeEmail);
+                return `${url.pathname}${url.search}${url.hash}`;
+            } catch (_error) {
+                return href;
+            }
+        }
+
+        document.querySelectorAll('a[href^="search.html"], a[href^="owner_portal.html"], a[href^="profile.html"], a[href^="subscription.html"], a[href^="checkout.html"]').forEach((link) => {
+            const href = link.getAttribute('href') || '';
+            link.setAttribute('href', withEmailParam(href));
+        });
+
+        if (activeEmail) {
+            document.querySelectorAll('a[href^="signin.html"]').forEach((link) => {
+                link.setAttribute('href', `profile.html?email=${encodeURIComponent(activeEmail)}`);
+            });
+        }
+
+        const signinLink = document.getElementById('header-signin-link');
+        const signoutLink = document.getElementById('header-signout-link');
+        if (signoutLink) {
+            signoutLink.addEventListener('click', function onSignout(event) {
+                event.preventDefault();
+                try {
+                    localStorage.removeItem(activeEmailKey);
+                } catch (_error) {
+                    // Ignore storage restrictions.
+                }
+                window.location.href = 'signin.html';
+            });
+
+            if (activeEmail) {
+                signoutLink.classList.remove('hidden');
+            } else {
+                signoutLink.classList.add('hidden');
+            }
+        }
+
+        if (signinLink && activeEmail) {
+            signinLink.textContent = 'Profile';
+            signinLink.setAttribute('href', `profile.html?email=${encodeURIComponent(activeEmail)}`);
+        }
+    })();
+
     (function wireJoinNowRoute() {
         const joinNowLink = document.getElementById('join-now-link');
         const startTradingLink = document.getElementById('start-trading-link');
@@ -626,4 +695,5 @@
         }
     })();
 </script>
+
 </body></html>
